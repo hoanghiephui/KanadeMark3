@@ -128,7 +128,7 @@ private fun SettingThemeDialog(
                     description = R.string.setting_theme_theme_dynamic_color_description,
                     value = userData.isDynamicColor,
                     onValueChanged = {
-                        if (userData.hasPrivilege) {
+                        if (!userData.hasPrivilege) {
                             onClickDynamicColor.invoke(it)
                         } else {
                             ToastUtil.show(context, R.string.billing_plus_toast_require_plus)

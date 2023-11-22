@@ -25,6 +25,8 @@ import caios.android.kanade.core.repository.UserDataRepository
 import caios.android.kanade.core.repository.UserDataRepositoryImpl
 import caios.android.kanade.core.repository.YTMusicRepository
 import caios.android.kanade.core.repository.YTMusicRepositoryImpl
+import caios.android.kanade.core.repository.podcast.FeedDiscoveryRepository
+import caios.android.kanade.core.repository.podcast.FeedDiscoveryRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -123,4 +125,10 @@ interface RepositoryModule {
     fun bindYTMusicRepository(
         yTMusicRepository: YTMusicRepositoryImpl,
     ): YTMusicRepository
+
+    @Singleton
+    @Binds
+    fun bindFeedDiscoveryRepository(
+        feedDiscoveryRepositoryImpl: FeedDiscoveryRepositoryImpl,
+    ): FeedDiscoveryRepository
 }

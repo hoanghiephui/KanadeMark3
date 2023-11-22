@@ -17,6 +17,7 @@ import caios.android.kanade.core.music.MusicController
 import caios.android.kanade.core.repository.LastFmRepository
 import caios.android.kanade.core.repository.MusicRepository
 import caios.android.kanade.core.repository.PlaylistRepository
+import caios.android.kanade.core.repository.podcast.FeedDiscoveryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.SharingStarted
@@ -34,6 +35,7 @@ class HomeViewModel @Inject constructor(
     private val musicRepository: MusicRepository,
     private val playlistRepository: PlaylistRepository,
     private val lastFmRepository: LastFmRepository,
+    private val feedDiscoveryRepository: FeedDiscoveryRepository,
     @Dispatcher(KanadeDispatcher.IO) private val ioDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
@@ -117,6 +119,11 @@ class HomeViewModel @Inject constructor(
         musicController.playerEvent(
             PlayerEvent.SkipToQueue(index),
         )
+    }
+    init {
+        viewModelScope.launch {
+            feedDiscoveryRepository.getTopPodcast("VN", 25)
+        }
     }
 }
 

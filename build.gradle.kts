@@ -15,4 +15,6 @@ plugins {
     alias(libs.plugins.libraries) apply false
     alias(libs.plugins.chaquopy) apply false
     alias(libs.plugins.module.graph) apply false
+    alias(libs.plugins.android.library) apply false
+    alias(libs.plugins.kotlin.android) apply false
 }
