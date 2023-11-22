@@ -179,7 +179,7 @@ data class Feed(
 	val icon: Icon? = null,
 
 	@Json(name="link")
-	val link: List<LinkItem?>? = null,
+	val link: List<LinkItem>? = null,
 
 	@Json(name="id")
 	val id: Id? = null,

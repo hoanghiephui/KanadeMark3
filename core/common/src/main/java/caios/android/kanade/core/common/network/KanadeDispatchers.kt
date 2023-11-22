@@ -7,6 +7,10 @@ import kotlin.annotation.AnnotationRetention.RUNTIME
 @Retention(RUNTIME)
 annotation class Dispatcher(val kanadeDispatcher: KanadeDispatcher)
 
+@Retention(AnnotationRetention.BINARY)
+@Qualifier
+annotation class MainImmediateDispatcher
+
 enum class KanadeDispatcher {
     Default,
     IO,

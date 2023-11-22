@@ -9,7 +9,7 @@ targetSdk = "34"
 compileSdk = "34"
 
 # Gradle
-gradle = "8.1.1"
+gradle = "8.1.4"
 
 # Kotlin
 kotlin = "1.9.10"

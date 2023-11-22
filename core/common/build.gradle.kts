@@ -11,4 +11,5 @@ android {
 dependencies {
     api(libs.bundles.infra.api)
     implementation(libs.libraries.core)
+    implementation(libs.moshi.kotlin)
 }
