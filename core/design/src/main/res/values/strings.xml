@@ -28,6 +28,10 @@
     <string name="common_details">Details</string>
     <string name="common_delete">Delete</string>
     <string name="common_download">Download</string>
+    <string name="common_retry_description">An error occurred</string>
+    <string name="common_retry_button">Try again</string>
+    <string name="common_error_no_network">You\'re not connected to the network 🌎, please check your network connection and try again.</string>
+    <string name="common_error_unexpected">Minor fail: an error has happened. 😵</string>
 
     <!-- Common Unit -->
     <string name="unit_song">%1$d songs</string>

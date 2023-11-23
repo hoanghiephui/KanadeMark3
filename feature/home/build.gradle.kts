@@ -17,6 +17,7 @@ dependencies {
     implementation(project(":core:design"))
     implementation(project(":core:music"))
     implementation(project(":core:ui"))
+    implementation(project(":core:usecase"))
 
     implementation(libs.bundles.ui.implementation)
     kapt(libs.bundles.ui.kapt)

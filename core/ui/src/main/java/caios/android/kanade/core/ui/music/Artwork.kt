@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.offset
-import androidx.compose.material.Text
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -51,7 +51,7 @@ fun Artwork(
 }
 
 @Composable
-private fun ArtworkFromWeb(
+fun ArtworkFromWeb(
     artwork: Artwork.Web,
     modifier: Modifier = Modifier,
 ) {

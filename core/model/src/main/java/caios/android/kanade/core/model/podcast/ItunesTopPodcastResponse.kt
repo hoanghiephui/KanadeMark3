@@ -130,7 +130,7 @@ data class EntryItem(
 	val imContentType: ImContentType? = null,
 
 	@Json(name="im:image")
-	val imImage: List<ImImageItem?>? = null,
+	val imImage: List<ImImageItem>? = null,
 
 	@Json(name="rights")
 	val rights: Rights? = null,
@@ -167,7 +167,7 @@ data class Icon(
 data class Feed(
 
 	@Json(name="entry")
-	val entry: List<EntryItem?>? = null,
+	val entry: List<EntryItem>? = null,
 
 	@Json(name="author")
 	val author: Author? = null,
