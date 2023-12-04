@@ -5,6 +5,7 @@ import com.podcast.core.network.BuildConfig
 import com.podcast.core.network.OkHttpClientFactory
 import com.podcast.core.network.adapter.StatusCodeAdapter
 import com.podcast.core.network.api.ItunesApi
+import com.prof18.rssparser.RssParserBuilder
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
@@ -59,4 +60,14 @@ object NetworkModule {
                 setLevel(HttpLoggingInterceptor.Level.BODY)
             }
         }
+
+    @Provides
+    @Singleton
+    fun provideRssParser(
+        okHttpClient: OkHttpClient
+    ): RssParserBuilder =
+        RssParserBuilder(
+            callFactory = okHttpClient,
+            charset = Charsets.UTF_8,
+        )
 }

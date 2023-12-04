@@ -27,4 +27,5 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging)
     implementation(libs.okhttp.urlconnection)
+    implementation(libs.rssparser)
 }

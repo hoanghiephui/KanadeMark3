@@ -31,6 +31,8 @@ import caios.android.kanade.core.repository.PlaylistRepository
 import caios.android.kanade.core.ui.error.ErrorsDispatcher
 import caios.android.kanade.core.ui.error.ImmutableList
 import com.podcast.core.usecase.ItunesFeedUseCase
+import com.prof18.rssparser.RssParserBuilder
+import com.prof18.rssparser.model.RssChannel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -43,6 +45,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 import java.util.Random
 import javax.inject.Inject
 
@@ -59,6 +62,7 @@ class HomeViewModel @Inject constructor(
     defaultDispatcher: CoroutineDispatcher,
     private val errorsDispatcher: ErrorsDispatcher,
     private val movieItemMapper: DiscoverFeedItemMapper,
+    private val rssParserBuilder: RssParserBuilder
 ) : BaseViewModel<NoneAction>(defaultDispatcher) {
 
     private val feedState = MutableStateFlow(emptyList<EntryItem>())
@@ -176,6 +180,10 @@ class HomeViewModel @Inject constructor(
 
     init {
         fetchNewDiscoverPodcast()
+        viewModelScope.launch(defaultDispatcher) {
+            val rssChannel: RssChannel = rssParserBuilder.build().getRssChannel("https://feeds.acast.com/public/shows/65381572bc6f900012280fbf")
+            Timber.tag("RSS").d(rssChannel.items.first().audio)
+        }
     }
 
     @AnyThread
