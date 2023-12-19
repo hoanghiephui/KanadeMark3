@@ -5,6 +5,7 @@ data class Artist(
     val artistId: Long,
     val albums: List<Album>,
     val artwork: Artwork,
+    val description: String? = null
 ) {
     val songs: List<Song>
         get() = albums.flatMap { it.songs }

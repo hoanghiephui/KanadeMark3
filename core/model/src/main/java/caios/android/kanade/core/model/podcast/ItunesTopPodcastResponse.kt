@@ -151,8 +151,10 @@ data class EntryItem(
 	val category: Category? = null,
 
 	@Json(name="im:releaseDate")
-	val imReleaseDate: ImReleaseDate? = null
-) : Parcelable
+	val imReleaseDate: ImReleaseDate? = null,
+) : Parcelable {
+	val feedUrl = "https://itunes.apple.com/lookup?id=${id?.attributes?.imId}"
+}
 
 @JsonClass(generateAdapter = true)
 @Parcelize

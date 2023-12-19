@@ -130,6 +130,7 @@ dependencies {
     implementation(project(":feature:billing"))
     implementation(project(":feature:welcome"))
     implementation(project(":feature:widget"))
+    implementation(project(":feature:discover"))
 
     implementation(platform(libs.firebase.bom))
     implementation(platform(libs.androidx.compose.bom))

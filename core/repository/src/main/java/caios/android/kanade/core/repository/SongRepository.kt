@@ -145,7 +145,8 @@ class SongRepositoryImpl @Inject constructor(
         return try {
             val order = musicOrders.joinToString(separator = ", ") { it.create() }
             val uri =
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL) else MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
+                else MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
 
             var selectionFinal = MediaStore.Audio.AudioColumns.TITLE + " != ''"
             var selectionValuesFinal = emptyArray<String>()

@@ -24,8 +24,9 @@ import caios.android.kanade.core.design.component.KanadeBackground
 import caios.android.kanade.core.design.theme.bold
 
 @Composable
-fun SongDetailHeader(
+fun EpisodeDetailHeader(
     onClickSeeAll: () -> Unit,
+    size: Int,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -36,7 +37,7 @@ fun SongDetailHeader(
             modifier = Modifier
                 .padding(start = 8.dp)
                 .weight(1f),
-            text = stringResource(R.string.common_songs),
+            text = stringResource(R.string.unit_episodes, size),
             style = MaterialTheme.typography.titleLarge.bold(),
             color = MaterialTheme.colorScheme.onSurface,
         )

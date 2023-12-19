@@ -47,6 +47,8 @@ import caios.android.kanade.feature.song.top.SongTopRoute
 import caios.android.kanade.feature.song.top.navigateToSongTop
 import caios.android.kanade.feature.tag.navigateToTagEdit
 import caios.android.kanade.navigation.LibraryDestination
+import com.podcast.discover.DiscoverRoute
+import com.podcast.discover.navigateToDiscover
 import kotlinx.coroutines.CoroutineScope
 
 @Composable
@@ -88,6 +90,7 @@ class KanadeAppState(
     val currentLibraryDestination: LibraryDestination?
         @Composable get() = when (currentDestination?.route) {
             HomeRoute -> LibraryDestination.Home
+            DiscoverRoute -> LibraryDestination.Discover
             PlaylistTopRoute -> LibraryDestination.Playlist
             SongTopRoute -> LibraryDestination.Song
             ArtistTopRoute -> LibraryDestination.Artist
@@ -108,6 +111,7 @@ class KanadeAppState(
 
         when (libraryDestination) {
             LibraryDestination.Home -> navController.navigateToHome(navOption)
+            LibraryDestination.Discover -> navController.navigateToDiscover(navOption)
             LibraryDestination.Song -> navController.navigateToSongTop(navOption)
             LibraryDestination.Artist -> navController.navigateToArtistTop(navOption)
             LibraryDestination.Album -> navController.navigateToAlbumTop(navOption)

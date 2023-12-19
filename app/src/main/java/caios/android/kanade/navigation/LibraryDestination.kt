@@ -15,6 +15,10 @@ enum class LibraryDestination(
         icon = DrawableResourceIcon(KanadeIcon.asHome),
         textId = R.string.navigation_home,
     ),
+    Discover(
+        icon = DrawableResourceIcon(KanadeIcon.asHome),
+        textId = R.string.navigation_home,
+    ),
     Playlist(
         icon = DrawableResourceIcon(KanadeIcon.asPlaylist),
         textId = R.string.navigation_playlist,

@@ -4,16 +4,12 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,7 +17,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -35,10 +30,6 @@ import caios.android.kanade.core.model.music.Album
 import caios.android.kanade.core.model.music.Queue
 import caios.android.kanade.core.model.music.Song
 import caios.android.kanade.core.ui.AsyncLoadContents
-import caios.android.kanade.core.ui.collectAsStateLifecycleAware
-import caios.android.kanade.core.ui.music.Artwork
-import caios.android.kanade.core.ui.music.ArtworkFromWeb
-import caios.android.kanade.core.ui.view.gridItems
 import caios.android.kanade.feature.home.items.HomeHeaderSection
 import caios.android.kanade.feature.home.items.HomeQueueSection
 import caios.android.kanade.feature.home.items.HomeRecentlyAddedAlbumsSection
@@ -62,7 +53,7 @@ internal fun HomeRoute(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val screenState by viewModel.screenState.collectAsStateWithLifecycle()
-    val uiState by viewModel.uiState.collectAsStateLifecycleAware()
+
 
     AsyncLoadContents(
         modifier = modifier,
@@ -85,19 +76,26 @@ internal fun HomeRoute(
                 contentPadding = PaddingValues(top = topMargin),
                 onClickRecentlyAdded = {
                     homeUiState.songs.sortedBy { it.addedDate }.map { it.id }.let {
-                        navigateToSongDetail.invoke(context.getString(R.string.song_detail_title_recently_add), it)
+                        navigateToSongDetail.invoke(
+                            context.getString(R.string.song_detail_title_recently_add),
+                            it
+                        )
                     }
                 },
                 onClickHistory = {
                     scope.launch {
                         val songs = viewModel.getRecentlyPlayedSongs(9999999)
-                        navigateToSongDetail.invoke(context.getString(R.string.song_detail_title_history), songs.map { it.id })
+                        navigateToSongDetail.invoke(
+                            context.getString(R.string.song_detail_title_history),
+                            songs.map { it.id })
                     }
                 },
                 onClickMostPlayed = {
                     scope.launch {
                         val songs = viewModel.getMostPlayedSongs(9999999)
-                        navigateToSongDetail.invoke(context.getString(R.string.song_detail_title_most_played), songs.map { it.first.id })
+                        navigateToSongDetail.invoke(
+                            context.getString(R.string.song_detail_title_most_played),
+                            songs.map { it.first.id })
                     }
                 },
                 onClickPlay = viewModel::onNewPlay,
@@ -107,7 +105,6 @@ internal fun HomeRoute(
                 onClickShuffle = viewModel::onShufflePlay,
                 onClickQueue = navigateToQueue,
                 onClickQueueItem = viewModel::onSkipToQueue,
-                uiState = uiState
             )
         }
     }
@@ -132,8 +129,7 @@ internal fun HomeScreen(
     onClickQueue: () -> Unit,
     onClickQueueItem: (Int) -> Unit,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp),
-    uiState: DiscoverUiState
+    contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
     LazyColumn(
         modifier = modifier,
@@ -149,24 +145,6 @@ internal fun HomeScreen(
                 onClickMostPlayed = onClickMostPlayed,
                 onClickShuffle = { onClickShuffle.invoke(songs) },
             )
-        }
-        when(uiState) {
-            is DiscoverUiState.Discover -> {
-                gridItems(uiState.items.size, nColumns = 4) { index ->
-                    Card(
-                        modifier = Modifier
-                            .size(80.dp)
-                            .padding(16.dp),
-                        shape = RoundedCornerShape(8.dp),
-                    ) {
-                        ArtworkFromWeb(
-                            modifier = Modifier.fillMaxSize(),
-                            artwork = caios.android.kanade.core.model.music.Artwork.Web(uiState.items[index].imImage?.first()?.label ?: ""),
-                        )
-                    }
-                }
-            }
-            else -> Unit
         }
 
         item {

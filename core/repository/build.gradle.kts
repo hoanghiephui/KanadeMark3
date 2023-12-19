@@ -18,6 +18,6 @@ dependencies {
     implementation(libs.bundles.ktor)
 
     implementation(libs.androidx.media)
-
+    implementation(libs.rssparser)
     implementation(libs.jsoup)
 }

@@ -39,6 +39,7 @@
     <string name="unit_album">%1$d pieces</string>
     <string name="unit_playlist">%1$d pieces</string>
     <string name="unit_play_times">Played %1$d times</string>
+    <string name="unit_episodes">%1$d Episodes</string>
 
     <!-- Common Error -->
     <string name="error_executed">An error occurred</string>
@@ -434,4 +435,22 @@
 
     <!-- Widget -->
     <string name="widget_error_require_plus">To use the widget\nYou must subscribe to Kanade+</string>
+
+    <!-- Add podcast fragment -->
+    <string name="search_podcast_hint">Search podcast…</string>
+    <string name="search_itunes_label">Search Apple Podcasts</string>
+    <string name="search_podcastindex_label">Search Podcast Index</string>
+    <string name="search_fyyd_label">Search fyyd</string>
+    <string name="gpodnet_search_hint">Search gpodder.net</string>
+    <string name="advanced">Advanced</string>
+    <string name="add_podcast_by_url">Add Podcast by RSS address</string>
+    <string name="add_podcast_by_url_hint" translatable="false">www.example.com/feed</string>
+    <string name="discover">Discover</string>
+    <string name="discover_hide">Hide</string>
+    <string name="discover_is_hidden">You selected to hide suggestions.</string>
+    <string name="discover_more">More</string>
+    <string name="discover_powered_by_itunes">Suggestions by Apple Podcasts</string>
+    <string name="discover_confirm">Show suggestions</string>
+    <string name="search_powered_by">Results by %1$s</string>
+    <string name="select_country">Select country</string>
 </resources>

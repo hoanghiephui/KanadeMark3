@@ -27,6 +27,8 @@ import caios.android.kanade.core.repository.YTMusicRepository
 import caios.android.kanade.core.repository.YTMusicRepositoryImpl
 import caios.android.kanade.core.repository.podcast.FeedDiscoveryRepository
 import caios.android.kanade.core.repository.podcast.FeedDiscoveryRepositoryImpl
+import caios.android.kanade.core.repository.podcast.ParseRssRepository
+import caios.android.kanade.core.repository.podcast.ParseRssRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -131,4 +133,10 @@ interface RepositoryModule {
     fun bindFeedDiscoveryRepository(
         feedDiscoveryRepositoryImpl: FeedDiscoveryRepositoryImpl,
     ): FeedDiscoveryRepository
+
+    @Singleton
+    @Binds
+    fun bindParseRssRepository(
+        parseRssRepositoryImpl: ParseRssRepositoryImpl,
+    ): ParseRssRepository
 }

@@ -77,6 +77,9 @@ import caios.android.kanade.feature.sort.showSortDialog
 import caios.android.kanade.feature.tag.navigateToTagEdit
 import caios.android.kanade.feature.tag.tagEditScreen
 import caios.android.kanade.ui.KanadeAppState
+import com.podcast.discover.detail.feedDetailScreen
+import com.podcast.discover.detail.navigateToOnlineDetail
+import com.podcast.discover.discoverScreen
 import kotlinx.collections.immutable.ImmutableList
 import kotlin.reflect.KClass
 
@@ -222,6 +225,28 @@ fun KanadeNavHost(
             },
             navigateToAlbumDetail = {
                 navController.navigateToAlbumDetail(it)
+            },
+        )
+
+        discoverScreen(
+            topMargin = libraryTopBarHeight,
+            navigateToFeedDetail = {
+                navController.navigateToOnlineDetail(it)
+            }
+        )
+
+        feedDetailScreen(
+            navigateToSongDetail = { title, songIds ->
+                navController.navigateToSongDetail(title, songIds)
+            },
+            navigateToAlbumDetail = {
+                navController.navigateToAlbumDetail(it)
+            },
+            navigateToSongMenu = ::showSongMenuDialog,
+            navigateToArtistMenu = ::showArtistMenuDialog,
+            navigateToAlbumMenu = ::showAlbumMenuDialog,
+            terminate = {
+                navController.popBackStack()
             },
         )
 

@@ -1,0 +1,110 @@
+package com.podcast.discover
+
+import android.content.res.Resources
+import androidx.annotation.AnyThread
+import androidx.compose.ui.text.intl.Locale
+import androidx.compose.ui.text.toUpperCase
+import androidx.lifecycle.viewModelScope
+import caios.android.kanade.core.common.network.BaseViewModel
+import caios.android.kanade.core.common.network.Dispatcher
+import caios.android.kanade.core.common.network.KanadeDispatcher
+import caios.android.kanade.core.common.network.NoneAction
+import caios.android.kanade.core.common.network.Result
+import caios.android.kanade.core.common.network.asFlowResult
+import caios.android.kanade.core.common.network.data
+import caios.android.kanade.core.common.network.extension.safeCollect
+import caios.android.kanade.core.common.network.isLoading
+import caios.android.kanade.core.common.network.onResultError
+import caios.android.kanade.core.design.R
+import caios.android.kanade.core.model.ScreenState
+import caios.android.kanade.core.model.podcast.EntryItem
+import caios.android.kanade.core.model.podcast.ItunesTopPodcastResponse
+import caios.android.kanade.core.ui.error.ErrorsDispatcher
+import com.podcast.core.usecase.ItunesFeedUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.getAndUpdate
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+@HiltViewModel
+class DiscoverViewModel @Inject constructor(
+    @Dispatcher(KanadeDispatcher.IO)
+    private val ioDispatcher: CoroutineDispatcher,
+    @Dispatcher(KanadeDispatcher.Default)
+    defaultDispatcher: CoroutineDispatcher,
+    private val errorsDispatcher: ErrorsDispatcher,
+    private val movieItemMapper: DiscoverFeedItemMapper,
+    private val feedDiscoveryUseCase: ItunesFeedUseCase,
+) : BaseViewModel<NoneAction>(defaultDispatcher) {
+    private val feedState = MutableStateFlow(emptyList<EntryItem>())
+    private val fetchNewFeedResultState = MutableStateFlow<Result<ItunesTopPodcastResponse>?>(null)
+    val uiState =
+        combine(
+            feedState.map(movieItemMapper::map),
+            fetchNewFeedResultState
+        ) { items, podcastResponseResult ->
+            createDiscoverUiState(
+                items = items,
+                podcastResponseResult = podcastResponseResult
+            )
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = ScreenState.Loading,
+        )
+
+    @AnyThread
+    private fun createDiscoverUiState(
+        items: ImmutableList<EntryItem>,
+        podcastResponseResult: Result<ItunesTopPodcastResponse>?
+    ): ScreenState<Discover> = when {
+        items.isNotEmpty() -> ScreenState.Idle(
+            Discover(items = items)
+        )
+
+        podcastResponseResult.isLoading -> ScreenState.Loading
+        else -> ScreenState.Error(
+            message = R.string.error_no_data,
+            retryTitle = R.string.common_close
+        )
+    }
+
+    init {
+        fetchNewDiscoverPodcast()
+        /*viewModelScope.launch(defaultDispatcher) {
+            val rssChannel: RssChannel = rssParserBuilder.build()
+                .getRssChannel("https://feeds.acast.com/public/shows/65381572bc6f900012280fbf")
+            Timber.tag("RSS").d(rssChannel.items.first().audio)
+        }*/
+    }
+
+    @AnyThread
+    private fun fetchNewDiscoverPodcast() {
+        val country: String = Resources.getSystem().configuration.locales[0].country.toUpperCase(
+            Locale.current
+        )
+        viewModelScope.launch(defaultDispatcher) {
+            val currentState = fetchNewFeedResultState.getAndUpdate { Result.Loading() }
+            if (currentState !is Result.Loading) {
+                asFlowResult {
+                    feedDiscoveryUseCase.getTopPodcast(country, 25)
+                }.onResultError(errorsDispatcher::dispatch)
+                    .safeCollect(
+                        onEach = { result ->
+                            feedState.update { it + result.data?.feed?.entry.orEmpty() }
+                            fetchNewFeedResultState.emit(result)
+                        },
+                        onError = errorsDispatcher::dispatch,
+                    )
+            }
+        }
+    }
+}

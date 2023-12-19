@@ -2,7 +2,7 @@ package caios.android.kanade.core.model.music
 
 import java.time.LocalDateTime
 
-data class Album(
+data class Album               (
     val album: String,
     val albumId: Long,
     val songs: List<Song>,
