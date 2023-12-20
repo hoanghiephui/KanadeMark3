@@ -453,4 +453,7 @@
     <string name="discover_confirm">Show suggestions</string>
     <string name="search_powered_by">Results by %1$s</string>
     <string name="select_country">Select country</string>
+
+    <string name="subscribe">Subscribe</string>
+    <string name="subscribed">Subscribed</string>
 </resources>

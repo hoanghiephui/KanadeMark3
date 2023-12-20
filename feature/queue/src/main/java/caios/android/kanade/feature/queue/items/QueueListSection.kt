@@ -10,12 +10,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.DismissDirection
-import androidx.compose.material3.DismissValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SwipeToDismiss
-import androidx.compose.material3.rememberDismissState
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissValue
+import androidx.compose.material3.rememberSwipeToDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -74,9 +73,9 @@ internal fun QueueListSection(
                     reorderableState = state,
                     key = "${item.index}",
                 ) { isDragging ->
-                    val dismissState = rememberDismissState(
+                    val dismissState = rememberSwipeToDismissState(//todo xem lai rememberSwipeToDismissState
                         confirmValueChange = {
-                            if (it == DismissValue.Default) return@rememberDismissState false
+                            if (it == SwipeToDismissValue.Settled) return@rememberSwipeToDismissState false
                             onDeleteItem(item)
                         },
                     )
@@ -89,11 +88,11 @@ internal fun QueueListSection(
                         label = "background",
                     )
 
-                    SwipeToDismiss(
+                    SwipeToDismissBox(
                         modifier = Modifier.animateItemPlacement(),
                         state = dismissState,
-                        background = { },
-                        dismissContent = {
+                        backgroundContent = { },
+                        content = {
                             IndexedSongHolder(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -107,7 +106,6 @@ internal fun QueueListSection(
                                 onClickMenu = onClickSongMenu,
                             )
                         },
-                        directions = setOf(DismissDirection.EndToStart),
                     )
                 }
             }

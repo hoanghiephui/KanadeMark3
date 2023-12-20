@@ -17,6 +17,9 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.media.AudioAttributesCompat
 import androidx.media.AudioFocusRequestCompat
 import androidx.media.AudioManagerCompat
+import androidx.media3.common.MediaItem
+import androidx.media3.common.MimeTypes
+import androidx.media3.exoplayer.ExoPlayer
 import caios.android.kanade.core.design.databinding.LayoutDefaultArtworkBinding
 import caios.android.kanade.core.design.theme.Blue40
 import caios.android.kanade.core.design.theme.Green40
@@ -34,8 +37,6 @@ import caios.android.kanade.core.repository.MusicRepository
 import coil.ImageLoader
 import coil.request.ImageRequest
 import coil.request.SuccessResult
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.MediaItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -203,8 +204,17 @@ class MediaSessionManager(
             musicEffector.build(song)
         }
 
+
         player.playWhenReady = playWhenReady
-        player.setMediaItem(MediaItem.fromUri(song.uri), startPosition)
+        if (song.isStream) {
+            val mediaItem = MediaItem.Builder()
+                .setUri(song.data)
+                .setMimeType(MimeTypes.AUDIO_DTS_HD)
+                .build()
+            player.setMediaItem(mediaItem, startPosition)
+        } else {
+            player.setMediaItem(MediaItem.fromUri(song.uri), startPosition)
+        }
         player.prepare()
     }
 

@@ -4,6 +4,8 @@ import android.content.ComponentName
 import android.content.Context
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.session.MediaControllerCompat
+import androidx.media3.common.MediaMetadata
+import androidx.media3.exoplayer.ExoPlayer
 import buildBundle
 import caios.android.kanade.core.common.network.di.ApplicationScope
 import caios.android.kanade.core.model.music.Queue
@@ -15,8 +17,6 @@ import caios.android.kanade.core.model.player.PlayerState
 import caios.android.kanade.core.model.player.RepeatMode
 import caios.android.kanade.core.model.player.ShuffleMode
 import caios.android.kanade.core.repository.MusicRepository
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.MediaMetadata
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart

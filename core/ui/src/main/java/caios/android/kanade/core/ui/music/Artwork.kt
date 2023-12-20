@@ -33,19 +33,21 @@ import caios.android.kanade.core.model.music.Artwork
 import caios.android.kanade.core.ui.util.extraSize
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import coil.size.Size
 
 @Composable
 fun Artwork(
     artwork: Artwork,
     modifier: Modifier = Modifier,
     isLockAspect: Boolean = true,
+    size: Size = Size.ORIGINAL
 ) {
     val artworkModifier = if (isLockAspect) modifier.aspectRatio(1f) else modifier
 
     when (artwork) {
         is Artwork.Internal -> ArtworkFromInternal(artwork, artworkModifier)
         is Artwork.MediaStore -> ArtworkFromMediaStore(artwork, artworkModifier)
-        is Artwork.Web -> ArtworkFromWeb(artwork, artworkModifier)
+        is Artwork.Web -> ArtworkFromWeb(artwork, artworkModifier, size)
         is Artwork.Unknown -> ArtworkFromUnknown(artworkModifier)
     }
 }
@@ -54,12 +56,14 @@ fun Artwork(
 fun ArtworkFromWeb(
     artwork: Artwork.Web,
     modifier: Modifier = Modifier,
+    size: Size = Size.ORIGINAL
 ) {
     AsyncImage(
         modifier = modifier,
         model = ImageRequest.Builder(LocalContext.current)
             .data(artwork.url)
             .crossfade(true)
+            .size(size)
             .build(),
         contentDescription = null,
         contentScale = ContentScale.Crop,

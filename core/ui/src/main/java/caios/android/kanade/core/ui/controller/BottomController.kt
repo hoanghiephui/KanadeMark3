@@ -57,14 +57,14 @@ fun BottomController(
         )
 
         LinearProgressIndicator(
+            progress = { position },
             modifier = Modifier.constrainAs(indicator) {
                 top.linkTo(parent.top)
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
 
                 width = Dimension.fillToConstraints
-            },
-            progress = position,
+            }.height(1.5.dp),
         )
 
         Artwork(
@@ -82,7 +82,6 @@ fun BottomController(
 
         Text(
             modifier = Modifier
-                .marquee()
                 .constrainAs(title) {
                     top.linkTo(parent.top, 16.dp)
                     start.linkTo(artwork.end, 8.dp)

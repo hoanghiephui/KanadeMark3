@@ -38,7 +38,7 @@ fun EpisodeDetailHeader(
                 .padding(start = 8.dp)
                 .weight(1f),
             text = stringResource(R.string.unit_episodes, size),
-            style = MaterialTheme.typography.titleLarge.bold(),
+            style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurface,
         )
 

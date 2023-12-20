@@ -1,10 +1,11 @@
 package caios.android.kanade.core.ui.view
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,24 +18,28 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.ContentAlpha
-import androidx.compose.material.Icon
-import androidx.compose.material.LocalContentAlpha
-import androidx.compose.material.ProvideTextStyle
-import androidx.compose.material.Surface
-import androidx.compose.material.TopAppBar
+import androidx.compose.material3.Surface
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
@@ -46,21 +51,25 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import caios.android.kanade.core.design.R
 import caios.android.kanade.core.design.component.KanadeBackground
 import caios.android.kanade.core.design.theme.applyTonalElevation
 import caios.android.kanade.core.design.theme.bold
 import caios.android.kanade.core.design.theme.center
+import caios.android.kanade.core.design.theme.start
 import caios.android.kanade.core.model.music.Artwork
 import caios.android.kanade.core.ui.music.Artwork
 import caios.android.kanade.core.ui.music.MultiArtwork
 import caios.android.kanade.core.ui.util.marquee
+import coil.size.Size
 import kotlinx.collections.immutable.toImmutableList
 
 @Composable
-fun CoordinatorScaffold(
+fun PodcastCoordinatorScaffold(
     data: CoordinatorData,
     onClickNavigateUp: () -> Unit,
     onClickMenu: () -> Unit,
@@ -78,43 +87,17 @@ fun CoordinatorScaffold(
             state = listState,
         ) {
             item {
-                when (data) {
-                    is CoordinatorData.Album -> {
-                        AlbumArtworkSection(
-                            modifier = Modifier
-                                .padding(bottom = 16.dp)
-                                .fillMaxWidth()
-                                .aspectRatio(1f)
-                                .onGloballyPositioned { topSectionHeight = it.size.height },
-                            data = data,
-                            color = color,
-                            alpha = 1f - appBarAlpha,
-                        )
-                    }
-                    is CoordinatorData.Artist -> {
-                        ArtistArtworkSection(
-                            modifier = Modifier
-                                .padding(bottom = 16.dp)
-                                .fillMaxWidth()
-                                .aspectRatio(1f)
-                                .onGloballyPositioned { topSectionHeight = it.size.height },
-                            data = data,
-                            color = color,
-                            alpha = 1f - appBarAlpha,
-                        )
-                    }
-                    is CoordinatorData.Playlist -> {
-                        PlaylistArtworkSection(
-                            modifier = Modifier
-                                .padding(bottom = 16.dp)
-                                .fillMaxWidth()
-                                .aspectRatio(1f)
-                                .onGloballyPositioned { topSectionHeight = it.size.height },
-                            data = data,
-                            color = color,
-                            alpha = 1f - appBarAlpha,
-                        )
-                    }
+                if (data is CoordinatorData.Podcast) {
+                    ArtistArtworkSection(
+                        modifier = Modifier
+                            .padding(bottom = 16.dp)
+                            .fillMaxWidth()
+                            .aspectRatio(1f)
+                            .onGloballyPositioned { topSectionHeight = it.size.height },
+                        data = data,
+                        color = color,
+                        alpha = 1f - appBarAlpha,
+                    )
                 }
             }
 
@@ -126,6 +109,7 @@ fun CoordinatorScaffold(
             title = when (data) {
                 is CoordinatorData.Album -> data.title
                 is CoordinatorData.Artist -> data.title
+                is CoordinatorData.Podcast -> data.title
                 is CoordinatorData.Playlist -> data.title
             },
             color = MaterialTheme.colorScheme.applyTonalElevation(
@@ -142,7 +126,8 @@ fun CoordinatorScaffold(
         snapshotFlow { listState.layoutInfo }.collect {
             val index = listState.firstVisibleItemIndex
             val disableArea = topSectionHeight * 0.4
-            val alpha = if (index == 0) (listState.firstVisibleItemScrollOffset.toDouble() - disableArea) / (topSectionHeight - disableArea) else 1
+            val alpha =
+                if (index == 0) (listState.firstVisibleItemScrollOffset.toDouble() - disableArea) / (topSectionHeight - disableArea) else 1
 
             appBarAlpha = (alpha.toFloat() * 3).coerceIn(0f..1f)
         }
@@ -158,6 +143,9 @@ private fun AlbumArtworkSection(
 ) {
     val titleStyle = MaterialTheme.typography.headlineSmall
     val summaryStyle = MaterialTheme.typography.bodyMedium
+    var expanded by remember {
+        mutableStateOf(false)
+    }
 
     Box(modifier) {
         Artwork(
@@ -182,7 +170,6 @@ private fun AlbumArtworkSection(
                 .aspectRatio(1f)
                 .alpha(alpha),
             shape = RoundedCornerShape(8.dp),
-            elevation = 4.dp,
         ) {
             Artwork(
                 modifier = Modifier.fillMaxWidth(),
@@ -212,31 +199,37 @@ private fun AlbumArtworkSection(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 4.dp)
-                    .alpha(alpha),
+                    .alpha(alpha)
+                    .animateContentSize(),
                 text = data.summary,
-                style = summaryStyle.center(),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                maxLines = 1,
+                maxLines = if (!expanded) 3 else Int.MAX_VALUE,
                 overflow = TextOverflow.Ellipsis,
             )
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                TextButton(onClick = { expanded = !expanded }) {
+                    Text(text = if (expanded) "Show less" else "Show more")
+                }
+            }
         }
     }
 }
 
 @Composable
 private fun ArtistArtworkSection(
-    data: CoordinatorData.Artist,
+    data: CoordinatorData.Podcast,
     alpha: Float,
     color: Color,
     modifier: Modifier = Modifier,
 ) {
     val titleStyle = MaterialTheme.typography.headlineSmall
     val summaryStyle = MaterialTheme.typography.bodyMedium
-
+    var selected by remember { mutableStateOf(false) }
     Box(modifier) {
         Artwork(
             modifier = Modifier.fillMaxWidth(),
             artwork = data.artwork,
+            size = Size(500, 500)
         )
 
         Box(
@@ -250,32 +243,73 @@ private fun ArtistArtworkSection(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
+                .alpha(alpha)
                 .align(Alignment.BottomCenter)
-                .padding(horizontal = 24.dp, vertical = 16.dp),
+                .padding(horizontal = 16.dp, vertical = 16.dp),
         ) {
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .marquee()
-                    .alpha(alpha),
-                text = data.title,
-                style = titleStyle.center().bold(),
-                color = MaterialTheme.colorScheme.onSurface,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
+            Row {
+                Card(
+                    modifier = Modifier
+                        .size(100.dp),
+                    shape = RoundedCornerShape(8.dp),
+                ) {
+                    Artwork(
+                        modifier = Modifier.fillMaxWidth(),
+                        artwork = data.artwork,
+                        size = Size(500, 500)
+                    )
+                }
+                Column(modifier = Modifier.padding(start = 8.dp)) {
+                    Text(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .marquee(),
+                        text = data.title,
+                        style = titleStyle.start().bold(),
+                        color = MaterialTheme.colorScheme.onSurface,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                    Text(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .animateContentSize(),
+                        text = data.author,
+                        color = MaterialTheme.colorScheme.primary,
+                        overflow = TextOverflow.Ellipsis,
+                        style = summaryStyle.start()
+                    )
 
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 4.dp)
-                    .alpha(alpha),
-                text = data.summary,
-                style = summaryStyle.center(),
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
+
+
+                    FilterChip(
+                        onClick = { selected = !selected },
+                        label = {
+                            Text(stringResource(id = if (selected)R.string.subscribed else R.string.subscribe))
+                        },
+                        selected = selected,
+                        leadingIcon = if (selected) {
+                            {
+                                Icon(
+                                    imageVector = Icons.Filled.CheckCircle,
+                                    contentDescription = "Done icon",
+                                    modifier = Modifier.size(FilterChipDefaults.IconSize)
+                                )
+                            }
+                        } else {
+                            {
+                                Icon(
+                                    imageVector = Icons.Filled.Add,
+                                    contentDescription = "Done icon",
+                                    modifier = Modifier.size(FilterChipDefaults.IconSize)
+                                )
+                            }
+                        },
+                    )
+                }
+
+            }
+
         }
     }
 }
@@ -336,6 +370,7 @@ private fun PlaylistArtworkSection(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CoordinatorToolBar(
     title: String,
@@ -349,59 +384,51 @@ private fun CoordinatorToolBar(
         modifier = modifier,
         color = color.copy(backgroundAlpha),
         contentColor = MaterialTheme.colorScheme.onSurface,
-        elevation = if (backgroundAlpha > 0.9f) 4.dp else 0.dp,
+        tonalElevation = if (backgroundAlpha > 0.9f) 4.dp else 0.dp,
     ) {
         TopAppBar(
             modifier = Modifier.statusBarsPadding(),
-            backgroundColor = Color.Transparent,
-            contentPadding = PaddingValues(vertical = 4.dp),
-            elevation = 0.dp,
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.high) {
-                    Icon(
-                        modifier = Modifier
-                            .size(40.dp)
-                            .aspectRatio(1f)
-                            .clip(RoundedCornerShape(50))
-                            .clickable { onClickNavigateUp() }
-                            .padding(8.dp),
-                        imageVector = Icons.Default.ArrowBack,
-                        contentDescription = null,
-                    )
-                }
-
-                ProvideTextStyle(value = androidx.compose.material.MaterialTheme.typography.h6) {
-                    CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.high) {
-                        Text(
-                            modifier = Modifier
-                                .padding(8.dp)
-                                .fillMaxWidth()
-                                .weight(1f)
-                                .alpha(backgroundAlpha),
-                            text = title,
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.onSurface,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                        )
-                    }
-                }
-
-                CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.high) {
-                    Icon(
-                        modifier = Modifier
-                            .size(40.dp)
-                            .aspectRatio(1f)
-                            .clip(RoundedCornerShape(50))
-                            .clickable { onClickMenu.invoke() }
-                            .padding(8.dp),
-                        imageVector = Icons.Default.MoreVert,
-                        contentDescription = null,
-                    )
-                }
+            colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                containerColor = Color.Transparent,
+            ),
+            navigationIcon = {
+                Icon(
+                    modifier = Modifier
+                        .size(40.dp)
+                        .aspectRatio(1f)
+                        .clip(RoundedCornerShape(50))
+                        .clickable { onClickNavigateUp() }
+                        .padding(8.dp),
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = null,
+                )
+            },
+            title = {
+                Text(
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .fillMaxWidth()
+                        .alpha(backgroundAlpha),
+                    text = title,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            },
+            actions = {
+                Icon(
+                    modifier = Modifier
+                        .size(40.dp)
+                        .aspectRatio(1f)
+                        .clip(RoundedCornerShape(50))
+                        .clickable { onClickMenu.invoke() }
+                        .padding(8.dp),
+                    imageVector = Icons.Default.MoreVert,
+                    contentDescription = null,
+                )
             }
-        }
+        )
     }
 }
 
@@ -426,10 +453,11 @@ private fun FillSectionPreview1() {
 private fun FillSectionPreview2() {
     KanadeBackground {
         ArtistArtworkSection(
-            data = CoordinatorData.Artist(
+            data = CoordinatorData.Podcast(
                 title = "toby fox",
                 summary = "UNDERTALE",
                 artwork = Artwork.Internal("UNDERTALE"),
+                author = "Demo"
             ),
             alpha = 1f,
             color = Color.Black,

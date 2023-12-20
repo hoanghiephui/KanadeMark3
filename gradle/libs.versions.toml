@@ -25,7 +25,7 @@ kotlinxImmutable = "0.3.5"
 androidxCore = "1.12.0"
 androidxCoreSplash = "1.0.1"
 androidxAppCompat = "1.6.1"
-androidxActivity = "1.8.1"
+androidxActivity = "1.8.2"
 androidxFragment = "1.6.2"
 androidxTransition = "1.4.1"
 androidxConstraintLayout = "2.1.4"
@@ -38,10 +38,10 @@ androidxPalette = "1.0.0"
 androidxLifecycle = "2.6.2"
 androidxRoom = "2.6.1"
 androidxMedia = "1.7.0"
-androidxAnnotation = "1.7.0"
-androidxNavigation = "2.7.5"
+androidxAnnotation = "1.7.1"
+androidxNavigation = "2.7.6"
 androidxCompose = "2023.10.01"
-androidxComposeMaterial3 = "1.2.0-alpha12"
+androidxComposeMaterial3 = "1.2.0-beta01"
 androidxComposeConstraintLayout = "1.1.0-alpha13"
 androidxHiltNavigationCompose = "1.1.0"
 androidxGlance = "1.0.0"
@@ -54,8 +54,8 @@ commonslangVersion = "3.11"
 # Google
 playServiceAds = "21.1.0"
 playServiceOss = "17.0.1"
-material = "1.10.0"
-exoPlayer = "2.19.1"
+material = "1.11.0"
+exoPlayer = "1.2.0"
 accompanist = "0.32.0"
 ksp = "1.9.10-1.0.13"
 
@@ -68,9 +68,9 @@ billing = "6.1.0"
 
 # Others
 dagger = "2.48.1"
-ktor = "2.3.4"
+ktor = "2.3.5"
 jsoup = "1.16.2"
-detekt = "1.23.1"
+detekt = "1.23.3"
 balloon = "1.5.3"
 orbital = "0.2.4"
 chaquopy = "15.0.0"
@@ -80,9 +80,9 @@ youtubedl= "23b26d55f8"
 twitterComposeRule = "0.0.26"
 
 # Debugs
-firebase = "32.6.0"
+firebase = "32.7.0"
 leakCanary = "2.12"
-flipper = "0.201.0"
+flipper = "0.238.0"
 timber = "5.0.1"
 junit = "4.13.2"
 androidx-test-ext-junit = "+"
@@ -192,7 +192,10 @@ billing-ktx = { module = "com.android.billingclient:billing-ktx", version.ref = 
 # Google
 play-service-oss = { module = "com.google.android.gms:play-services-oss-licenses", version.ref = "playServiceOss" }
 google-material = { module = "com.google.android.material:material", version.ref = "material" }
-google-exoplayer = { module = "com.google.android.exoplayer:exoplayer", version.ref = "exoPlayer" }
+google-exoplayer = { module = "androidx.media3:media3-exoplayer", version.ref = "exoPlayer" }
+google-exoplayer-dash = { module = "androidx.media3:media3-exoplayer-dash", version.ref = "exoPlayer" }
+google-exoplayer-hls = { module = "androidx.media3:media3-exoplayer-hls", version.ref = "exoPlayer" }
+google-exoplayer-okhttp = { module = "androidx.media3:media3-datasource-okhttp", version.ref = "exoPlayer" }
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanist" }
 accompanist-compose-theme-adapter = { module = "com.google.accompanist:accompanist-themeadapter-material", version.ref = "accompanist" }
 accompanist-compose-theme-adapter3 = { module = "com.google.accompanist:accompanist-themeadapter-material3", version.ref = "accompanist" }

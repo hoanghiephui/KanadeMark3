@@ -115,7 +115,10 @@ fun CoordinatorScaffold(
                             alpha = 1f - appBarAlpha,
                         )
                     }
+
+                    else -> {}
                 }
+
             }
 
             content(this)
@@ -127,6 +130,7 @@ fun CoordinatorScaffold(
                 is CoordinatorData.Album -> data.title
                 is CoordinatorData.Artist -> data.title
                 is CoordinatorData.Playlist -> data.title
+                is CoordinatorData.Podcast -> data.title
             },
             color = MaterialTheme.colorScheme.applyTonalElevation(
                 backgroundColor = MaterialTheme.colorScheme.surface,

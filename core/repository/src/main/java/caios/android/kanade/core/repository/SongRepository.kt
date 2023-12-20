@@ -40,6 +40,7 @@ interface SongRepository {
 
     suspend fun songs(musicConfig: MusicConfig): List<Song>
     suspend fun songs(cursor: Cursor?): List<Song>
+    fun songsPodcast(item: Song)
 
     suspend fun <T> useFile(song: Song, action: (File?) -> T): T
     suspend fun makeCursor(
@@ -116,6 +117,10 @@ class SongRepositoryImpl @Inject constructor(
         }
         cursor?.close()
         return songs
+    }
+
+    override fun songsPodcast(item: Song) {
+        cache[item.id] = item
     }
 
     override suspend fun <T> useFile(song: Song, action: (File?) -> T): T {

@@ -16,14 +16,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material3.DismissDirection
-import androidx.compose.material3.DismissValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SwipeToDismiss
-import androidx.compose.material3.rememberDismissState
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissValue
+import androidx.compose.material3.rememberSwipeToDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -149,9 +148,9 @@ private fun PlaylistDetailScreen(
                     reorderableState = state,
                     key = { item.id },
                 ) {
-                    val dismissState = rememberDismissState(
+                    val dismissState = rememberSwipeToDismissState(
                         confirmValueChange = {
-                            if (it == DismissValue.Default) return@rememberDismissState false
+                            if (it == SwipeToDismissValue.Settled) return@rememberSwipeToDismissState false
 
                             onDeleteItem.invoke(playlist, getItemIndex(item))
                             data = data.apply { remove(item) }
@@ -159,13 +158,13 @@ private fun PlaylistDetailScreen(
                         },
                     )
 
-                    SwipeToDismiss(
+                    SwipeToDismissBox(
                         modifier = Modifier
                             .fillMaxWidth()
                             .animateItemPlacement(),
                         state = dismissState,
-                        background = { },
-                        dismissContent = {
+                        backgroundContent = { },
+                        content = {
                             IndexedSongHolder(
                                 modifier = Modifier.fillMaxWidth(),
                                 song = item.song,
@@ -175,7 +174,6 @@ private fun PlaylistDetailScreen(
                                 onClickMenu = onClickSongMenu,
                             )
                         },
-                        directions = setOf(DismissDirection.EndToStart),
                     )
                 }
             }

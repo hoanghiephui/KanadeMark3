@@ -24,6 +24,7 @@ data class Song(
     val uri: Uri,
     val albumArtwork: Artwork,
     val artistArtwork: Artwork,
+    val isStream: Boolean = false
 ) {
     val durationString: String
         get() {
@@ -82,4 +83,18 @@ fun Song.getMetadataBuilder(): MediaMetadataCompat.Builder {
         .putLong(MediaMetadataCompat.METADATA_KEY_YEAR, year.toLong())
         .putLong(MediaMetadataCompat.METADATA_KEY_TRACK_NUMBER, track.toLong())
         .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, id.toString())
+}
+
+fun convertDurationStringToLong(durationString: String): Long {
+    val parts = durationString.split(":")
+    return if (parts.size == 3) {
+        val day = parts[0].toLong()
+        val hours = parts[1].toLong()
+        val minutes = parts[2].toLong()
+        (day * 3600 * 24 + hours * 3600 + minutes * 60) * 1000
+    } else {
+        val hours = parts[0].toLong()
+        val minutes = parts[1].toLong()
+        (hours * 3600 + minutes * 60) * 1000
+    }
 }

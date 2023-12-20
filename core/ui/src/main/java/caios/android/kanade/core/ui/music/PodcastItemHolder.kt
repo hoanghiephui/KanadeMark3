@@ -9,6 +9,9 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.outlined.PlayCircleOutline
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -18,27 +21,26 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.core.text.HtmlCompat
 import caios.android.kanade.core.design.component.KanadeBackground
+import caios.android.kanade.core.design.theme.bold
 import caios.android.kanade.core.model.music.Song
 
 @Composable
-fun SongHolder(
+fun PodcastItemHolder(
     song: Song,
-    onClickHolder: () -> Unit,
+    onClickPlay: () -> Unit,
     onClickMenu: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    ConstraintLayout(modifier.clickable { onClickHolder.invoke() }) {
-        val (artwork, title, artist, duration, menu) = createRefs()
+    ConstraintLayout(
+        modifier
+            .padding(all = 8.dp)) {
+        val (artwork, title, artist, duration, menu, play) = createRefs()
 
-        createVerticalChain(
-            title.withChainParams(bottomMargin = 2.dp),
-            artist.withChainParams(topMargin = 2.dp),
-            chainStyle = ChainStyle.Packed,
-        )
+
 
         Artwork(
             modifier = Modifier
@@ -46,7 +48,6 @@ fun SongHolder(
                 .aspectRatio(1f)
                 .constrainAs(artwork) {
                     top.linkTo(parent.top)
-                    bottom.linkTo(parent.bottom)
                     start.linkTo(parent.start)
                 },
             artwork = song.albumArtwork,
@@ -55,14 +56,13 @@ fun SongHolder(
         Text(
             modifier = Modifier.constrainAs(title) {
                 top.linkTo(artwork.top)
-                bottom.linkTo(artist.top)
                 start.linkTo(artwork.end, 16.dp)
-                end.linkTo(menu.start, 16.dp)
+                end.linkTo(parent.end, 16.dp)
 
                 width = Dimension.fillToConstraints
             },
             text = song.title,
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.bodyLarge.bold(),
             color = MaterialTheme.colorScheme.onSurface,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
@@ -71,29 +71,17 @@ fun SongHolder(
         Text(
             modifier = Modifier.constrainAs(artist) {
                 top.linkTo(title.bottom)
-                bottom.linkTo(artwork.bottom)
                 start.linkTo(artwork.end, 16.dp)
-                end.linkTo(duration.start, 16.dp)
-
+                end.linkTo(parent.end, 16.dp)
                 width = Dimension.fillToConstraints
             },
             text = song.artist,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
-            maxLines = 1,
+            maxLines = 2,
             overflow = TextOverflow.Ellipsis,
         )
 
-        Text(
-            modifier = Modifier.constrainAs(duration) {
-                top.linkTo(artist.top)
-                bottom.linkTo(artist.bottom)
-                end.linkTo(menu.start, 16.dp)
-            },
-            text = song.durationString,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
 
         Icon(
             modifier = Modifier
@@ -101,14 +89,35 @@ fun SongHolder(
                 .aspectRatio(1f)
                 .clip(RoundedCornerShape(50))
                 .constrainAs(menu) {
-                    top.linkTo(parent.top)
-                    bottom.linkTo(parent.bottom)
+                    top.linkTo(play.top)
+                    bottom.linkTo(play.bottom)
                     end.linkTo(parent.end, 16.dp)
                 }
                 .clickable { onClickMenu.invoke() }
                 .padding(4.dp),
             imageVector = Icons.Default.MoreVert,
             contentDescription = null,
+        )
+
+        AssistChip(
+            modifier = Modifier
+                .constrainAs(play) {
+                    top.linkTo(artwork.bottom)
+                    start.linkTo(parent.start)
+                    bottom.linkTo(parent.bottom    )
+                }
+                .clickable { onClickMenu.invoke() },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Outlined.PlayCircleOutline,
+                    contentDescription = "Play icon",
+                    modifier = Modifier.size(FilterChipDefaults.IconSize)
+                )
+            },
+            label = {
+                Text(text = "Preview")
+            },
+            onClick = onClickPlay
         )
     }
 }
@@ -117,10 +126,10 @@ fun SongHolder(
 @Composable
 private fun MusicHolderPreview() {
     KanadeBackground(Modifier.wrapContentSize()) {
-        SongHolder(
+        PodcastItemHolder(
             modifier = Modifier.fillMaxWidth(),
             song = Song.dummy(),
-            onClickHolder = { },
+            onClickPlay = { },
             onClickMenu = { },
         )
     }

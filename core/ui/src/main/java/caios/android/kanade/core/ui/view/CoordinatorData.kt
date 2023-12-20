@@ -20,4 +20,11 @@ sealed interface CoordinatorData {
         val summary: String,
         val artworks: List<Artwork>,
     ) : CoordinatorData
+
+    data class Podcast(
+        val title: String,
+        val summary: String,
+        val artwork: Artwork,
+        val author: String
+    ) : CoordinatorData
 }

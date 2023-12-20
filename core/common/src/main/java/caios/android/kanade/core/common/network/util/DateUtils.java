@@ -1,8 +1,9 @@
-package de.danoeh.antennapod.parser.feed.util;
+package caios.android.kanade.core.common.network.util;
 
 import android.util.Log;
 
 import androidx.annotation.Nullable;
+
 import org.apache.commons.lang3.StringUtils;
 
 import java.text.ParsePosition;
@@ -142,7 +143,7 @@ public class DateUtils {
      * Takes a string of the form [HH:]MM:SS[.mmm] and converts it to
      * milliseconds.
      *
-     * @throws java.lang.NumberFormatException if the number segments contain invalid numbers.
+     * @throws NumberFormatException if the number segments contain invalid numbers.
      */
     public static long parseTimeString(final String time) {
         String[] parts = time.split(":");

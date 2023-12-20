@@ -36,7 +36,10 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.media)
 
-    implementation(libs.google.exoplayer)
+    api(libs.google.exoplayer)
+    implementation(libs.google.exoplayer.dash)
+    implementation(libs.google.exoplayer.hls)
+    implementation(libs.google.exoplayer.okhttp)
     implementation(libs.coil.compose)
     implementation(libs.ffmpeg)
 }

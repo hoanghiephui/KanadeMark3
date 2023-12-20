@@ -6,17 +6,19 @@ import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
+import androidx.annotation.OptIn
 import androidx.media.MediaBrowserServiceCompat
 import androidx.media.session.MediaButtonReceiver
+import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.exoplayer.ExoPlayer
 import caios.android.kanade.core.common.network.Dispatcher
 import caios.android.kanade.core.common.network.KanadeDispatcher
 import caios.android.kanade.core.model.music.toMediaItem
 import caios.android.kanade.core.model.player.PlayerState
 import caios.android.kanade.core.music.analyzer.VolumeAnalyzer
 import caios.android.kanade.core.repository.MusicRepository
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.Player
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -66,6 +68,12 @@ class MusicService : MediaBrowserServiceCompat() {
         ExoPlayer.Builder(baseContext).build().apply {
             setHandleAudioBecomingNoisy(true)
             addListener(playerEventListener)
+        }.also { exoPlayer ->
+            // Update the track selection parameters to only pick standard definition tracks
+            exoPlayer.trackSelectionParameters = exoPlayer.trackSelectionParameters
+                .buildUpon()
+                .setMaxVideoSizeSd()
+                .build()
         }
     }
 
@@ -116,10 +124,10 @@ class MusicService : MediaBrowserServiceCompat() {
         result.detach()
     }
 
-    override fun onCreate() {
+    @OptIn(UnstableApi::class) override fun onCreate() {
         super.onCreate()
 
-        mediaSession = MediaSessionCompat(this, "KanadeMediaSession3").apply {
+        mediaSession = MediaSessionCompat(this, "PodcastMediaSession3").apply {
             setSessionActivity(null)
             setFlags(MediaSessionCompat.FLAG_HANDLES_QUEUE_COMMANDS)
             this@MusicService.sessionToken = sessionToken
@@ -180,6 +188,6 @@ class MusicService : MediaBrowserServiceCompat() {
     }
 
     companion object {
-        private const val MEDIA_BROWSER_ROOT_ID = "kanade-media-root2"
+        private const val MEDIA_BROWSER_ROOT_ID = "podcast-media-root2"
     }
 }
