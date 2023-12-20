@@ -163,6 +163,7 @@ private fun PlaylistDetailScreen(
                             .fillMaxWidth()
                             .animateItemPlacement(),
                         state = dismissState,
+                        enableDismissFromStartToEnd = false,
                         backgroundContent = { },
                         content = {
                             IndexedSongHolder(

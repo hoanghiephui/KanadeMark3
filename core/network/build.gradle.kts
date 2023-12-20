@@ -28,4 +28,6 @@ dependencies {
     implementation(libs.okhttp.logging)
     implementation(libs.okhttp.urlconnection)
     implementation(libs.rssparser)
+    api(libs.coil.core)
+    api(libs.coil.svg)
 }

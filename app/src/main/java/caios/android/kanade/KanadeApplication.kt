@@ -8,14 +8,17 @@ import caios.android.kanade.core.common.network.KanadeConfig
 import caios.android.kanade.core.common.network.KanadeDebugTree
 import caios.android.kanade.core.common.network.KanadeDispatcher
 import caios.android.kanade.feature.report.CrushReportActivity
+import coil.ImageLoader
+import coil.ImageLoaderFactory
 import com.google.android.material.color.DynamicColors
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineDispatcher
 import timber.log.Timber
 import javax.inject.Inject
+import javax.inject.Provider
 
 @HiltAndroidApp
-class KanadeApplication : Application() {
+class KanadeApplication : Application(), ImageLoaderFactory {
 
     @Inject
     lateinit var kanadeConfig: KanadeConfig
@@ -26,6 +29,9 @@ class KanadeApplication : Application() {
     @Inject
     @Dispatcher(KanadeDispatcher.IO)
     lateinit var io: CoroutineDispatcher
+
+    @Inject
+    lateinit var imageLoader: Provider<ImageLoader>
 
     override fun onCreate() {
         super.onCreate()
@@ -38,6 +44,9 @@ class KanadeApplication : Application() {
             startCrushReportActivity(e)
         }
     }
+
+    override fun newImageLoader(): ImageLoader =
+        imageLoader.get()
 
     private fun startCrushReportActivity(e: Throwable) {
         Timber.e(e)

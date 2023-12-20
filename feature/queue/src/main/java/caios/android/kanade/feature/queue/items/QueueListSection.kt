@@ -73,7 +73,7 @@ internal fun QueueListSection(
                     reorderableState = state,
                     key = "${item.index}",
                 ) { isDragging ->
-                    val dismissState = rememberSwipeToDismissState(//todo xem lai rememberSwipeToDismissState
+                    val dismissState = rememberSwipeToDismissState(
                         confirmValueChange = {
                             if (it == SwipeToDismissValue.Settled) return@rememberSwipeToDismissState false
                             onDeleteItem(item)
@@ -91,6 +91,7 @@ internal fun QueueListSection(
                     SwipeToDismissBox(
                         modifier = Modifier.animateItemPlacement(),
                         state = dismissState,
+                        enableDismissFromStartToEnd = false,
                         backgroundContent = { },
                         content = {
                             IndexedSongHolder(
