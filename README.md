@@ -34,7 +34,7 @@ Kanade is an elegant music player app that can display synchronized lyrics.
 After a long development period, we have finally released it to Google Play!
 However, development is still ongoing and contributions are always welcome. Try building your app by following the section below.
 
-#### [Download](https://play.google.com/store/apps/details?id=caios.android.kanade) from GooglePlay
+#### [Download]() from GooglePlay
 
 ## Why?
 
