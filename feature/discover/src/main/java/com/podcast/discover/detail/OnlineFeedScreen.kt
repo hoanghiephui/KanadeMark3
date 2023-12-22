@@ -121,7 +121,7 @@ private fun OnlineFeedScreen(
         }
 
         itemsIndexed(
-            items = artist.songs.takeLast(6),
+            items = artist.songs.take(6),
             key = { _, song -> song.id },
         ) { index, song ->
             PodcastItemHolder(

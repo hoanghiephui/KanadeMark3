@@ -36,7 +36,7 @@ import kotlinx.collections.immutable.ImmutableList
 @Composable
 internal fun DiscoverFeedSection(
     feed: ImmutableList<EntryItem>,
-    onClickMore: () -> Unit,
+    onClickMore: (ImmutableList<EntryItem>) -> Unit,
     onClickPodcast: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -62,7 +62,7 @@ internal fun DiscoverFeedSection(
                 modifier = Modifier
                     .size(32.dp)
                     .clip(RoundedCornerShape(50))
-                    .clickable { onClickMore.invoke() }
+                    .clickable { onClickMore.invoke(feed) }
                     .padding(4.dp),
                 imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                 contentDescription = null,
@@ -75,11 +75,11 @@ internal fun DiscoverFeedSection(
             contentPadding = PaddingValues(horizontal = 10.dp),
         ) {
             items(
-                items = feed.subList(0, 5),
+                items = feed.take(5),
                 key = { "added-${it.id}" },
             ) { feed ->
                 FeedPodcastHolder(
-                    modifier = Modifier.width(160.dp),
+                    modifier = Modifier.width(150.dp),
                     feed = feed,
                     onClickHolder = {
                         feed.id?.attributes?.imId?.let { onClickPodcast.invoke(it) }

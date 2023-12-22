@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import caios.android.kanade.core.design.R
 import caios.android.kanade.core.design.theme.bold
+import caios.android.kanade.core.model.podcast.EntryItem
 import caios.android.kanade.core.ui.AsyncLoadContents
 import caios.android.kanade.core.ui.collectAsStateLifecycleAware
 import com.podcast.discover.items.DiscoverFeedSection
@@ -26,7 +27,8 @@ internal fun DiscoverRouter(
     topMargin: Dp,
     modifier: Modifier = Modifier,
     viewModel: DiscoverViewModel = hiltViewModel(),
-    navigateToFeedDetail: (String) -> Unit
+    navigateToFeedDetail: (String) -> Unit,
+    navigateToFeedMore: (List<EntryItem>) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateLifecycleAware()
     AsyncLoadContents(
@@ -39,7 +41,8 @@ internal fun DiscoverRouter(
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.surface),
-            navigateToFeedDetail = navigateToFeedDetail
+            navigateToFeedDetail = navigateToFeedDetail,
+            navigateToFeedMore = navigateToFeedMore
         )
     }
 }
@@ -49,7 +52,8 @@ internal fun DiscoverScreen(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
     uiState: Discover,
-    navigateToFeedDetail: (String) -> Unit
+    navigateToFeedDetail: (String) -> Unit,
+    navigateToFeedMore: (List<EntryItem>) -> Unit
 ) {
 
     LazyColumn(
@@ -60,7 +64,9 @@ internal fun DiscoverScreen(
             DiscoverFeedSection(
                 modifier = Modifier.fillMaxWidth(),
                 feed = uiState.items,
-                onClickMore = {},
+                onClickMore = {
+                    navigateToFeedMore(it.toList())
+                },
                 onClickPodcast = navigateToFeedDetail,
             )
         }

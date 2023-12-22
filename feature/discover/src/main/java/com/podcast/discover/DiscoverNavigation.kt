@@ -8,6 +8,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import caios.android.kanade.core.design.animation.NavigateAnimation
+import caios.android.kanade.core.model.podcast.EntryItem
 
 const val DiscoverRoute = "discoverTop"
 
@@ -17,7 +18,8 @@ fun NavController.navigateToDiscover(navOptions: NavOptions? = null) {
 
 fun NavGraphBuilder.discoverScreen(
     topMargin: Dp,
-    navigateToFeedDetail: (String) -> Unit
+    navigateToFeedDetail: (String) -> Unit,
+    navigateToFeedMore: (List<EntryItem>) -> Unit
 ) {
     composable(
         route = DiscoverRoute,
@@ -37,7 +39,8 @@ fun NavGraphBuilder.discoverScreen(
         DiscoverRouter(
             modifier = Modifier.fillMaxSize(),
             topMargin = topMargin,
-            navigateToFeedDetail = navigateToFeedDetail
+            navigateToFeedDetail = navigateToFeedDetail,
+            navigateToFeedMore = navigateToFeedMore
         )
     }
 }

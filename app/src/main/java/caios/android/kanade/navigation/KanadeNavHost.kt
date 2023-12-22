@@ -79,7 +79,9 @@ import caios.android.kanade.feature.tag.tagEditScreen
 import caios.android.kanade.ui.KanadeAppState
 import com.podcast.discover.detail.feedDetailScreen
 import com.podcast.discover.detail.navigateToOnlineDetail
+import com.podcast.discover.discoverMoreScreen
 import com.podcast.discover.discoverScreen
+import com.podcast.discover.navigateToDiscoverMore
 import kotlinx.collections.immutable.ImmutableList
 import kotlin.reflect.KClass
 
@@ -232,6 +234,9 @@ fun KanadeNavHost(
             topMargin = libraryTopBarHeight,
             navigateToFeedDetail = {
                 navController.navigateToOnlineDetail(it)
+            },
+            navigateToFeedMore = {
+                navController.navigateToDiscoverMore(it)
             }
         )
 
@@ -495,6 +500,15 @@ fun KanadeNavHost(
             terminate = {
                 navController.popBackStack()
             },
+        )
+
+        discoverMoreScreen(
+            navigateToFeedDetail = {
+                navController.navigateToOnlineDetail(it)
+            },
+            terminate = {
+                navController.popBackStack()
+            }
         )
     }
 }
