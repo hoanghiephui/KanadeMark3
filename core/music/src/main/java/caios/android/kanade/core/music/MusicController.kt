@@ -181,7 +181,7 @@ class MusicControllerImpl @Inject constructor(
     }
 
     override fun setPlayerItem(item: MediaMetadata) {
-        _currentSong.value = queueManager.getCurrentSong()
+        _currentSong.value = queueManager.getCurrentSong() ?: queueManager.getCurrentSongPreview()
     }
 
     override fun setPlayerPosition(position: Long) {
@@ -230,6 +230,7 @@ class MusicControllerImpl @Inject constructor(
                 is PlayerEvent.Repeat -> onRepeatModeChanged(event)
                 is PlayerEvent.Shuffle -> onShuffleModeChanged(event)
                 is PlayerEvent.Dack -> onDack(event)
+                is PlayerEvent.PreviewPlay -> onPreviewPlay(event)
             }
         }
     }
@@ -252,6 +253,17 @@ class MusicControllerImpl @Inject constructor(
         }
 
         event.transport { sendCustomAction(ControlAction.NEW_PLAY, args) }
+    }
+    private fun onPreviewPlay(event: PlayerEvent.PreviewPlay) {
+        queueManager.preview(
+            currentQueue = event.queue
+        )
+
+        val args = buildBundle {
+            putBoolean(ControlKey.PLAY_WHEN_READY, event.playWhenReady)
+        }
+
+        event.transport { sendCustomAction(ControlAction.PREVIEW_PLAY, args) }
     }
 
     private fun onPlay(event: PlayerEvent.Play) {

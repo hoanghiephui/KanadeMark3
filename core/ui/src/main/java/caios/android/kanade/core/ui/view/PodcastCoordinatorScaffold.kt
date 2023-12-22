@@ -18,8 +18,6 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Surface
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
@@ -31,8 +29,10 @@ import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -181,7 +181,7 @@ private fun AlbumArtworkSection(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.BottomCenter)
-                .padding(horizontal = 24.dp, vertical = 16.dp),
+                .padding(horizontal = 24.dp, vertical = 6.dp),
         ) {
             Text(
                 modifier = Modifier
@@ -222,7 +222,7 @@ private fun ArtistArtworkSection(
     color: Color,
     modifier: Modifier = Modifier,
 ) {
-    val titleStyle = MaterialTheme.typography.headlineSmall
+    val titleStyle = MaterialTheme.typography.titleLarge
     val summaryStyle = MaterialTheme.typography.bodyMedium
     var selected by remember { mutableStateOf(false) }
     Box(modifier) {
@@ -262,12 +262,11 @@ private fun ArtistArtworkSection(
                 Column(modifier = Modifier.padding(start = 8.dp)) {
                     Text(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .marquee(),
+                            .fillMaxWidth(),
                         text = data.title,
                         style = titleStyle.start().bold(),
                         color = MaterialTheme.colorScheme.onSurface,
-                        maxLines = 1,
+                        maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
                     )
                     Text(
@@ -285,7 +284,7 @@ private fun ArtistArtworkSection(
                     FilterChip(
                         onClick = { selected = !selected },
                         label = {
-                            Text(stringResource(id = if (selected)R.string.subscribed else R.string.subscribe))
+                            Text(stringResource(id = if (selected) R.string.subscribed else R.string.subscribe))
                         },
                         selected = selected,
                         leadingIcon = if (selected) {

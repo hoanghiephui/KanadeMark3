@@ -26,11 +26,13 @@ interface QueueManager {
     fun setCurrentSong(song: Song)
 
     fun getCurrentSong(): Song?
+    fun getCurrentSongPreview(): Song?
     fun getCurrentQueue(): List<Song>
     fun getOriginalQueue(): List<Song>
     fun getIndex(): Int
 
     fun build(currentQueue: List<Song>, originalQueue: List<Song>, index: Int)
+    fun preview(currentQueue: Song)
     fun clear()
 }
 
@@ -41,6 +43,7 @@ class QueueManagerImpl @Inject constructor(
     private val _currentQueue = MutableStateFlow(mutableListOf<Long>())
     private val _originalQueue = MutableStateFlow(mutableListOf<Long>())
     private val _index = MutableStateFlow(0)
+    private val _currentPreview = MutableStateFlow<Song?>(null)
 
     @get:JvmName("currentQueueValue")
     private val currentQueue get() = _currentQueue.value
@@ -50,6 +53,9 @@ class QueueManagerImpl @Inject constructor(
 
     @get:JvmName("indexValue")
     private val index get() = _index.value
+
+    @get:JvmName("currentPreviewValue")
+    private val currentPreview get() = _currentPreview.value
 
     override val queue: Flow<Queue>
         get() = combine(_currentQueue, _index) { queue, index ->
@@ -136,6 +142,10 @@ class QueueManagerImpl @Inject constructor(
         return currentQueue.elementAtOrNull(index)?.let { musicRepository.getSong(it) }
     }
 
+    override fun getCurrentSongPreview(): Song? {
+        return currentPreview
+    }
+
     override fun getCurrentQueue(): List<Song> {
         return currentQueue.mapNotNull { musicRepository.getSong(it) }
     }
@@ -150,10 +160,13 @@ class QueueManagerImpl @Inject constructor(
 
     override fun build(currentQueue: List<Song>, originalQueue: List<Song>, index: Int) {
         Timber.d("queue build: current=${currentQueue.size}, originalQueue=${originalQueue.size}, index=$index")
-
         _currentQueue.value = currentQueue.map { it.id }.toMutableList()
         _originalQueue.value = originalQueue.map { it.id }.toMutableList()
         _index.value = index
+    }
+
+    override fun preview(currentQueue: Song) {
+        _currentPreview.value = currentQueue
     }
 
     override fun clear() {

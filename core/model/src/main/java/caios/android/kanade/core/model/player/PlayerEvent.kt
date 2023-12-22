@@ -11,6 +11,11 @@ sealed interface PlayerEvent {
         val queue: List<Song>,
         val playWhenReady: Boolean,
     ) : PlayerEvent
+    data class PreviewPlay(
+        val index: Int,
+        val queue: Song,
+        val playWhenReady: Boolean,
+    ) : PlayerEvent
 
     data object Play : PlayerEvent
 

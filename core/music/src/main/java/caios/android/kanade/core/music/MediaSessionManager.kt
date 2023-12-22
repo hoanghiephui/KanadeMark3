@@ -159,10 +159,9 @@ class MediaSessionManager(
             when (action) {
                 ControlAction.INITIALIZE -> {
                     val song = queueManager.getCurrentSong() ?: kotlin.run {
-                        Timber.d("onCustomAction: cannot initialize because current song is null")
+                        Timber.d("onCustomAction: cannot initialize because current song is null -- ${queueManager.getCurrentSongPreview()}")
                         return
                     }
-
                     val playWhenReady = extras?.getBoolean(ControlKey.PLAY_WHEN_READY) ?: false
                     val progress = extras?.getLong(ControlKey.PROGRESS) ?: 0L
 
@@ -170,6 +169,13 @@ class MediaSessionManager(
                 }
                 ControlAction.NEW_PLAY -> {
                     val song = queueManager.getCurrentSong() ?: return
+                    val playWhenReady = extras?.getBoolean(ControlKey.PLAY_WHEN_READY) ?: false
+
+                    if (playWhenReady) requestAudioFocus()
+                    loadSong(song, playWhenReady)
+                }
+                ControlAction.PREVIEW_PLAY -> {
+                    val song = queueManager.getCurrentSongPreview() ?: return
                     val playWhenReady = extras?.getBoolean(ControlKey.PLAY_WHEN_READY) ?: false
 
                     if (playWhenReady) requestAudioFocus()
@@ -209,7 +215,7 @@ class MediaSessionManager(
         if (song.isStream) {
             val mediaItem = MediaItem.Builder()
                 .setUri(song.data)
-                .setMimeType(MimeTypes.AUDIO_DTS_HD)
+                .setMimeType(song.mimeType)
                 .build()
             player.setMediaItem(mediaItem, startPosition)
         } else {

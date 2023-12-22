@@ -137,7 +137,7 @@ class OnlineFeedViewModel @Inject constructor(
                             artistArtwork = Artwork.Web(url = item.image?.url.toString()),
                             isStream = true
                         )
-                        songRepository.songsPodcast(song)
+                        //songRepository.songsPodcast(song)
                         Album(
                             album = it.title ?: "",
                             albumId = BigInteger(it.guid?.toByteArray()).toLong(),
@@ -161,9 +161,9 @@ class OnlineFeedViewModel @Inject constructor(
 
     fun onNewPlay(songs: List<Song>, index: Int) {
         musicController.playerEvent(
-            PlayerEvent.NewPlay(
+            PlayerEvent.PreviewPlay(
                 index = index,
-                queue = songs,
+                queue = songs[index],
                 playWhenReady = true,
             ),
         )
