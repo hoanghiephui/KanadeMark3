@@ -62,8 +62,6 @@ internal fun DiscoverScreen(
                 feed = uiState.items,
                 onClickMore = {},
                 onClickPodcast = navigateToFeedDetail,
-                onClickAlbumPlay = { _, _ -> },
-                onClickAlbumMenu = {},
             )
         }
         item {

@@ -49,6 +49,7 @@ interface MusicController {
     fun setPlayerPosition(position: Long)
 
     fun addToQueue(songs: List<Song>, index: Int? = null)
+    fun addToQueue(songs: Song, index: Int? = null)
     fun removeFromQueue(index: Int)
     fun moveQueue(fromIndex: Int, toIndex: Int)
 
@@ -196,6 +197,11 @@ class MusicControllerImpl @Inject constructor(
     override fun addToQueue(songs: List<Song>, index: Int?) {
         val i = if (currentQueue.value?.items?.isEmpty() == true) 0 else index
         queueManager.addItems(i ?: currentQueue.value?.items?.size ?: 0, songs)
+    }
+
+    override fun addToQueue(songs: Song, index: Int?) {
+        val i = if (currentQueue.value?.items?.isEmpty() == true) 0 else index
+        queueManager.addItem(i ?: currentQueue.value?.items?.size ?: 0, songs)
     }
 
     override fun removeFromQueue(index: Int) {

@@ -73,6 +73,7 @@
     <string name="navigation_top_bar_title">Search library</string>
     <string name="navigation_kanade_plus_description">Get access to all features for the price of a cup of coffee! </string>
     <string name="navigation_kanade_plus_purchased_description">You are a Kanade+ user. Enjoy comfortable music listening! </string>
+    <string name="navigation_podcast" translatable="false">Podcast</string>
 
     <!-- Permission Request-->
     <string name="permission_request_title">Permission</string>

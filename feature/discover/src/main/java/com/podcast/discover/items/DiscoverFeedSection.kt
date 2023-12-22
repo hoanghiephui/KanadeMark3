@@ -38,8 +38,6 @@ internal fun DiscoverFeedSection(
     feed: ImmutableList<EntryItem>,
     onClickMore: () -> Unit,
     onClickPodcast: (String) -> Unit,
-    onClickAlbumPlay: (Int, List<Song>) -> Unit,
-    onClickAlbumMenu: (Album) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -86,8 +84,6 @@ internal fun DiscoverFeedSection(
                     onClickHolder = {
                         feed.id?.attributes?.imId?.let { onClickPodcast.invoke(it) }
                     },
-                    onClickPlay = { },
-                    onClickMenu = { },
                 )
             }
         }

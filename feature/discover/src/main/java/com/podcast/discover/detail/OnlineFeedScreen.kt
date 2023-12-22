@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -55,7 +56,9 @@ fun OnlineFeedRoute(
             artist = it,
             onClickMenu = {},
             onTerminate = terminate,
-            onClickSongHolder = viewModel::onNewPlay
+            onClickSongHolder = viewModel::onNewPlay,
+            onClickAddToQueue = viewModel::onAddToQuote,
+            onClickDownload = viewModel::onDownloadSong
         )
     }
 }
@@ -66,7 +69,9 @@ private fun OnlineFeedScreen(
     artist: Artist,
     onTerminate: () -> Unit,
     onClickMenu: (Artist) -> Unit,
-    onClickSongHolder: (List<Song>, Int) -> Unit
+    onClickSongHolder: (List<Song>, Int) -> Unit,
+    onClickAddToQueue: (Song) -> Unit,
+    onClickDownload: (Song) -> Unit,
 ) {
     val context = LocalContext.current
     var expanded by remember {
@@ -81,58 +86,59 @@ private fun OnlineFeedScreen(
         )
     }
 
-    Box(modifier) {
-        PodcastCoordinatorScaffold(
-            modifier = Modifier.fillMaxSize(),
-            data = coordinatorData,
-            onClickNavigateUp = onTerminate,
-            onClickMenu = { onClickMenu.invoke(artist) },
-        ) {
-            item {
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                        .animateContentSize(),
-                    text = artist.description ?: "",
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = if (!expanded) 3 else Int.MAX_VALUE,
-                    overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-                Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp), horizontalArrangement = Arrangement.End) {
-                    TextButton(onClick = { expanded = !expanded }) {
-                        Text(text = if (expanded) "Show less" else "Show more")
-                    }
+    PodcastCoordinatorScaffold(
+        modifier = modifier.fillMaxSize(),
+        data = coordinatorData,
+        onClickNavigateUp = onTerminate,
+        onClickMenu = { onClickMenu.invoke(artist) },
+    ) {
+        item {
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .animateContentSize(),
+                text = artist.description ?: "",
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = if (!expanded) 3 else Int.MAX_VALUE,
+                overflow = TextOverflow.Ellipsis,
+                style = MaterialTheme.typography.bodyMedium
+            )
+            Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp), horizontalArrangement = Arrangement.End) {
+                TextButton(onClick = { expanded = !expanded }) {
+                    Text(text = if (expanded) "Show less" else "Show more")
                 }
             }
-            item {
-                EpisodeDetailHeader(
-                    modifier = Modifier.fillMaxWidth(),
-                    onClickSeeAll = { },
-                    size = artist.songs.size
-                )
-            }
+        }
+        item {
+            EpisodeDetailHeader(
+                modifier = Modifier.fillMaxWidth(),
+                onClickSeeAll = { },
+                size = artist.songs.size
+            )
+        }
 
-            itemsIndexed(
-                items = artist.songs.takeLast(6),
-                key = { _, song -> song.id },
-            ) { index, song ->
-                PodcastItemHolder(
-                    modifier = Modifier.fillMaxWidth(),
-                    song = song,
-                    onClickPlay = { onClickSongHolder.invoke(artist.songs, index) },
-                    onClickMenu = { },
-                )
-            }
+        itemsIndexed(
+            items = artist.songs.takeLast(6),
+            key = { _, song -> song.id },
+        ) { index, song ->
+            PodcastItemHolder(
+                modifier = Modifier.fillMaxWidth(),
+                song = song,
+                onClickPlay = { onClickSongHolder.invoke(artist.songs, index) },
+                onClickMenu = { },
+                onClickDownload = onClickDownload,
+                onClickAddToQueue = onClickAddToQueue
+            )
+            HorizontalDivider(modifier = Modifier.padding(bottom = 8.dp))
+        }
 
-            item {
-                Spacer(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(128.dp),
-                )
-            }
+        item {
+            Spacer(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(128.dp),
+            )
         }
     }
 }

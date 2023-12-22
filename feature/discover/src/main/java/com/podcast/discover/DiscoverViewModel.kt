@@ -79,11 +79,6 @@ class DiscoverViewModel @Inject constructor(
 
     init {
         fetchNewDiscoverPodcast()
-        /*viewModelScope.launch(defaultDispatcher) {
-            val rssChannel: RssChannel = rssParserBuilder.build()
-                .getRssChannel("https://feeds.acast.com/public/shows/65381572bc6f900012280fbf")
-            Timber.tag("RSS").d(rssChannel.items.first().audio)
-        }*/
     }
 
     @AnyThread

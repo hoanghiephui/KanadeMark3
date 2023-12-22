@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -31,8 +32,10 @@ fun SongHolder(
     onClickMenu: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    ConstraintLayout(modifier.clickable { onClickHolder.invoke() }) {
-        val (artwork, title, artist, duration, menu) = createRefs()
+    ConstraintLayout(
+        modifier
+            .clickable { onClickHolder.invoke() }) {
+        val (artwork, title, artist, duration, menu, line) = createRefs()
 
         createVerticalChain(
             title.withChainParams(bottomMargin = 2.dp),
@@ -110,6 +113,11 @@ fun SongHolder(
             imageVector = Icons.Default.MoreVert,
             contentDescription = null,
         )
+        HorizontalDivider(modifier = Modifier.constrainAs(line) {
+            top.linkTo(artwork.bottom, 8.dp)
+            start.linkTo(parent.start)
+            end.linkTo(parent.end)
+        })
     }
 }
 

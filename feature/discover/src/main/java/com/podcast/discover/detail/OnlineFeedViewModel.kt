@@ -169,6 +169,14 @@ class OnlineFeedViewModel @Inject constructor(
         )
     }
 
+    fun onAddToQuote(song: Song) {
+        musicController.addToQueue(song)
+    }
+
+    fun onDownloadSong(song: Song) {
+
+    }
+
 
     companion object {
         const val FEED_URL = "feed_url"

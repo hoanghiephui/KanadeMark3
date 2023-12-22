@@ -6,11 +6,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -35,8 +33,6 @@ import caios.android.kanade.core.model.podcast.EntryItem
 fun FeedPodcastHolder(
     feed: EntryItem,
     onClickHolder: () -> Unit,
-    onClickPlay: () -> Unit,
-    onClickMenu: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(modifier.padding(6.dp)) {
@@ -54,35 +50,12 @@ fun FeedPodcastHolder(
                 verticalArrangement = Arrangement.spacedBy(4.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Box(Modifier.fillMaxWidth()) {
-                    Artwork(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(6.dp)),
-                        artwork = Web(feed.imImage?.last()?.label ?: ""),
-                    )
-
-                    PlayButton(
-                        modifier = Modifier
-                            .padding(8.dp)
-                            .align(Alignment.BottomStart)
-                            .size(28.dp),
-                        onClick = onClickPlay,
-                    )
-
-                    Icon(
-                        modifier = Modifier
-                            .padding(4.dp)
-                            .size(32.dp)
-                            .align(Alignment.TopEnd)
-                            .clip(RoundedCornerShape(50))
-                            .clickable { onClickMenu.invoke() }
-                            .padding(4.dp),
-                        imageVector = Icons.Default.MoreVert,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurface,
-                    )
-                }
+                Artwork(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(6.dp)),
+                    artwork = Web(feed.imImage?.last()?.label ?: ""),
+                )
 
                 Text(
                     modifier = Modifier

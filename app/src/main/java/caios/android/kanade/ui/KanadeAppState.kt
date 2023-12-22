@@ -98,7 +98,7 @@ class KanadeAppState(
             else -> null
         }
 
-    val libraryDestinations = LibraryDestination.entries
+    val libraryDestinations = LibraryDestination.entries.filter { it != LibraryDestination.Playlist}
 
     fun navigateToLibrary(libraryDestination: LibraryDestination) {
         val navOption = navOptions {

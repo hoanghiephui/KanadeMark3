@@ -11,6 +11,7 @@ object KanadeIcon {
     val asSong = R.drawable.as_songs
     val asArtist = R.drawable.as_artist
     val asAlbum = R.drawable.as_album
+    val asDiscover = R.drawable.baseline_podcasts_24
 }
 
 sealed class Icon {
