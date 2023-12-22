@@ -2,7 +2,6 @@ package com.podcast.discover.detail
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,7 +20,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -73,7 +71,6 @@ private fun OnlineFeedScreen(
     onClickAddToQueue: (Song) -> Unit,
     onClickDownload: (Song) -> Unit,
 ) {
-    val context = LocalContext.current
     var expanded by remember {
         mutableStateOf(false)
     }
@@ -104,7 +101,12 @@ private fun OnlineFeedScreen(
                 overflow = TextOverflow.Ellipsis,
                 style = MaterialTheme.typography.bodyMedium
             )
-            Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp), horizontalArrangement = Arrangement.End) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.End
+            ) {
                 TextButton(onClick = { expanded = !expanded }) {
                     Text(text = if (expanded) "Show less" else "Show more")
                 }

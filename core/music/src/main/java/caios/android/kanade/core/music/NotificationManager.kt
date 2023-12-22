@@ -6,6 +6,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
+import android.app.Service.STOP_FOREGROUND_REMOVE
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -59,7 +60,7 @@ class NotificationManager(
             service.startForeground(notifyConfig.notifyId, notification)
         } else {
             manager.notify(notifyConfig.notifyId, notification)
-            service.stopForeground(false)
+            service.stopForeground(STOP_FOREGROUND_REMOVE)
         }
     }
 
@@ -204,10 +205,10 @@ class NotificationManager(
     }
 
     companion object {
-        const val ACTION_PLAY = "caios.system.kanade3.play"
-        const val ACTION_PAUSE = "caios.system.kanade3.pause"
-        const val ACTION_STOP = "caios.system.kanade3.stop"
-        const val ACTION_SKIP_TO_NEXT = "caios.system.kanade3.skip_to_next"
-        const val ACTION_SKIP_TO_PREVIOUS = "caios.system.kanade3.skip_to_previous"
+        const val ACTION_PLAY = "com.system.podcast.play"
+        const val ACTION_PAUSE = "com.system.podcast.pause"
+        const val ACTION_STOP = "com.system.podcast.stop"
+        const val ACTION_SKIP_TO_NEXT = "com.system.podcast.skip_to_next"
+        const val ACTION_SKIP_TO_PREVIOUS = "com.system.podcast.skip_to_previous"
     }
 }

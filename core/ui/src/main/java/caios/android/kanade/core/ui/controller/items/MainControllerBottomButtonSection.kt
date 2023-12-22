@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Article
+import androidx.compose.material.icons.automirrored.outlined.PlaylistPlay
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.outlined.Article
@@ -59,8 +61,8 @@ internal fun MainControllerBottomButtonSection(
                     onLongClick = onClickLyricsEdit,
                 )
                 .padding(8.dp),
-            imageVector = Icons.Outlined.Article,
-            contentDescription = null,
+            imageVector = Icons.AutoMirrored.Outlined.Article,
+            contentDescription = "Lyrics",
         )
 
         Icon(
@@ -70,7 +72,7 @@ internal fun MainControllerBottomButtonSection(
                 .clickable { onClickFavorite.invoke() }
                 .padding(8.dp),
             imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-            contentDescription = null,
+            contentDescription = "Favorite",
             tint = if (isFavorite) Red40 else LocalContentColor.current,
         )
 
@@ -81,7 +83,7 @@ internal fun MainControllerBottomButtonSection(
                 .clickable { ToastUtil.show(context, R.string.error_developing_feature) }
                 .padding(8.dp),
             imageVector = Icons.Outlined.Bedtime,
-            contentDescription = null,
+            contentDescription = "Bedtime",
         )
 
         Icon(
@@ -90,8 +92,8 @@ internal fun MainControllerBottomButtonSection(
                 .clip(RoundedCornerShape(50))
                 .clickable { onClickQueue.invoke() }
                 .padding(8.dp),
-            imageVector = Icons.Outlined.PlaylistPlay,
-            contentDescription = null,
+            imageVector = Icons.AutoMirrored.Outlined.PlaylistPlay,
+            contentDescription = "Playlist",
         )
 
         Icon(
@@ -101,7 +103,7 @@ internal fun MainControllerBottomButtonSection(
                 .clickable { ToastUtil.show(context, R.string.error_developing_feature) }
                 .padding(8.dp),
             imageVector = Icons.Outlined.GraphicEq,
-            contentDescription = null,
+            contentDescription = "Eq",
         )
     }
 }
