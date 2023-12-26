@@ -2,10 +2,13 @@ package caios.android.kanade.core.ui.music
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -23,6 +26,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import caios.android.kanade.core.design.R
 import caios.android.kanade.core.design.theme.Blue40
 import caios.android.kanade.core.design.theme.Green40
@@ -32,6 +36,7 @@ import caios.android.kanade.core.design.theme.Teal40
 import caios.android.kanade.core.model.music.Artwork
 import caios.android.kanade.core.ui.util.extraSize
 import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import coil.size.Size
 
@@ -58,7 +63,7 @@ fun ArtworkFromWeb(
     modifier: Modifier = Modifier,
     size: Size = Size.ORIGINAL
 ) {
-    AsyncImage(
+    SubcomposeAsyncImage(
         modifier = modifier,
         model = ImageRequest.Builder(LocalContext.current)
             .data(artwork.url)
@@ -67,6 +72,26 @@ fun ArtworkFromWeb(
             .build(),
         contentDescription = null,
         contentScale = ContentScale.Crop,
+        loading = {
+            Box(
+                modifier = Modifier
+                    .size(25.dp)
+                    .align(Alignment.Center),
+                contentAlignment = Alignment.Center
+            ) {
+                ArtworkFromInternal(
+                    modifier = modifier,
+                    artwork = Artwork.Internal("PO")
+                )
+                CircularProgressIndicator()
+            }
+        },
+        error = {
+            ArtworkFromInternal(
+                modifier = modifier,
+                artwork = Artwork.Internal("PO")
+            )
+        }
     )
 }
 

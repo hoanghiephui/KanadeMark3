@@ -2,7 +2,6 @@ package caios.android.kanade.core.ui.controller
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
@@ -17,6 +16,7 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.SkipNext
 import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
@@ -58,13 +58,15 @@ fun BottomController(
 
         LinearProgressIndicator(
             progress = { position },
-            modifier = Modifier.constrainAs(indicator) {
-                top.linkTo(parent.top)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
+            modifier = Modifier
+                .constrainAs(indicator) {
+                    top.linkTo(parent.top)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
 
-                width = Dimension.fillToConstraints
-            }.height(1.5.dp),
+                    width = Dimension.fillToConstraints
+                }
+                .height(1.5.dp),
         )
 
         Artwork(
@@ -122,11 +124,9 @@ fun BottomController(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(2.dp),
         ) {
-            Icon(
+            IconButton(
                 modifier = Modifier
-                    .size(48.dp)
-                    .clip(RoundedCornerShape(24.dp))
-                    .clickable { onClickSkipToPrevious() }
+                    .size(45.dp)
                     .padding(8.dp)
                     .border(
                         width = 1.dp,
@@ -134,31 +134,35 @@ fun BottomController(
                         shape = RoundedCornerShape(24.dp),
                     )
                     .padding(4.dp),
-                imageVector = Icons.Filled.SkipPrevious,
-                contentDescription = "Skip to previous",
-            )
+                onClick = { onClickSkipToPrevious() },
+                enabled = uiState.queueItems.size > 1
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.SkipPrevious,
+                    contentDescription = "Skip to previous",
+                )
+            }
 
-            Icon(
-                modifier = Modifier
-                    .size(54.dp)
-                    .clip(RoundedCornerShape(27.dp))
-                    .clickable { if (uiState.isPlaying) onClickPause() else onClickPlay() }
-                    .padding(8.dp)
-                    .border(
-                        width = 1.dp,
-                        color = LocalContentColor.current,
-                        shape = RoundedCornerShape(24.dp),
-                    )
-                    .padding(4.dp),
-                imageVector = if (uiState.isPlaying) Icons.Filled.Pause else Icons.Filled.PlayArrow,
-                contentDescription = "Play or Pause",
-            )
+            IconButton(modifier = Modifier
+                .size(54.dp)
+                .padding(8.dp)
+                .border(
+                    width = 1.dp,
+                    color = LocalContentColor.current,
+                    shape = RoundedCornerShape(24.dp),
+                )
+                .padding(4.dp),
+                enabled = uiState.song != null,
+                onClick = { if (uiState.isPlaying) onClickPause() else onClickPlay() }) {
+                Icon(
+                    imageVector = if (uiState.isPlaying) Icons.Filled.Pause else Icons.Filled.PlayArrow,
+                    contentDescription = "Play or Pause",
+                )
+            }
 
-            Icon(
+            IconButton(
                 modifier = Modifier
-                    .size(48.dp)
-                    .clip(RoundedCornerShape(24.dp))
-                    .clickable { onClickSkipToNext() }
+                    .size(45.dp)
                     .padding(8.dp)
                     .border(
                         width = 1.dp,
@@ -166,9 +170,15 @@ fun BottomController(
                         shape = RoundedCornerShape(24.dp),
                     )
                     .padding(4.dp),
-                imageVector = Icons.Filled.SkipNext,
-                contentDescription = "Skip to next",
-            )
+                onClick = { onClickSkipToNext() },
+                enabled = uiState.queueItems.size > 1
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.SkipNext,
+                    contentDescription = "Skip to next",
+                )
+            }
+
         }
     }
 }

@@ -26,6 +26,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import caios.android.kanade.core.model.music.Artist
 import caios.android.kanade.core.model.music.Song
+import caios.android.kanade.core.model.player.PlayerEvent
 import caios.android.kanade.core.ui.AsyncLoadContents
 import caios.android.kanade.core.ui.music.EpisodeDetailHeader
 import caios.android.kanade.core.ui.music.PodcastItemHolder
@@ -56,7 +57,10 @@ fun OnlineFeedRoute(
             onTerminate = terminate,
             onClickSongHolder = viewModel::onNewPlay,
             onClickAddToQueue = viewModel::onAddToQuote,
-            onClickDownload = viewModel::onDownloadSong
+            onClickDownload = viewModel::onDownloadSong,
+            onClickPause = {
+                viewModel.playerEvent(PlayerEvent.Pause)
+            }
         )
     }
 }
@@ -70,6 +74,7 @@ private fun OnlineFeedScreen(
     onClickSongHolder: (List<Song>, Int) -> Unit,
     onClickAddToQueue: (Song) -> Unit,
     onClickDownload: (Song) -> Unit,
+    onClickPause: () -> Unit
 ) {
     var expanded by remember {
         mutableStateOf(false)
@@ -130,7 +135,8 @@ private fun OnlineFeedScreen(
                 onClickPlay = { onClickSongHolder.invoke(artist.songs, index) },
                 onClickMenu = { },
                 onClickDownload = onClickDownload,
-                onClickAddToQueue = onClickAddToQueue
+                onClickAddToQueue = onClickAddToQueue,
+                onClickPause = onClickPause
             )
             HorizontalDivider(modifier = Modifier.padding(bottom = 8.dp))
         }

@@ -177,6 +177,10 @@ class OnlineFeedViewModel @Inject constructor(
 
     }
 
+    fun playerEvent(event: PlayerEvent) {
+        musicController.playerEvent(event)
+    }
+
 
     companion object {
         const val FEED_URL = "feed_url"

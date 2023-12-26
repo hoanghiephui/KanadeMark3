@@ -181,7 +181,7 @@ class MusicControllerImpl @Inject constructor(
     }
 
     override fun setPlayerItem(item: MediaMetadata) {
-        _currentSong.value = queueManager.getCurrentSong() ?: queueManager.getCurrentSongPreview()
+        _currentSong.value = if (!queueManager.isPreview) queueManager.getCurrentSong() else queueManager.getCurrentSongPreview()
     }
 
     override fun setPlayerPosition(position: Long) {

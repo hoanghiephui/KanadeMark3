@@ -1,5 +1,11 @@
 package caios.android.kanade.core.ui.music
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,15 +16,19 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.PlaylistAdd
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.PlaylistAdd
 import androidx.compose.material.icons.outlined.ArrowCircleDown
 import androidx.compose.material.icons.outlined.PlayCircleOutline
 import androidx.compose.material3.AssistChip
+import androidx.compose.material3.ChipColors
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
@@ -26,7 +36,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import androidx.core.text.HtmlCompat
 import caios.android.kanade.core.design.component.KanadeBackground
 import caios.android.kanade.core.design.theme.bold
 import caios.android.kanade.core.model.music.Song
@@ -35,6 +44,7 @@ import caios.android.kanade.core.model.music.Song
 fun PodcastItemHolder(
     song: Song,
     onClickPlay: () -> Unit,
+    onClickPause: () -> Unit,
     onClickMenu: () -> Unit,
     onClickAddToQueue: (Song) -> Unit,
     onClickDownload: (Song) -> Unit,
@@ -42,10 +52,11 @@ fun PodcastItemHolder(
 ) {
     ConstraintLayout(
         modifier
-            .padding(all = 8.dp)) {
+            .padding(all = 8.dp)
+    ) {
         val (artwork, title, artist, add, menu, play, download) = createRefs()
 
-
+        var isPlayActive by remember { mutableStateOf(false) }
 
         Artwork(
             modifier = Modifier
@@ -109,9 +120,8 @@ fun PodcastItemHolder(
                 .constrainAs(play) {
                     top.linkTo(artwork.bottom)
                     start.linkTo(parent.start)
-                    bottom.linkTo(parent.bottom    )
-                }
-                .clickable { onClickMenu.invoke() },
+                    bottom.linkTo(parent.bottom)
+                },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Outlined.PlayCircleOutline,
@@ -120,9 +130,17 @@ fun PodcastItemHolder(
                 )
             },
             label = {
-                Text(text = "Preview")
+                val text = if (isPlayActive) "Playing" else "Preview"
+                Text(text = text)
             },
-            onClick = onClickPlay
+            onClick = {
+                if (!isPlayActive) {
+                    onClickPlay.invoke()
+                } else {
+                    onClickPause.invoke()
+                }
+                isPlayActive = !isPlayActive
+            }
         )
 
         Icon(
@@ -169,7 +187,8 @@ private fun MusicHolderPreview() {
             onClickPlay = { },
             onClickMenu = { },
             onClickAddToQueue = {},
-            onClickDownload = {}
+            onClickDownload = {},
+            onClickPause = {}
         )
     }
 }

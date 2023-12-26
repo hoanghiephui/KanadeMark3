@@ -42,28 +42,30 @@ fun EpisodeDetailHeader(
             color = MaterialTheme.colorScheme.onSurface,
         )
 
-        Row(
-            modifier = Modifier
-                .clip(RoundedCornerShape(50))
-                .clickable { onClickSeeAll.invoke() }
-                .padding(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
+        if (size > 6) {
+            Row(
                 modifier = Modifier
-                    .wrapContentWidth()
-                    .padding(end = 8.dp),
-                text = stringResource(R.string.song_header_see_all),
-                style = MaterialTheme.typography.bodyMedium.bold(),
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
+                    .clip(RoundedCornerShape(50))
+                    .clickable { onClickSeeAll.invoke() }
+                    .padding(8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    modifier = Modifier
+                        .wrapContentWidth()
+                        .padding(end = 8.dp),
+                    text = stringResource(R.string.song_header_see_all),
+                    style = MaterialTheme.typography.bodyMedium.bold(),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
 
-            Icon(
-                modifier = Modifier.size(16.dp),
-                imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
+                Icon(
+                    modifier = Modifier.size(16.dp),
+                    imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
         }
     }
 }

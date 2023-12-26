@@ -34,6 +34,8 @@ interface QueueManager {
     fun build(currentQueue: List<Song>, originalQueue: List<Song>, index: Int)
     fun preview(currentQueue: Song)
     fun clear()
+
+    val isPreview: Boolean
 }
 
 class QueueManagerImpl @Inject constructor(
@@ -44,6 +46,7 @@ class QueueManagerImpl @Inject constructor(
     private val _originalQueue = MutableStateFlow(mutableListOf<Long>())
     private val _index = MutableStateFlow(0)
     private val _currentPreview = MutableStateFlow<Song?>(null)
+    private val _isPreview = MutableStateFlow(false)
 
     @get:JvmName("currentQueueValue")
     private val currentQueue get() = _currentQueue.value
@@ -163,10 +166,12 @@ class QueueManagerImpl @Inject constructor(
         _currentQueue.value = currentQueue.map { it.id }.toMutableList()
         _originalQueue.value = originalQueue.map { it.id }.toMutableList()
         _index.value = index
+        _isPreview.value = false
     }
 
     override fun preview(currentQueue: Song) {
         _currentPreview.value = currentQueue
+        _isPreview.value = true
     }
 
     override fun clear() {
@@ -174,4 +179,7 @@ class QueueManagerImpl @Inject constructor(
         _originalQueue.value = mutableListOf()
         _index.value = 0
     }
+
+    override val isPreview: Boolean
+        get() = _isPreview.value
 }
