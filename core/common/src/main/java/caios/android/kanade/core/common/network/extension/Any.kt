@@ -2,6 +2,10 @@
 
 package caios.android.kanade.core.common.network.extension
 
+import android.app.Activity
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.core.content.ContextCompat
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 
@@ -147,3 +151,9 @@ inline fun <reified R> Any?.takeAs(): R? = this as? R?
 
 inline fun <reified R> Any?.requireAs(errorMessage: String = "Require value $this as ${R::class.java.simpleName}"): R =
     requireNotNull(takeAs<R>()) { errorMessage }
+
+fun Activity.shouldAllowPermission(): Boolean {
+    val storagePermission =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) android.Manifest.permission.READ_MEDIA_AUDIO else android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+    return ContextCompat.checkSelfPermission(this, storagePermission) != PackageManager.PERMISSION_GRANTED
+}

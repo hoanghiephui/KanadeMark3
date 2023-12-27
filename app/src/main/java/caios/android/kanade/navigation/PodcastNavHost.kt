@@ -86,13 +86,14 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlin.reflect.KClass
 
 @Composable
-fun KanadeNavHost(
+fun PodcastNavHost(
     musicViewModel: MusicViewModel,
     appState: KanadeAppState,
     userData: UserData?,
     libraryTopBarHeight: Dp,
     modifier: Modifier = Modifier,
     startDestination: String = HomeRoute,
+    showSnackBar: (String) -> Unit
 ) {
     val navController = appState.navController
     val activity = (LocalContext.current as Activity)
@@ -253,6 +254,7 @@ fun KanadeNavHost(
             terminate = {
                 navController.popBackStack()
             },
+            showSnackBar = showSnackBar
         )
 
         playlistTopScreen(

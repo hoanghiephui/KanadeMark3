@@ -1,5 +1,6 @@
 package caios.android.kanade
 
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -23,6 +24,7 @@ import androidx.core.view.WindowCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import caios.android.kanade.core.common.network.extension.shouldAllowPermission
 import caios.android.kanade.core.design.theme.KanadeTheme
 import caios.android.kanade.core.model.ScreenState
 import caios.android.kanade.core.model.ThemeConfig
@@ -163,11 +165,5 @@ class MainActivity : ComponentActivity() {
             is ScreenState.Idle -> screenState.data.isDynamicColor
             else -> false
         }
-    }
-
-    private fun shouldAllowPermission(): Boolean {
-        val storagePermission =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) android.Manifest.permission.READ_MEDIA_AUDIO else android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-        return ContextCompat.checkSelfPermission(this, storagePermission) != PackageManager.PERMISSION_GRANTED
     }
 }

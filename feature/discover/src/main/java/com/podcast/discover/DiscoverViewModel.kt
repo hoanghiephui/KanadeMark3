@@ -17,6 +17,7 @@ import caios.android.kanade.core.common.network.isLoading
 import caios.android.kanade.core.common.network.onResultError
 import caios.android.kanade.core.design.R
 import caios.android.kanade.core.model.ScreenState
+import caios.android.kanade.core.model.podcast.Advanced
 import caios.android.kanade.core.model.podcast.EntryItem
 import caios.android.kanade.core.model.podcast.ItunesTopPodcastResponse
 import caios.android.kanade.core.ui.error.ErrorsDispatcher
@@ -60,6 +61,13 @@ class DiscoverViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = ScreenState.Loading,
         )
+
+    val itemsAdvanced = mutableListOf(
+        Advanced(1, R.drawable.baseline_search_24, "Search Apple Podcasts"),
+        Advanced(2,R.drawable.baseline_search_24, "Search fyyd"),
+        Advanced(3,R.drawable.baseline_search_24, "Search gpodder.net"),
+        Advanced(4,R.drawable.baseline_search_24, "Search Podcast Index")
+    )
 
     @AnyThread
     private fun createDiscoverUiState(

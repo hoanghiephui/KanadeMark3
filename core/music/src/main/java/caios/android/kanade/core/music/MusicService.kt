@@ -84,6 +84,7 @@ class MusicService : MediaBrowserServiceCompat() {
 
         override fun onPlaybackStateChanged(playbackState: Int) {
             musicController.setPlayerState(playbackState)
+            Timber.d("playbackState: $playbackState")
         }
 
         override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {

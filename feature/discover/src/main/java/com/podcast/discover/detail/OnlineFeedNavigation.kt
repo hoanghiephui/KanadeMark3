@@ -28,6 +28,7 @@ fun NavGraphBuilder.feedDetailScreen(
     navigateToSongMenu: (Song) -> Unit,
     navigateToAlbumMenu: (Album) -> Unit,
     terminate: () -> Unit,
+    showSnackBar: (String) -> Unit
 ) {
     composable(
         route = OnlineDetailRoute,
@@ -43,6 +44,7 @@ fun NavGraphBuilder.feedDetailScreen(
             modifier = Modifier.fillMaxSize(),
             feedId = it.arguments?.getString(OnlineDetailId) ?: "",
             terminate = terminate,
+            showSnackBar = showSnackBar
         )
     }
 }

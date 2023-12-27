@@ -3,6 +3,7 @@ package caios.android.kanade.core.model.music
 import android.net.Uri
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat
+import kotlinx.datetime.Clock
 import java.time.Instant
 import java.time.LocalDateTime
 import java.util.Locale
@@ -24,7 +25,9 @@ data class Song(
     val uri: Uri,
     val albumArtwork: Artwork,
     val artistArtwork: Artwork,
-    val isStream: Boolean = false
+    val isStream: Boolean = false,
+    val isDownloaded: Boolean = false,
+    val publishDate: kotlinx.datetime.Instant = Clock.System.now()
 ) {
     val durationString: String
         get() {
@@ -60,6 +63,7 @@ data class Song(
                 uri = Uri.EMPTY,
                 albumArtwork = Artwork.Internal("Song"),
                 artistArtwork = Artwork.Internal("Artist"),
+                publishDate = Clock.System.now()
             )
         }
 

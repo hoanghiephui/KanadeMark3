@@ -1,10 +1,8 @@
 package com.podcast.discover.detail
 
+import android.content.Context
 import android.net.Uri
-import androidx.annotation.AnyThread
-import androidx.compose.ui.util.fastMap
 import androidx.core.text.HtmlCompat
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MimeTypes
 import caios.android.kanade.core.common.network.BaseViewModel
@@ -31,6 +29,7 @@ import caios.android.kanade.core.repository.SongRepository
 import caios.android.kanade.core.repository.podcast.FeedDiscoveryRepository
 import caios.android.kanade.core.repository.podcast.ParseRssRepository
 import caios.android.kanade.core.ui.error.ErrorsDispatcher
+import com.podcast.core.network.util.PodcastDownloader
 import com.prof18.rssparser.model.RssChannel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -42,8 +41,11 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import timber.log.Timber
+import kotlinx.datetime.Instant
+import kotlinx.datetime.toKotlinTimeZone
+import kotlinx.datetime.toLocalDateTime
 import java.math.BigInteger
+import java.time.ZoneId
 import java.util.Date
 import javax.inject.Inject
 
@@ -51,7 +53,6 @@ import javax.inject.Inject
 class OnlineFeedViewModel @Inject constructor(
     private val repository: ParseRssRepository,
     private val feedRepository: FeedDiscoveryRepository,
-    val savedStateHandle: SavedStateHandle,
     @Dispatcher(KanadeDispatcher.IO)
     private val ioDispatcher: CoroutineDispatcher,
     @Dispatcher(KanadeDispatcher.Default)
@@ -59,6 +60,7 @@ class OnlineFeedViewModel @Inject constructor(
     private val errorsDispatcher: ErrorsDispatcher,
     private val musicController: MusicController,
     private val songRepository: SongRepository,
+    val download: PodcastDownloader
 ) : BaseViewModel<NoneAction>(defaultDispatcher) {
 
     private val feedState = MutableStateFlow<RssChannel?>(null)
@@ -119,34 +121,44 @@ class OnlineFeedViewModel @Inject constructor(
                     artistId = 0,
                     albums = item.items.map {
                         val actual: Date = DateUtils.parse(it.pubDate)
+                        val id = BigInteger(it.guid?.toByteArray()).toLong()
+                        val localPodcast = feedRepository.loadPodcast(id)
                         val song = Song(
-                            id = BigInteger(it.guid?.toByteArray()).toLong(),
+                            id = id,
                             title = it.title ?: "",
                             artistId = BigInteger(it.guid?.toByteArray()).toLong(),
-                            artist = HtmlCompat.fromHtml(it.description.toString(), HtmlCompat.FROM_HTML_MODE_COMPACT).toString(),
+                            artist = HtmlCompat.fromHtml(
+                                it.description.toString(),
+                                HtmlCompat.FROM_HTML_MODE_COMPACT
+                            ).toString(),
                             album = "",
                             albumId = BigInteger(it.guid?.toByteArray()).toLong(),
                             duration = inMillis(it.itunesItemData?.duration.toString()),
-                            year = actual.year,
+                            year = Instant.fromEpochMilliseconds(actual.time)
+                                .toLocalDateTime(ZoneId.systemDefault().toKotlinTimeZone()).year,
                             track = 1,
-                            mimeType = MimeTypes.AUDIO_DTS_HD,
+                            mimeType = MimeTypes.AUDIO_MPEG,
                             data = it.audio ?: "",
                             dateModified = actual.time,
                             uri = Uri.parse(it.audio ?: ""),
-                            albumArtwork = if (it.itunesItemData?.image != null) Artwork.Web(url = it.itunesItemData?.image.toString()) else Artwork.dummy(),
+                            albumArtwork = if (it.itunesItemData?.image != null) Artwork.Web(url = it.itunesItemData?.image.toString()) else Artwork.dummy(it.title ?: "PO"),
                             artistArtwork = Artwork.Web(url = item.image?.url.toString()),
-                            isStream = true
+                            isStream = true,
+                            isDownloaded = localPodcast != null,
+                            publishDate = Instant.fromEpochMilliseconds(actual.time)
                         )
-                        //songRepository.songsPodcast(song)
                         Album(
                             album = it.title ?: "",
                             albumId = BigInteger(it.guid?.toByteArray()).toLong(),
                             songs = listOf(song),
-                            artwork = if (item.image?.url != null) Artwork.Web(url = item.image?.url.toString()) else Artwork.dummy()
+                            artwork = if (item.image?.url != null) Artwork.Web(url = item.image?.url.toString()) else Artwork.dummy(it.title ?: "PO")
                         )
                     },
-                    artwork = if (item.image?.url != null) Artwork.Web(url = item.image?.url.toString()) else Artwork.dummy(),
-                    description = HtmlCompat.fromHtml(item.description.toString(), HtmlCompat.FROM_HTML_MODE_COMPACT).toString(),
+                    artwork = if (item.image?.url != null) Artwork.Web(url = item.image?.url.toString()) else Artwork.dummy(item.title ?: "PO"),
+                    description = HtmlCompat.fromHtml(
+                        item.description.toString(),
+                        HtmlCompat.FROM_HTML_MODE_COMPACT
+                    ).toString(),
                     author = item.itunesChannelData?.author
                 )
             )
@@ -173,16 +185,31 @@ class OnlineFeedViewModel @Inject constructor(
         musicController.addToQueue(song)
     }
 
-    fun onDownloadSong(song: Song) {
-
-    }
-
     fun playerEvent(event: PlayerEvent) {
         musicController.playerEvent(event)
     }
 
 
-    companion object {
-        const val FEED_URL = "feed_url"
+    fun downloadPodcast(
+        song: Song,
+        permission: Boolean,
+        context: Context,
+        downloadProgressListener: (Float, Int) -> Unit
+    ): String {
+        return if (permission) {
+            download.downloadBook(song = song,
+                downloadProgressListener = downloadProgressListener,
+                onDownloadSuccess = {
+                    insertIntoDB(song, download.getMediaFileName(song))
+                })
+            context.getString(R.string.downloading_podcast)
+        } else {
+            context.getString(R.string.storage_perm_error)
+        }
     }
+
+    private fun insertIntoDB(song: Song, filename: String) =
+        viewModelScope.launch(defaultDispatcher) {
+            feedRepository.savePodcast(song, "${PodcastDownloader.FILE_FOLDER_PATH}/$filename")
+        }
 }

@@ -82,6 +82,7 @@
     <string name="permission_request_storage_why">To load songs</string>
     <string name="permission_request_notification">Notification</string>
     <string name="permission_request_notification_why">To display controller</string>
+    <string name="storage_perm_error">Please grant storage permission!</string>
 
     <!-- Notification -->
     <string name="notify_channel_music_name">Controller</string>
@@ -350,6 +351,7 @@
     <string name="download_progress_tag_edit">Edit tag</string>
     <string name="download_progress_toast_complete">Downloaded</string>
     <string name="download_progress_toast_error">Download failed</string>
+    <string name="downloading_podcast">Download Started!</string>
 
     <!-- Report -->
     <string name="report_crush_title">Oops! Something went wrong</string>

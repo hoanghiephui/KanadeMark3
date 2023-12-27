@@ -9,6 +9,7 @@ import com.podcast.core.network.BuildConfig
 import com.podcast.core.network.OkHttpClientFactory
 import com.podcast.core.network.adapter.StatusCodeAdapter
 import com.podcast.core.network.api.ItunesApi
+import com.podcast.core.network.util.PodcastDownloader
 import com.prof18.rssparser.RssParser
 import com.prof18.rssparser.RssParserBuilder
 import com.squareup.moshi.Moshi
@@ -101,4 +102,8 @@ object NetworkModule {
             }
         }
         .build()
+
+    @Singleton
+    @Provides
+    fun provideBookDownloader(@ApplicationContext context: Context) = PodcastDownloader(context)
 }

@@ -17,6 +17,8 @@ import caios.android.kanade.core.database.history.PlayHistoryEntity
 import caios.android.kanade.core.database.playlist.PlaylistDao
 import caios.android.kanade.core.database.playlist.PlaylistEntity
 import caios.android.kanade.core.database.playlist.PlaylistItemEntity
+import caios.android.kanade.core.database.podcast.PodcastDao
+import caios.android.kanade.core.database.podcast.PodcastEntity
 
 @Database(
     entities = [
@@ -30,8 +32,9 @@ import caios.android.kanade.core.database.playlist.PlaylistItemEntity
         PlaylistEntity::class,
         PlaylistItemEntity::class,
         PlayHistoryEntity::class,
+        PodcastEntity::class
     ],
-    version = 1,
+    version = 2,
 )
 abstract class KanadeDataBase : RoomDatabase() {
     abstract fun artistDetailDao(): ArtistDetailDao
@@ -39,4 +42,5 @@ abstract class KanadeDataBase : RoomDatabase() {
     abstract fun artworkDao(): ArtworkDao
     abstract fun playlistDao(): PlaylistDao
     abstract fun playHistoryDao(): PlayHistoryDao
+    abstract fun podcastDao(): PodcastDao
 }

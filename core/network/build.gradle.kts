@@ -30,4 +30,5 @@ dependencies {
     implementation(libs.rssparser)
     api(libs.coil.core)
     api(libs.coil.svg)
+    implementation("commons-io:commons-io:2.13.0")
 }

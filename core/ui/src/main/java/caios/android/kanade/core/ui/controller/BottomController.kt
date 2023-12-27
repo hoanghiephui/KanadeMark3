@@ -1,5 +1,6 @@
 package caios.android.kanade.core.ui.controller
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -25,7 +26,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -55,19 +55,33 @@ fun BottomController(
             targetValue = uiState.progressParent,
             label = "bottomSliderPosition",
         )
+        if (uiState.isLoading) {
+            LinearProgressIndicator(
+                modifier = Modifier
+                    .constrainAs(indicator) {
+                        top.linkTo(parent.top)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
 
-        LinearProgressIndicator(
-            progress = { position },
-            modifier = Modifier
-                .constrainAs(indicator) {
-                    top.linkTo(parent.top)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
+                        width = Dimension.fillToConstraints
+                    }
+                    .height(2.dp),
+            )
+        } else {
+            // Determinate progress bar.
+            LinearProgressIndicator(
+                progress = { position },
+                modifier = Modifier
+                    .constrainAs(indicator) {
+                        top.linkTo(parent.top)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
 
-                    width = Dimension.fillToConstraints
-                }
-                .height(1.5.dp),
-        )
+                        width = Dimension.fillToConstraints
+                    }
+                    .height(2.dp),
+            )
+        }
 
         Artwork(
             modifier = Modifier

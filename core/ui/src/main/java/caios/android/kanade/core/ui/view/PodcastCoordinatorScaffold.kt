@@ -90,7 +90,7 @@ fun PodcastCoordinatorScaffold(
                 if (data is CoordinatorData.Podcast) {
                     ArtistArtworkSection(
                         modifier = Modifier
-                            .padding(bottom = 16.dp)
+                            .padding(bottom = 8.dp)
                             .fillMaxWidth()
                             .aspectRatio(1f)
                             .onGloballyPositioned { topSectionHeight = it.size.height },
@@ -245,20 +245,16 @@ private fun ArtistArtworkSection(
                 .fillMaxWidth()
                 .alpha(alpha)
                 .align(Alignment.BottomCenter)
-                .padding(horizontal = 16.dp, vertical = 16.dp),
+                .padding(horizontal = 16.dp, vertical = 8.dp),
         ) {
             Row {
-                Card(
+                Artwork(
                     modifier = Modifier
-                        .size(100.dp),
-                    shape = RoundedCornerShape(8.dp),
-                ) {
-                    Artwork(
-                        modifier = Modifier.fillMaxWidth(),
-                        artwork = data.artwork,
-                        size = Size(500, 500)
-                    )
-                }
+                        .size(100.dp)
+                        .clip(RoundedCornerShape(8)),
+                    artwork = data.artwork,
+                    size = Size(500, 500)
+                )
                 Column(modifier = Modifier.padding(start = 8.dp)) {
                     Text(
                         modifier = Modifier

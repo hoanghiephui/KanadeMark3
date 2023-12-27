@@ -34,6 +34,8 @@ import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -75,7 +77,7 @@ import caios.android.kanade.feature.playlist.detail.navigateToPlaylistDetail
 import caios.android.kanade.feature.search.scan.navigateToScanMedia
 import caios.android.kanade.feature.setting.top.navigateToSettingTop
 import caios.android.kanade.feature.welcome.WelcomeNavHost
-import caios.android.kanade.navigation.KanadeNavHost
+import caios.android.kanade.navigation.PodcastNavHost
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
 
@@ -265,8 +267,10 @@ private fun IdleScreen(
                 activity.startService(Intent(activity, LastFmService::class.java))
             }
         }
+        val snackBarHostState = remember { SnackbarHostState() }
 
         Scaffold(
+            snackbarHost = { SnackbarHost(snackBarHostState) },
             modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             containerColor = Color.Transparent,
             contentColor = MaterialTheme.colorScheme.onBackground,
@@ -397,11 +401,16 @@ private fun IdleScreen(
                         navigateToPlaylistMenu = { appState.showPlaylistMenuDialog(activity, it) },
                     )
 
-                    KanadeNavHost(
+                    PodcastNavHost(
                         musicViewModel = musicViewModel,
                         appState = appState,
                         userData = userData,
                         libraryTopBarHeight = with(density) { topBarHeight.toDp() },
+                        showSnackBar = {
+                            scope.launch {
+                                snackBarHostState.showSnackbar(it)
+                            }
+                        }
                     )
 
                     BackHandler(scaffoldState.bottomSheetState.currentValue == BottomSheetValue.Expanded) {
