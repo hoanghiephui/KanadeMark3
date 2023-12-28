@@ -202,7 +202,7 @@ data class MusicUiState(
         get() = (state == PlayerState.Playing)
 
     val isLoading
-        get() = (state == PlayerState.Buffering || state == PlayerState.Initialize)
+        get() = (state == PlayerState.Buffering)
 
     val progressParent: Float
         get() {

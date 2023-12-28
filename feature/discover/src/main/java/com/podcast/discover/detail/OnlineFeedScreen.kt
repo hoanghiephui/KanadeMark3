@@ -1,7 +1,6 @@
 package com.podcast.discover.detail
 
 import android.app.Activity
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -95,7 +94,12 @@ fun OnlineFeedRoute(
             },
             downloader = viewModel.download,
             downloadStatus = mDownloadStatus,
-            downloadProgress = mDownloadProgress
+            downloadProgress = mDownloadProgress,
+            clickSubscribe = {
+                if (!it) {
+                    viewModel.onSubscribePodcast(imId = feedId, artist = artist)
+                }
+            }
         )
     }
 }
@@ -113,7 +117,8 @@ private fun OnlineFeedScreen(
     downloader: PodcastDownloader,
     onClickCancelDownload: (Song) -> Unit,
     downloadStatus: SnapshotStateMap<Long, Int>,
-    downloadProgress: SnapshotStateMap<Long, Float>
+    downloadProgress: SnapshotStateMap<Long, Float>,
+    clickSubscribe: (Boolean) -> Unit
 ) {
     var expanded by remember {
         mutableStateOf(false)
@@ -135,6 +140,7 @@ private fun OnlineFeedScreen(
         data = coordinatorData,
         onClickNavigateUp = onTerminate,
         onClickMenu = { onClickMenu.invoke(artist) },
+        clickSubscribe = clickSubscribe
     ) {
         item {
             Text(

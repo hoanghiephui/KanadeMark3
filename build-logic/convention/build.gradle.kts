@@ -15,6 +15,7 @@ dependencies {
     implementation(libs.firebase.crashlytics)
     implementation(libs.gms.services)
     implementation(libs.gms.oss)
+    compileOnly(libs.ksp.gradlePlugin)
 }
 
 gradlePlugin {
@@ -50,6 +51,10 @@ gradlePlugin {
         register("androidDetekt") {
             id = "kanade.detekt"
             implementationClass = "AndroidDetektConventionPlugin"
+        }
+        register("androidRoom") {
+            id = "com.android.room"
+            implementationClass = "AndroidRoomConventionPlugin"
         }
     }
 }

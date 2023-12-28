@@ -1,7 +1,9 @@
 package caios.android.kanade.core.database
 
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import caios.android.kanade.core.database.album_detail.AlbumDetailDao
 import caios.android.kanade.core.database.album_detail.AlbumDetailEntity
 import caios.android.kanade.core.database.album_detail.AlbumTagEntity
@@ -19,6 +21,8 @@ import caios.android.kanade.core.database.playlist.PlaylistEntity
 import caios.android.kanade.core.database.playlist.PlaylistItemEntity
 import caios.android.kanade.core.database.podcast.PodcastDao
 import caios.android.kanade.core.database.podcast.PodcastEntity
+import caios.android.kanade.core.database.podcast.PodcastFeedEntity
+import caios.android.kanade.core.database.podcast.PodcastFeedItemEntity
 
 @Database(
     entities = [
@@ -32,9 +36,16 @@ import caios.android.kanade.core.database.podcast.PodcastEntity
         PlaylistEntity::class,
         PlaylistItemEntity::class,
         PlayHistoryEntity::class,
-        PodcastEntity::class
+        PodcastEntity::class,
+        PodcastFeedItemEntity::class,
+        PodcastFeedEntity::class
     ],
-    version = 2,
+    version = 1,
+    autoMigrations = [],
+    exportSchema = true,
+)
+@TypeConverters(
+    InstantConverter::class,
 )
 abstract class KanadeDataBase : RoomDatabase() {
     abstract fun artistDetailDao(): ArtistDetailDao

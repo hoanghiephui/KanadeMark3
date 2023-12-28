@@ -2,10 +2,11 @@ plugins {
     id("kanade.library")
     id("kanade.detekt")
     id("kanade.hilt")
+    id("com.android.room")
 }
 
 android {
-    namespace = "caios.android.kanade.core.database"
+    namespace = "com.android.podcast.core.database"
 }
 
 dependencies {

@@ -4,6 +4,10 @@ import caios.android.kanade.core.common.network.Dispatcher
 import caios.android.kanade.core.common.network.KanadeDispatcher
 import caios.android.kanade.core.database.podcast.PodcastDao
 import caios.android.kanade.core.database.podcast.PodcastEntity
+import caios.android.kanade.core.database.podcast.PodcastFeedEntity
+import caios.android.kanade.core.database.podcast.PodcastFeedItemEntity
+import caios.android.kanade.core.database.podcast.PodcastModel
+import caios.android.kanade.core.model.music.Artist
 import caios.android.kanade.core.model.music.Song
 import caios.android.kanade.core.model.podcast.ItunesTopPodcastResponse
 import caios.android.kanade.core.model.podcast.LookFeedResponse
@@ -29,6 +33,11 @@ interface FeedDiscoveryRepository {
     )
 
     suspend fun loadPodcast(podcastId: Long): PodcastDownload?
+
+    suspend fun subscribePodcast(
+        imId: String,
+        artist: Artist
+    )
 }
 
 class FeedDiscoveryRepositoryImpl @Inject constructor(
@@ -60,6 +69,15 @@ class FeedDiscoveryRepositoryImpl @Inject constructor(
         podcastDao.getItemById(podcastId)?.toPodcast()
     }
 
+    override suspend fun subscribePodcast(imId: String, artist: Artist): Unit =
+        withContext(dispatcher) {
+            val model = artist.toModel(imId)
+            val idPodcast = podcastDao.insertPodcastFeed(model.podcastFeed)
+
+            podcastDao.insertPodcastFeedItem(*model.items.map { it.copy(idPodcast = idPodcast) }
+                .toTypedArray())
+        }
+
     private fun PodcastEntity.toPodcast(): PodcastDownload {
         return PodcastDownload(
             podcastId = this.podcastId,
@@ -67,5 +85,33 @@ class FeedDiscoveryRepositoryImpl @Inject constructor(
             filePath = this.filePath,
             createdAt = this.createdAt
         )
+    }
+
+    private fun Artist.toModel(imId: String): PodcastModel {
+        return PodcastModel().apply {
+            podcastFeed = PodcastFeedEntity(
+                id = artistId,
+                imId = imId,
+                idPodcast = artistId,
+                title = artist,
+                description = description,
+                author = author,
+                urlAvatar = urlAvatar
+            )
+            items = this@toModel.songs.map {
+                PodcastFeedItemEntity(
+                    idPodcast = artistId,
+                    songId = it.id,
+                    title = it.title,
+                    artist = it.artist,
+                    duration = it.duration,
+                    year = it.year,
+                    data = it.data,
+                    dateModified = it.dateModified,
+                    image = it.urlImage,
+                    publishDate = it.publishDate
+                )
+            }
+        }
     }
 }

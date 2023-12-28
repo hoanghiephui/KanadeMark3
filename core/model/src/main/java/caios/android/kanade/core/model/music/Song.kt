@@ -27,7 +27,8 @@ data class Song(
     val artistArtwork: Artwork,
     val isStream: Boolean = false,
     val isDownloaded: Boolean = false,
-    val publishDate: kotlinx.datetime.Instant = Clock.System.now()
+    val publishDate: kotlinx.datetime.Instant = Clock.System.now(),
+    val urlImage: String? = null
 ) {
     val durationString: String
         get() {

@@ -62,7 +62,7 @@ class OnlineFeedViewModel @Inject constructor(
     private val songRepository: SongRepository,
     val download: PodcastDownloader
 ) : BaseViewModel<NoneAction>(defaultDispatcher) {
-
+    private var imId: String? = null
     private val feedState = MutableStateFlow<RssChannel?>(null)
     private val fetchNewFeedResultState = MutableStateFlow<Result<RssChannel>?>(null)
     val screenState =
@@ -72,7 +72,8 @@ class OnlineFeedViewModel @Inject constructor(
         ) { item, podcastResponseResult ->
             createFeedUiState(
                 item = item,
-                podcastRssResult = podcastResponseResult
+                podcastRssResult = podcastResponseResult,
+                imId = imId
             )
         }.stateIn(
             scope = viewModelScope,
@@ -81,6 +82,7 @@ class OnlineFeedViewModel @Inject constructor(
         )
 
     fun getLookFeed(feedId: String) {
+        this.imId = feedId
         viewModelScope.launch(defaultDispatcher) {
             val currentState = fetchNewFeedResultState.getAndUpdate { Result.Loading() }
             if (currentState !is Result.Loading) {
@@ -111,14 +113,16 @@ class OnlineFeedViewModel @Inject constructor(
 
     private suspend fun createFeedUiState(
         item: RssChannel?,
-        podcastRssResult: Result<RssChannel>?
+        podcastRssResult: Result<RssChannel>?,
+        imId: String?
     ): ScreenState<Artist> = when {
 
         item != null -> withContext(ioDispatcher) {
+            val artistId = BigInteger(imId?.toByteArray()).toLong()
             ScreenState.Idle(
                 Artist(
                     artist = item.title ?: "",
-                    artistId = 0,
+                    artistId = artistId,
                     albums = item.items.map {
                         val actual: Date = DateUtils.parse(it.pubDate)
                         val id = BigInteger(it.guid?.toByteArray()).toLong()
@@ -126,13 +130,13 @@ class OnlineFeedViewModel @Inject constructor(
                         val song = Song(
                             id = id,
                             title = it.title ?: "",
-                            artistId = BigInteger(it.guid?.toByteArray()).toLong(),
+                            artistId = artistId,
                             artist = HtmlCompat.fromHtml(
                                 it.description.toString(),
                                 HtmlCompat.FROM_HTML_MODE_COMPACT
                             ).toString(),
                             album = "",
-                            albumId = BigInteger(it.guid?.toByteArray()).toLong(),
+                            albumId = artistId,
                             duration = inMillis(it.itunesItemData?.duration.toString()),
                             year = Instant.fromEpochMilliseconds(actual.time)
                                 .toLocalDateTime(ZoneId.systemDefault().toKotlinTimeZone()).year,
@@ -141,25 +145,35 @@ class OnlineFeedViewModel @Inject constructor(
                             data = it.audio ?: "",
                             dateModified = actual.time,
                             uri = Uri.parse(it.audio ?: ""),
-                            albumArtwork = if (it.itunesItemData?.image != null) Artwork.Web(url = it.itunesItemData?.image.toString()) else Artwork.dummy(it.title ?: "PO"),
-                            artistArtwork = Artwork.Web(url = item.image?.url.toString()),
+                            albumArtwork = if (it.itunesItemData?.image != null) Artwork.Web(url = it.itunesItemData?.image.toString()) else Artwork.dummy(
+                                it.title ?: "PO"
+                            ),
+                            artistArtwork = if (it.itunesItemData?.image != null) Artwork.Web(url = it.itunesItemData?.image.toString()) else Artwork.dummy(
+                                it.title ?: "PO"
+                            ),
                             isStream = true,
                             isDownloaded = localPodcast != null,
-                            publishDate = Instant.fromEpochMilliseconds(actual.time)
+                            publishDate = Instant.fromEpochMilliseconds(actual.time),
+                            urlImage = it.itunesItemData?.image
                         )
                         Album(
                             album = it.title ?: "",
-                            albumId = BigInteger(it.guid?.toByteArray()).toLong(),
+                            albumId = artistId,
                             songs = listOf(song),
-                            artwork = if (item.image?.url != null) Artwork.Web(url = item.image?.url.toString()) else Artwork.dummy(it.title ?: "PO")
+                            artwork = if (item.image?.url != null) Artwork.Web(url = item.image?.url.toString()) else Artwork.dummy(
+                                it.title ?: "PO"
+                            )
                         )
                     },
-                    artwork = if (item.image?.url != null) Artwork.Web(url = item.image?.url.toString()) else Artwork.dummy(item.title ?: "PO"),
+                    artwork = if (item.image?.url != null) Artwork.Web(url = item.image?.url.toString()) else Artwork.dummy(
+                        item.title ?: "PO"
+                    ),
                     description = HtmlCompat.fromHtml(
                         item.description.toString(),
                         HtmlCompat.FROM_HTML_MODE_COMPACT
                     ).toString(),
-                    author = item.itunesChannelData?.author
+                    author = item.itunesChannelData?.author,
+                    urlAvatar = item.image?.url
                 )
             )
         }
@@ -205,6 +219,15 @@ class OnlineFeedViewModel @Inject constructor(
             context.getString(R.string.downloading_podcast)
         } else {
             context.getString(R.string.storage_perm_error)
+        }
+    }
+
+    fun onSubscribePodcast(
+        imId: String,
+        artist: Artist
+    ) {
+        viewModelScope.launch(defaultDispatcher) {
+            feedRepository.subscribePodcast(imId, artist)
         }
     }
 

@@ -73,6 +73,7 @@ fun PodcastCoordinatorScaffold(
     data: CoordinatorData,
     onClickNavigateUp: () -> Unit,
     onClickMenu: () -> Unit,
+    clickSubscribe: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     listState: LazyListState = rememberLazyListState(),
     color: Color = MaterialTheme.colorScheme.surface,
@@ -97,6 +98,7 @@ fun PodcastCoordinatorScaffold(
                         data = data,
                         color = color,
                         alpha = 1f - appBarAlpha,
+                        clickSubscribe = clickSubscribe
                     )
                 }
             }
@@ -221,6 +223,7 @@ private fun ArtistArtworkSection(
     alpha: Float,
     color: Color,
     modifier: Modifier = Modifier,
+    clickSubscribe: (Boolean) -> Unit
 ) {
     val titleStyle = MaterialTheme.typography.titleLarge
     val summaryStyle = MaterialTheme.typography.bodyMedium
@@ -278,7 +281,10 @@ private fun ArtistArtworkSection(
 
 
                     FilterChip(
-                        onClick = { selected = !selected },
+                        onClick = {
+                            clickSubscribe.invoke(selected)
+                            selected = !selected
+                        },
                         label = {
                             Text(stringResource(id = if (selected) R.string.subscribed else R.string.subscribe))
                         },
@@ -456,6 +462,7 @@ private fun FillSectionPreview2() {
             ),
             alpha = 1f,
             color = Color.Black,
+            clickSubscribe = {}
         )
     }
 }
