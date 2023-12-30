@@ -119,8 +119,10 @@ class OnlineFeedViewModel @Inject constructor(
 
         item != null -> withContext(ioDispatcher) {
             val artistId = BigInteger(imId?.toByteArray()).toLong()
+            val isSubscribe = feedRepository.isSubscribe(artistId)
             ScreenState.Idle(
                 Artist(
+                    isSubscribe = isSubscribe,
                     artist = item.title ?: "",
                     artistId = artistId,
                     albums = item.items.map {
@@ -235,4 +237,10 @@ class OnlineFeedViewModel @Inject constructor(
         viewModelScope.launch(defaultDispatcher) {
             feedRepository.savePodcast(song, "${PodcastDownloader.FILE_FOLDER_PATH}/$filename")
         }
+
+    fun onUnSubscribePodcast(imId: Long) {
+        viewModelScope.launch(defaultDispatcher) {
+            feedRepository.onUnSubscribePodcast(imId)
+        }
+    }
 }

@@ -25,6 +25,7 @@ sealed interface CoordinatorData {
         val title: String,
         val summary: String,
         val artwork: Artwork,
-        val author: String
+        val author: String,
+        val isSubscribe: Boolean
     ) : CoordinatorData
 }

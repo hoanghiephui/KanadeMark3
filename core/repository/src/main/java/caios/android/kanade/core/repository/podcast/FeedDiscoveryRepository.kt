@@ -38,6 +38,10 @@ interface FeedDiscoveryRepository {
         imId: String,
         artist: Artist
     )
+
+    suspend fun onUnSubscribePodcast(imId: Long)
+
+    suspend fun isSubscribe(idPodcast: Long): Boolean
 }
 
 class FeedDiscoveryRepositoryImpl @Inject constructor(
@@ -76,6 +80,16 @@ class FeedDiscoveryRepositoryImpl @Inject constructor(
 
             podcastDao.insertPodcastFeedItem(*model.items.map { it.copy(idPodcast = idPodcast) }
                 .toTypedArray())
+        }
+
+    override suspend fun onUnSubscribePodcast(imId: Long) =
+        withContext(dispatcher) {
+            podcastDao.delete(imId)
+        }
+
+    override suspend fun isSubscribe(idPodcast: Long): Boolean =
+        withContext(dispatcher) {
+            podcastDao.load(idPodcast) != null
         }
 
     private fun PodcastEntity.toPodcast(): PodcastDownload {

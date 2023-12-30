@@ -227,7 +227,8 @@ private fun ArtistArtworkSection(
 ) {
     val titleStyle = MaterialTheme.typography.titleLarge
     val summaryStyle = MaterialTheme.typography.bodyMedium
-    var selected by remember { mutableStateOf(false) }
+    var isSubscribed by remember { mutableStateOf(data.isSubscribe) }
+
     Box(modifier) {
         Artwork(
             modifier = Modifier.fillMaxWidth(),
@@ -282,14 +283,14 @@ private fun ArtistArtworkSection(
 
                     FilterChip(
                         onClick = {
-                            clickSubscribe.invoke(selected)
-                            selected = !selected
+                            clickSubscribe.invoke(isSubscribed)
+                            isSubscribed = !isSubscribed
                         },
                         label = {
-                            Text(stringResource(id = if (selected) R.string.subscribed else R.string.subscribe))
+                            Text(stringResource(id = if (isSubscribed) R.string.subscribed else R.string.subscribe))
                         },
-                        selected = selected,
-                        leadingIcon = if (selected) {
+                        selected = isSubscribed,
+                        leadingIcon = if (isSubscribed) {
                             {
                                 Icon(
                                     imageVector = Icons.Filled.CheckCircle,
@@ -458,7 +459,8 @@ private fun FillSectionPreview2() {
                 title = "toby fox",
                 summary = "UNDERTALE",
                 artwork = Artwork.Internal("UNDERTALE"),
-                author = "Demo"
+                author = "Demo",
+                isSubscribe = true
             ),
             alpha = 1f,
             color = Color.Black,

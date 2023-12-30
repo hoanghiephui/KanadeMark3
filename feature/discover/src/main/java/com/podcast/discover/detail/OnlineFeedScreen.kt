@@ -98,6 +98,10 @@ fun OnlineFeedRoute(
             clickSubscribe = {
                 if (!it) {
                     viewModel.onSubscribePodcast(imId = feedId, artist = artist)
+                    showSnackBar.invoke("Subscribed")
+                } else {
+                    viewModel.onUnSubscribePodcast(imId = artist.artistId)
+                    showSnackBar.invoke("Unsubscribe")
                 }
             }
         )
@@ -131,7 +135,8 @@ private fun OnlineFeedScreen(
             title = artist.artist,
             summary = artist.description ?: "",
             artwork = artist.artwork,
-            author = artist.author ?: ""
+            author = artist.author ?: "",
+            isSubscribe = artist.isSubscribe
         )
     }
     var playActiveId by remember { mutableStateOf<Long?>(null) }
