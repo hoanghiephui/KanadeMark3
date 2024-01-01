@@ -28,10 +28,11 @@ import caios.android.kanade.core.design.component.KanadeBackground
 import caios.android.kanade.core.model.music.Album
 import caios.android.kanade.core.model.music.Artwork.Web
 import caios.android.kanade.core.model.podcast.EntryItem
+import caios.android.kanade.core.model.podcast.FeedModel
 
 @Composable
 fun FeedPodcastHolder(
-    feed: EntryItem,
+    feed: FeedModel,
     onClickHolder: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -54,14 +55,14 @@ fun FeedPodcastHolder(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(6.dp)),
-                    artwork = Web(feed.imImage?.last()?.label ?: ""),
+                    artwork = Web(feed.imImage),
                 )
 
                 Text(
                     modifier = Modifier
                         .padding(horizontal = 8.dp)
                         .fillMaxWidth(),
-                    text = feed.title?.label ?: "",
+                    text = feed.title,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurface,
                     maxLines = 1,
@@ -72,7 +73,7 @@ fun FeedPodcastHolder(
                     modifier = Modifier
                         .padding(horizontal = 8.dp)
                         .fillMaxWidth(),
-                    text = feed.imArtist?.label ?: "",
+                    text = feed.imArtist,
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1,

@@ -6,6 +6,7 @@ import caios.android.kanade.core.common.network.BaseViewModel
 import caios.android.kanade.core.common.network.Dispatcher
 import caios.android.kanade.core.common.network.KanadeDispatcher
 import caios.android.kanade.core.common.network.NoneAction
+import caios.android.kanade.core.database.podcast.PodcastModel
 import caios.android.kanade.core.model.ScreenState
 import caios.android.kanade.core.model.music.Album
 import caios.android.kanade.core.model.music.Playlist
@@ -18,6 +19,7 @@ import caios.android.kanade.core.music.MusicController
 import caios.android.kanade.core.repository.LastFmRepository
 import caios.android.kanade.core.repository.MusicRepository
 import caios.android.kanade.core.repository.PlaylistRepository
+import caios.android.kanade.core.repository.podcast.FeedDiscoveryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.SharingStarted
@@ -35,6 +37,7 @@ class HomeViewModel @Inject constructor(
     private val musicRepository: MusicRepository,
     private val playlistRepository: PlaylistRepository,
     private val lastFmRepository: LastFmRepository,
+    private val feedDiscoveryRepository: FeedDiscoveryRepository,
     @Dispatcher(KanadeDispatcher.IO) private val ioDispatcher: CoroutineDispatcher,
     @Dispatcher(KanadeDispatcher.Default)
     defaultDispatcher: CoroutineDispatcher,
@@ -55,12 +58,14 @@ class HomeViewModel @Inject constructor(
         withContext(ioDispatcher) {
             musicRepository.fetchSongs(config)
             musicRepository.fetchAlbumArtwork()
+            musicRepository.fetchSongsPodcast()
         }
 
         val songs = musicRepository.sortedSongs(config)
         val albums = musicRepository.sortedAlbums(config)
         val recentlyAddedAlbums = albums.sortedBy { it.addedDate }.take(10)
         val favorite = playlist.filterIsInstance<Playlist>().find { it.isSystemPlaylist }
+        val subscribedFeeds = feedDiscoveryRepository.loadLatestAdd()
 
         ScreenState.Idle(
             HomeUiState(
@@ -70,6 +75,7 @@ class HomeViewModel @Inject constructor(
                 recentlyPlayedSongs = getRecentlyPlayedSongs(6),
                 mostPlayedSongs = getMostPlayedSongs(6),
                 favoriteSongs = favorite?.songs ?: emptyList(),
+                subscribedFeeds = subscribedFeeds
             ),
         )
     }.stateIn(
@@ -134,4 +140,5 @@ data class HomeUiState(
     val recentlyPlayedSongs: List<Song>,
     val mostPlayedSongs: List<Pair<Song, Int>>,
     val favoriteSongs: List<Song>,
+    val subscribedFeeds: List<PodcastModel>
 )

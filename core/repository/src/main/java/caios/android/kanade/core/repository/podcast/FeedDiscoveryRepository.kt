@@ -15,6 +15,7 @@ import caios.android.kanade.core.model.podcast.PodcastDownload
 import com.podcast.core.network.datasource.ItunesDataSource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import kotlinx.datetime.Clock
 import javax.inject.Inject
 
 interface FeedDiscoveryRepository {
@@ -42,6 +43,12 @@ interface FeedDiscoveryRepository {
     suspend fun onUnSubscribePodcast(imId: Long)
 
     suspend fun isSubscribe(idPodcast: Long): Boolean
+
+    suspend fun loadItemSong(songId: Long): PodcastFeedItemEntity?
+    suspend fun loadAddItem(): List<PodcastFeedItemEntity>
+
+    suspend fun loadSubscribe(): List<PodcastModel>
+    suspend fun loadLatestAdd(): List<PodcastModel>
 }
 
 class FeedDiscoveryRepositoryImpl @Inject constructor(
@@ -92,6 +99,25 @@ class FeedDiscoveryRepositoryImpl @Inject constructor(
             podcastDao.load(idPodcast) != null
         }
 
+    override suspend fun loadItemSong(songId: Long): PodcastFeedItemEntity? =
+        withContext(dispatcher) {
+            podcastDao.loadItemSong(songId)
+        }
+
+    override suspend fun loadAddItem(): List<PodcastFeedItemEntity> {
+        return podcastDao.loadAddItem()
+    }
+
+    override suspend fun loadSubscribe(): List<PodcastModel> =
+        withContext(dispatcher) {
+            podcastDao.loadAll()
+        }
+
+    override suspend fun loadLatestAdd(): List<PodcastModel> =
+        withContext(dispatcher) {
+            podcastDao.loadLatestAdd()
+        }
+
     private fun PodcastEntity.toPodcast(): PodcastDownload {
         return PodcastDownload(
             podcastId = this.podcastId,
@@ -110,7 +136,8 @@ class FeedDiscoveryRepositoryImpl @Inject constructor(
                 title = artist,
                 description = description,
                 author = author,
-                urlAvatar = urlAvatar
+                urlAvatar = urlAvatar,
+                timeStamp = Clock.System.now().toEpochMilliseconds()
             )
             items = this@toModel.songs.map {
                 PodcastFeedItemEntity(

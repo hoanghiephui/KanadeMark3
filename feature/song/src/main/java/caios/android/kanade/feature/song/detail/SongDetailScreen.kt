@@ -137,7 +137,7 @@ private fun SongDetailScreen(
             )
         },
     ) { paddingValues ->
-        Box(Modifier.padding(paddingValues)) {
+        Box(Modifier.padding(top = paddingValues.calculateTopPadding())) {
             LazyColumn(Modifier.fillMaxSize()) {
                 itemsIndexed(
                     items = songs,

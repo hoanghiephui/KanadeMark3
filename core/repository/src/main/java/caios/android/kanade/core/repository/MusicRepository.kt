@@ -2,6 +2,7 @@ package caios.android.kanade.core.repository
 
 import caios.android.kanade.core.common.network.Dispatcher
 import caios.android.kanade.core.common.network.KanadeDispatcher
+import caios.android.kanade.core.database.podcast.PodcastDao
 import caios.android.kanade.core.datastore.KanadePreferencesDataStore
 import caios.android.kanade.core.model.music.Album
 import caios.android.kanade.core.model.music.AlbumDetail
@@ -94,6 +95,7 @@ interface MusicRepository {
     suspend fun setPlaylistOrder(musicOrder: MusicOrder)
 
     suspend fun <T> useSongFile(song: Song, action: (File?) -> T): T
+    suspend fun fetchSongsPodcast()
 }
 
 class MusicRepositoryImpl @Inject constructor(
@@ -107,6 +109,7 @@ class MusicRepositoryImpl @Inject constructor(
     private val lastFmRepository: LastFmRepository,
     @LyricsKugou private val lyricsRepository: LyricsRepository,
     @Dispatcher(KanadeDispatcher.Main) private val main: CoroutineDispatcher,
+    private val podcastDao: PodcastDao
 ) : MusicRepository {
 
     private val _updateFlag = MutableStateFlow(0)
@@ -181,7 +184,11 @@ class MusicRepositoryImpl @Inject constructor(
         return lastFmRepository.getAlbumDetails()[album.albumId]
     }
 
-    override suspend fun saveQueue(currentQueue: List<Song>, originalQueue: List<Song>, index: Int) {
+    override suspend fun saveQueue(
+        currentQueue: List<Song>,
+        originalQueue: List<Song>,
+        index: Int
+    ) {
         kanadePreferencesDataStore.setLastQueue(
             currentItems = currentQueue.map { it.id },
             originalItems = originalQueue.map { it.id },
@@ -307,5 +314,11 @@ class MusicRepositoryImpl @Inject constructor(
 
     override suspend fun <T> useSongFile(song: Song, action: (File?) -> T): T {
         return songRepository.useFile(song, action)
+    }
+
+    override suspend fun fetchSongsPodcast() {
+        podcastDao.loadAddItem().forEach {
+            songRepository.songsPodcast(it.toSong())
+        }
     }
 }

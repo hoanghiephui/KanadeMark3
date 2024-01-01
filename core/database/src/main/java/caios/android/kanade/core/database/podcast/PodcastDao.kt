@@ -32,12 +32,24 @@ interface PodcastDao {
     fun loadAll(): List<PodcastModel>
 
     @Transaction
+    @Query("SELECT * FROM podcast_feed ORDER BY timeStamp DESC LIMIT 10")
+    fun loadLatestAdd(): List<PodcastModel>
+
+    @Transaction
+    @Query("SELECT * FROM podcast_feed_item")
+    fun loadAddItem(): List<PodcastFeedItemEntity>
+
+    @Transaction
     @Query("SELECT * FROM podcast_feed WHERE id = :podcastId")
     fun load(podcastId: Long): PodcastModel?
 
     @Transaction
     @Query("SELECT * FROM podcast_feed_item WHERE id = :podcastItemId")
-    fun loadItem(podcastItemId: Long): PodcastFeedItemEntity
+    fun loadItem(podcastItemId: Long): PodcastFeedItemEntity?
+
+    @Transaction
+    @Query("SELECT * FROM podcast_feed_item WHERE song_id = :songId")
+    fun loadItemSong(songId: Long): PodcastFeedItemEntity?
 
     @Delete
     fun delete(podcastItem: PodcastEntity)

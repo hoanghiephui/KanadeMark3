@@ -40,7 +40,6 @@ fun AlbumHolder(
     Box(modifier.padding(6.dp)) {
         Card(
             modifier = Modifier
-                .clip(RoundedCornerShape(6.dp))
                 .clickable { onClickHolder.invoke() },
             shape = RoundedCornerShape(6.dp),
             colors = CardDefaults.cardColors(

@@ -33,7 +33,8 @@ data class PodcastFeedEntity(
     @ColumnInfo(name = "author")
     val author: String? = null,
     @ColumnInfo("avatar")
-    val urlAvatar: String? = null
+    val urlAvatar: String? = null,
+    val timeStamp: Long
 )
 
 @Entity(

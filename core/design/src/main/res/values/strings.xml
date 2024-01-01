@@ -103,6 +103,7 @@
     <string name="home_button_shuffle_all">Shuffle</string>
     <string name="home_title_queue">Playback queue list</string>
     <string name="home_title_recently_added_albums">Recently added albums</string>
+    <string name="home_title_recently_subscribed">Check your classics</string>
     <string name="home_title_recently_played_songs">Recently played songs</string>
     <string name="home_title_most_played_songs">Most played songs</string>
     <string name="home_empty_title">Home is empty</string>

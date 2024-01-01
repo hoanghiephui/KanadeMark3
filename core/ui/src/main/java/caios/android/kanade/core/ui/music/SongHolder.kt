@@ -47,10 +47,11 @@ fun SongHolder(
             modifier = Modifier
                 .size(64.dp)
                 .aspectRatio(1f)
+                .clip(RoundedCornerShape(6.dp))
                 .constrainAs(artwork) {
                     top.linkTo(parent.top)
                     bottom.linkTo(parent.bottom)
-                    start.linkTo(parent.start)
+                    start.linkTo(parent.start, 8.dp)
                 },
             artwork = song.albumArtwork,
         )
@@ -113,10 +114,10 @@ fun SongHolder(
             imageVector = Icons.Default.MoreVert,
             contentDescription = null,
         )
-        HorizontalDivider(modifier = Modifier.constrainAs(line) {
+        HorizontalDivider(modifier = Modifier.padding(horizontal = 8.dp).constrainAs(line) {
             top.linkTo(artwork.bottom, 8.dp)
-            start.linkTo(parent.start)
-            end.linkTo(parent.end)
+            start.linkTo(parent.start, 8.dp)
+            end.linkTo(parent.end, 8.dp)
         })
     }
 }

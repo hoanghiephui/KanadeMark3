@@ -20,6 +20,7 @@ import caios.android.kanade.core.model.ScreenState
 import caios.android.kanade.core.model.podcast.Advanced
 import caios.android.kanade.core.model.podcast.EntryItem
 import caios.android.kanade.core.model.podcast.ItunesTopPodcastResponse
+import caios.android.kanade.core.repository.podcast.FeedDiscoveryRepository
 import caios.android.kanade.core.ui.error.ErrorsDispatcher
 import com.podcast.core.usecase.ItunesFeedUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -44,6 +45,7 @@ class DiscoverViewModel @Inject constructor(
     private val errorsDispatcher: ErrorsDispatcher,
     private val movieItemMapper: DiscoverFeedItemMapper,
     private val feedDiscoveryUseCase: ItunesFeedUseCase,
+    private val feedRepository: FeedDiscoveryRepository,
 ) : BaseViewModel<NoneAction>(defaultDispatcher) {
     private val feedState = MutableStateFlow(emptyList<EntryItem>())
     private val fetchNewFeedResultState = MutableStateFlow<Result<ItunesTopPodcastResponse>?>(null)
@@ -64,9 +66,9 @@ class DiscoverViewModel @Inject constructor(
 
     val itemsAdvanced = mutableListOf(
         Advanced(1, R.drawable.baseline_search_24, "Search Apple Podcasts"),
-        Advanced(2,R.drawable.baseline_search_24, "Search fyyd"),
-        Advanced(3,R.drawable.baseline_search_24, "Search gpodder.net"),
-        Advanced(4,R.drawable.baseline_search_24, "Search Podcast Index")
+        Advanced(2, R.drawable.baseline_search_24, "Search fyyd"),
+        Advanced(3, R.drawable.baseline_search_24, "Search gpodder.net"),
+        Advanced(4, R.drawable.baseline_search_24, "Search Podcast Index")
     )
 
     @AnyThread
@@ -102,7 +104,13 @@ class DiscoverViewModel @Inject constructor(
                 }.onResultError(errorsDispatcher::dispatch)
                     .safeCollect(
                         onEach = { result ->
-                            feedState.update { it + result.data?.feed?.entry.orEmpty() }
+                            val suggestedPodcasts = result.data?.feed?.entry
+                            val subscribedFeeds =
+                                feedRepository.loadSubscribe().map { it.podcastFeed.imId }
+                            val suggestedPodcastsResult =
+                                suggestedPodcasts?.filterNot { subscribedFeeds.contains(it.id?.attributes?.imId) }
+
+                            feedState.update { it + suggestedPodcastsResult.orEmpty() }
                             fetchNewFeedResultState.emit(result)
                         },
                         onError = errorsDispatcher::dispatch,

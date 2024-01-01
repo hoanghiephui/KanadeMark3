@@ -24,6 +24,8 @@ fun NavGraphBuilder.homeScreen(
     navigateToSongMenu: (Song) -> Unit,
     navigateToAlbumDetail: (Long) -> Unit,
     navigateToAlbumMenu: (Album) -> Unit,
+    navigateToAddedFeed: () -> Unit,
+    navigateToFeed: (imId: String) -> Unit,
 ) {
     composable(
         route = HomeRoute,
@@ -48,6 +50,8 @@ fun NavGraphBuilder.homeScreen(
             navigateToSongMenu = navigateToSongMenu,
             navigateToAlbumDetail = navigateToAlbumDetail,
             navigateToAlbumMenu = navigateToAlbumMenu,
+            onClickFeed = navigateToFeed,
+            onClickRecentlyAddedFeed = navigateToAddedFeed
         )
     }
 }

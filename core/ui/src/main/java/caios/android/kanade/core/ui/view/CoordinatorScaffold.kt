@@ -25,6 +25,7 @@ import androidx.compose.material.ProvideTextStyle
 import androidx.compose.material.Surface
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.MaterialTheme
@@ -370,7 +371,7 @@ private fun CoordinatorToolBar(
                             .clip(RoundedCornerShape(50))
                             .clickable { onClickNavigateUp() }
                             .padding(8.dp),
-                        imageVector = Icons.Default.ArrowBack,
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = null,
                     )
                 }

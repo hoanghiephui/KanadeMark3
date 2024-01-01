@@ -229,6 +229,12 @@ fun PodcastNavHost(
             navigateToAlbumDetail = {
                 navController.navigateToAlbumDetail(it)
             },
+            navigateToAddedFeed = {
+
+            },
+            navigateToFeed =  {
+                navController.navigateToOnlineDetail(it)
+            }
         )
 
         discoverScreen(

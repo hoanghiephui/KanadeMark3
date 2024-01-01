@@ -30,6 +30,7 @@ import caios.android.kanade.core.design.theme.bold
 import caios.android.kanade.core.model.music.Album
 import caios.android.kanade.core.model.music.Song
 import caios.android.kanade.core.model.podcast.EntryItem
+import caios.android.kanade.core.model.podcast.toFeedModel
 import caios.android.kanade.core.ui.music.FeedPodcastHolder
 import kotlinx.collections.immutable.ImmutableList
 
@@ -80,7 +81,7 @@ internal fun DiscoverFeedSection(
             ) { feed ->
                 FeedPodcastHolder(
                     modifier = Modifier.width(150.dp),
-                    feed = feed,
+                    feed = feed.toFeedModel(),
                     onClickHolder = {
                         feed.id?.attributes?.imId?.let { onClickPodcast.invoke(it) }
                     },

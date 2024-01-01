@@ -16,6 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import caios.android.kanade.core.design.R
 import caios.android.kanade.core.model.podcast.EntryItem
+import caios.android.kanade.core.model.podcast.toFeedModel
 import caios.android.kanade.core.ui.music.FeedPodcastHolder
 import caios.android.kanade.core.ui.view.FixedWithEdgeSpace
 import caios.android.kanade.core.ui.view.KanadeTopAppBar
@@ -74,7 +75,7 @@ private fun DiscoverMoreScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .animateItemPlacement(),
-                    feed = artist,
+                    feed = artist.toFeedModel(),
                     onClickHolder = { artist.id?.attributes?.imId?.let { onClickPodcast.invoke(it) } },
                 )
             }

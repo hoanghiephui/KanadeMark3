@@ -12,7 +12,7 @@ dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:model"))
     implementation(project(":core:datastore"))
-    implementation(project(":core:database"))
+    api(project(":core:database"))
     api(project(":core:network"))
 
     implementation(libs.bundles.ktor)

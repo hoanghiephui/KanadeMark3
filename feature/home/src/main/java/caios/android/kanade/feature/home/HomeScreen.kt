@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import caios.android.kanade.core.database.podcast.PodcastModel
 import caios.android.kanade.core.design.R
 import caios.android.kanade.core.design.theme.center
 import caios.android.kanade.core.model.music.Album
@@ -33,11 +34,13 @@ import caios.android.kanade.core.ui.AsyncLoadContents
 import caios.android.kanade.feature.home.items.HomeHeaderSection
 import caios.android.kanade.feature.home.items.HomeQueueSection
 import caios.android.kanade.feature.home.items.HomeRecentlyAddedAlbumsSection
+import caios.android.kanade.feature.home.items.HomeRecentlySubscribedFeedsSection
 import caios.android.kanade.feature.home.items.homeMostPlayedSongsSection
 import caios.android.kanade.feature.home.items.homeRecentlyPlayedSongsSection
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @Composable
 internal fun HomeRoute(
@@ -47,6 +50,8 @@ internal fun HomeRoute(
     navigateToSongMenu: (Song) -> Unit,
     navigateToAlbumDetail: (Long) -> Unit,
     navigateToAlbumMenu: (Album) -> Unit,
+    onClickRecentlyAddedFeed: () -> Unit,
+    onClickFeed: (imId: String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
@@ -59,7 +64,8 @@ internal fun HomeRoute(
         modifier = modifier,
         screenState = screenState,
     ) { homeUiState ->
-        if (homeUiState.recentlyAddedAlbums.isEmpty() || homeUiState.recentlyPlayedSongs.isEmpty() || homeUiState.mostPlayedSongs.isEmpty() || homeUiState.queue?.items?.isEmpty() == true) {
+        Timber.d("HOME: ${homeUiState.recentlyAddedAlbums.size} - ${homeUiState.recentlyPlayedSongs.size} - ${homeUiState.mostPlayedSongs.size}")
+        if (homeUiState.recentlyAddedAlbums.isEmpty() || homeUiState.recentlyPlayedSongs.isEmpty() || homeUiState.mostPlayedSongs.isEmpty()) {
             HomeEmptyScreen(
                 modifier = Modifier.fillMaxSize(),
             )
@@ -105,6 +111,9 @@ internal fun HomeRoute(
                 onClickShuffle = viewModel::onShufflePlay,
                 onClickQueue = navigateToQueue,
                 onClickQueueItem = viewModel::onSkipToQueue,
+                recentlySubscribedFeeds = homeUiState.subscribedFeeds.toImmutableList(),
+                onClickRecentlyAddedFeed = onClickRecentlyAddedFeed,
+                onClickFeed = onClickFeed
             )
         }
     }
@@ -116,10 +125,13 @@ internal fun HomeScreen(
     queue: Queue,
     songs: ImmutableList<Song>,
     recentlyAddedAlbums: ImmutableList<Album>,
+    recentlySubscribedFeeds: ImmutableList<PodcastModel>,
     recentlyPlayedSongs: ImmutableList<Song>,
     mostPlayedSongs: ImmutableList<Pair<Song, Int>>,
     onClickHistory: () -> Unit,
     onClickRecentlyAdded: () -> Unit,
+    onClickRecentlyAddedFeed: () -> Unit,
+    onClickFeed: (imId: String) -> Unit,
     onClickMostPlayed: () -> Unit,
     onClickPlay: (Int, List<Song>) -> Unit,
     onClickSongMenu: (Song) -> Unit,
@@ -155,6 +167,14 @@ internal fun HomeScreen(
                 queue = queue,
                 onClickQueue = onClickQueue,
                 onClickQueueItem = onClickQueueItem,
+            )
+        }
+        item {
+            HomeRecentlySubscribedFeedsSection(
+                modifier = Modifier.fillMaxWidth(),
+                feeds = recentlySubscribedFeeds,
+                onClickMore = onClickRecentlyAddedFeed,
+                onClickFeed = onClickFeed,
             )
         }
 
