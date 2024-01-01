@@ -14,6 +14,7 @@ import caios.android.kanade.core.model.podcast.LookFeedResponse
 import caios.android.kanade.core.model.podcast.PodcastDownload
 import com.podcast.core.network.datasource.ItunesDataSource
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
 import javax.inject.Inject
@@ -45,10 +46,10 @@ interface FeedDiscoveryRepository {
     suspend fun isSubscribe(idPodcast: Long): Boolean
 
     suspend fun loadItemSong(songId: Long): PodcastFeedItemEntity?
-    suspend fun loadAddItem(): List<PodcastFeedItemEntity>
+    fun loadAddItem(): Flow<List<PodcastFeedItemEntity>>
 
-    suspend fun loadSubscribe(): List<PodcastModel>
-    suspend fun loadLatestAdd(): List<PodcastModel>
+    fun loadSubscribe(): Flow<List<PodcastModel>>
+    fun loadLatestAdd(): Flow<List<PodcastModel>>
 }
 
 class FeedDiscoveryRepositoryImpl @Inject constructor(
@@ -104,19 +105,15 @@ class FeedDiscoveryRepositoryImpl @Inject constructor(
             podcastDao.loadItemSong(songId)
         }
 
-    override suspend fun loadAddItem(): List<PodcastFeedItemEntity> {
+    override fun loadAddItem(): Flow<List<PodcastFeedItemEntity>> {
         return podcastDao.loadAddItem()
     }
 
-    override suspend fun loadSubscribe(): List<PodcastModel> =
-        withContext(dispatcher) {
-            podcastDao.loadAll()
-        }
+    override fun loadSubscribe(): Flow<List<PodcastModel>> =
+        podcastDao.loadAll()
 
-    override suspend fun loadLatestAdd(): List<PodcastModel> =
-        withContext(dispatcher) {
-            podcastDao.loadLatestAdd()
-        }
+    override fun loadLatestAdd(): Flow<List<PodcastModel>> =
+        podcastDao.loadLatestAdd()
 
     private fun PodcastEntity.toPodcast(): PodcastDownload {
         return PodcastDownload(

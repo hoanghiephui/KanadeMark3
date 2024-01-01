@@ -20,13 +20,13 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.PlaylistPlay
+import androidx.compose.material.icons.automirrored.filled.QueueMusic
 import androidx.compose.material.icons.filled.Album
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.PlaylistPlay
-import androidx.compose.material.icons.filled.QueueMusic
 import androidx.compose.material.icons.filled.Scanner
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.CloudDownload
@@ -65,9 +65,8 @@ import caios.android.kanade.navigation.LibraryDestination
 import caios.android.kanade.navigation.isLibraryDestinationInHierarchy
 import kotlinx.coroutines.launch
 
-@Suppress("UnusedParameter")
 @Composable
-fun KanadeDrawer(
+fun PodcastDrawer(
     state: DrawerState,
     userData: UserData?,
     currentSong: Song?,
@@ -112,9 +111,8 @@ fun KanadeDrawer(
 
             NavigationDrawerItem(
                 state = state,
-                isSelected = currentDestination.isLibraryDestinationInHierarchy(LibraryDestination.Playlist),
                 label = stringResource(R.string.navigation_playlist),
-                icon = Icons.Filled.QueueMusic,
+                icon = Icons.AutoMirrored.Filled.QueueMusic,
                 onClick = { onClickItem.invoke(LibraryDestination.Playlist) },
             )
 
@@ -151,7 +149,7 @@ fun KanadeDrawer(
             NavigationDrawerItem(
                 state = state,
                 label = stringResource(R.string.navigation_queue),
-                icon = Icons.Default.PlaylistPlay,
+                icon = Icons.AutoMirrored.Filled.PlaylistPlay,
                 onClick = navigateToQueue,
             )
 
@@ -183,12 +181,12 @@ fun KanadeDrawer(
                 onClick = navigateToAbout,
             )
 
-           /* NavigationDrawerItem(
-                state = state,
-                label = stringResource(R.string.navigation_support),
-                icon = Icons.Default.Redeem,
-                onClick = navigateToSupport,
-            )*/
+            /* NavigationDrawerItem(
+                 state = state,
+                 label = stringResource(R.string.navigation_support),
+                 icon = Icons.Default.Redeem,
+                 onClick = navigateToSupport,
+             )*/
 
             Spacer(modifier = Modifier.weight(1f))
 

@@ -24,6 +24,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flowOn
@@ -95,7 +96,7 @@ interface MusicRepository {
     suspend fun setPlaylistOrder(musicOrder: MusicOrder)
 
     suspend fun <T> useSongFile(song: Song, action: (File?) -> T): T
-    suspend fun fetchSongsPodcast()
+    fun fetchSongsPodcast(song: List<Song>)
 }
 
 class MusicRepositoryImpl @Inject constructor(
@@ -316,9 +317,9 @@ class MusicRepositoryImpl @Inject constructor(
         return songRepository.useFile(song, action)
     }
 
-    override suspend fun fetchSongsPodcast() {
-        podcastDao.loadAddItem().forEach {
-            songRepository.songsPodcast(it.toSong())
+    override fun fetchSongsPodcast(song: List<Song>) {
+        song.forEach {
+            songRepository.songsPodcast(it)
         }
     }
 }

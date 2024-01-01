@@ -65,7 +65,7 @@ internal fun HomeRoute(
         screenState = screenState,
     ) { homeUiState ->
         Timber.d("HOME: ${homeUiState.recentlyAddedAlbums.size} - ${homeUiState.recentlyPlayedSongs.size} - ${homeUiState.mostPlayedSongs.size}")
-        if (homeUiState.recentlyAddedAlbums.isEmpty() || homeUiState.recentlyPlayedSongs.isEmpty() || homeUiState.mostPlayedSongs.isEmpty()) {
+        if ((homeUiState.recentlyPlayedSongs.isEmpty() || homeUiState.mostPlayedSongs.isEmpty()) && homeUiState.subscribedFeeds.isEmpty()) {
             HomeEmptyScreen(
                 modifier = Modifier.fillMaxSize(),
             )
@@ -169,24 +169,28 @@ internal fun HomeScreen(
                 onClickQueueItem = onClickQueueItem,
             )
         }
-        item {
-            HomeRecentlySubscribedFeedsSection(
-                modifier = Modifier.fillMaxWidth(),
-                feeds = recentlySubscribedFeeds,
-                onClickMore = onClickRecentlyAddedFeed,
-                onClickFeed = onClickFeed,
-            )
+        if (recentlySubscribedFeeds.isNotEmpty()) {
+            item {
+                HomeRecentlySubscribedFeedsSection(
+                    modifier = Modifier.fillMaxWidth(),
+                    feeds = recentlySubscribedFeeds,
+                    onClickMore = onClickRecentlyAddedFeed,
+                    onClickFeed = onClickFeed,
+                )
+            }
         }
 
-        item {
-            HomeRecentlyAddedAlbumsSection(
-                modifier = Modifier.fillMaxWidth(),
-                albums = recentlyAddedAlbums,
-                onClickMore = onClickRecentlyAdded,
-                onClickAlbum = onClickAlbum,
-                onClickAlbumPlay = onClickPlay,
-                onClickAlbumMenu = onClickAlbumMenu,
-            )
+        if (recentlyAddedAlbums.isNotEmpty()) {
+            item {
+                HomeRecentlyAddedAlbumsSection(
+                    modifier = Modifier.fillMaxWidth(),
+                    albums = recentlyAddedAlbums,
+                    onClickMore = onClickRecentlyAdded,
+                    onClickAlbum = onClickAlbum,
+                    onClickAlbumPlay = onClickPlay,
+                    onClickAlbumMenu = onClickAlbumMenu,
+                )
+            }
         }
 
         homeRecentlyPlayedSongsSection(

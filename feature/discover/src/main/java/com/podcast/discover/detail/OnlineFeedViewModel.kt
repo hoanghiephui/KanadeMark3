@@ -25,6 +25,7 @@ import caios.android.kanade.core.model.music.Artwork
 import caios.android.kanade.core.model.music.Song
 import caios.android.kanade.core.model.player.PlayerEvent
 import caios.android.kanade.core.music.MusicController
+import caios.android.kanade.core.repository.MusicRepository
 import caios.android.kanade.core.repository.SongRepository
 import caios.android.kanade.core.repository.podcast.FeedDiscoveryRepository
 import caios.android.kanade.core.repository.podcast.ParseRssRepository
@@ -59,7 +60,7 @@ class OnlineFeedViewModel @Inject constructor(
     defaultDispatcher: CoroutineDispatcher,
     private val errorsDispatcher: ErrorsDispatcher,
     private val musicController: MusicController,
-    private val songRepository: SongRepository,
+    private val musicRepository: MusicRepository,
     val download: PodcastDownloader
 ) : BaseViewModel<NoneAction>(defaultDispatcher) {
     private var imId: String? = null
@@ -241,6 +242,7 @@ class OnlineFeedViewModel @Inject constructor(
     fun onUnSubscribePodcast(imId: Long) {
         viewModelScope.launch(defaultDispatcher) {
             feedRepository.onUnSubscribePodcast(imId)
+            musicRepository.clear()
         }
     }
 }

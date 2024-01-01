@@ -23,6 +23,7 @@ fun NavGraphBuilder.playlistTopScreen(
     navigateToPlaylistMenu: (Playlist) -> Unit,
     navigateToPlaylistEdit: () -> Unit,
     navigateToSort: (KClass<*>) -> Unit,
+    onTerminate: () -> Unit
 ) {
     composable(
         route = PlaylistTopRoute,
@@ -46,6 +47,7 @@ fun NavGraphBuilder.playlistTopScreen(
             navigateToPlaylistMenu = navigateToPlaylistMenu,
             navigateToPlaylistEdit = navigateToPlaylistEdit,
             navigateToSort = navigateToSort,
+            onTerminate = onTerminate
         )
     }
 }

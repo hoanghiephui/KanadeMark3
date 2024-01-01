@@ -14,8 +14,10 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
@@ -63,26 +65,31 @@ fun PlaylistHolder(
                         songs = playlist.songs.toImmutableList(),
                     )
 
-                    PlayButton(
-                        modifier = Modifier
-                            .padding(8.dp)
-                            .align(Alignment.BottomStart)
-                            .size(28.dp),
-                        onClick = onClickPlay,
-                    )
-
-                    Icon(
+                    if (playlist.items.isNotEmpty()) {
+                        PlayButton(
+                            modifier = Modifier
+                                .padding(8.dp)
+                                .align(Alignment.BottomStart)
+                                .size(28.dp),
+                            onClick = onClickPlay,
+                        )
+                    }
+                    OutlinedIconButton(
+                        onClick = { onClickMenu.invoke() },
                         modifier = Modifier
                             .padding(4.dp)
                             .size(32.dp)
                             .align(Alignment.TopEnd)
-                            .clip(RoundedCornerShape(50))
-                            .clickable { onClickMenu.invoke() }
-                            .padding(4.dp),
-                        imageVector = Icons.Default.MoreVert,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurface,
-                    )
+                            .padding(4.dp)
+                    ) {
+                        Icon(
+                            modifier = Modifier
+                                .padding(4.dp),
+                            imageVector = Icons.Default.MoreVert,
+                            contentDescription = null,
+                        )
+                    }
+
                 }
             }
 
@@ -120,8 +127,9 @@ private fun PlayButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Card(
-        modifier = modifier.clickable { onClick.invoke() },
+    ElevatedCard(
+        modifier = modifier,
+        onClick = onClick,
         shape = RoundedCornerShape(4.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(8.dp),

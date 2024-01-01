@@ -25,6 +25,7 @@ import caios.android.kanade.core.ui.error.ErrorsDispatcher
 import com.podcast.core.usecase.ItunesFeedUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -34,6 +35,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -52,11 +54,14 @@ class DiscoverViewModel @Inject constructor(
     val uiState =
         combine(
             feedState.map(movieItemMapper::map),
-            fetchNewFeedResultState
-        ) { items, podcastResponseResult ->
+            fetchNewFeedResultState,
+            feedRepository.loadSubscribe()
+                .map { podcastModels -> podcastModels.map { it.podcastFeed.imId } }
+        ) { items, podcastResponseResult, subscribedFeeds ->
             createDiscoverUiState(
                 items = items,
-                podcastResponseResult = podcastResponseResult
+                podcastResponseResult = podcastResponseResult,
+                subscribedFeeds = subscribedFeeds
             )
         }.stateIn(
             scope = viewModelScope,
@@ -72,13 +77,18 @@ class DiscoverViewModel @Inject constructor(
     )
 
     @AnyThread
-    private fun createDiscoverUiState(
+    private suspend fun createDiscoverUiState(
         items: ImmutableList<EntryItem>,
-        podcastResponseResult: Result<ItunesTopPodcastResponse>?
+        podcastResponseResult: Result<ItunesTopPodcastResponse>?,
+        subscribedFeeds: List<String>
     ): ScreenState<Discover> = when {
-        items.isNotEmpty() -> ScreenState.Idle(
-            Discover(items = items)
-        )
+        items.isNotEmpty() -> withContext(ioDispatcher) {
+            val suggestedPodcastsResult =
+                items.filterNot { subscribedFeeds.contains(it.id?.attributes?.imId) }
+            ScreenState.Idle(
+                Discover(items = suggestedPodcastsResult.toImmutableList())
+            )
+        }
 
         podcastResponseResult.isLoading -> ScreenState.Loading
         else -> ScreenState.Error(
@@ -105,12 +115,7 @@ class DiscoverViewModel @Inject constructor(
                     .safeCollect(
                         onEach = { result ->
                             val suggestedPodcasts = result.data?.feed?.entry
-                            val subscribedFeeds =
-                                feedRepository.loadSubscribe().map { it.podcastFeed.imId }
-                            val suggestedPodcastsResult =
-                                suggestedPodcasts?.filterNot { subscribedFeeds.contains(it.id?.attributes?.imId) }
-
-                            feedState.update { it + suggestedPodcastsResult.orEmpty() }
+                            feedState.update { it + suggestedPodcasts.orEmpty() }
                             fetchNewFeedResultState.emit(result)
                         },
                         onError = errorsDispatcher::dispatch,

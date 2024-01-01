@@ -273,6 +273,9 @@ fun PodcastNavHost(
             navigateToPlaylistDetail = {
                 navController.navigateToPlaylistDetail(it)
             },
+            onTerminate = {
+                navController.popBackStack()
+            },
         )
 
         songTopScreen(

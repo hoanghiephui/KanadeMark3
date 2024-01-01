@@ -7,6 +7,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PodcastDao {
@@ -29,15 +30,15 @@ interface PodcastDao {
 
     @Transaction
     @Query("SELECT * FROM podcast_feed")
-    fun loadAll(): List<PodcastModel>
+    fun loadAll(): Flow<List<PodcastModel>>
 
     @Transaction
     @Query("SELECT * FROM podcast_feed ORDER BY timeStamp DESC LIMIT 10")
-    fun loadLatestAdd(): List<PodcastModel>
+    fun loadLatestAdd(): Flow<List<PodcastModel>>
 
     @Transaction
     @Query("SELECT * FROM podcast_feed_item")
-    fun loadAddItem(): List<PodcastFeedItemEntity>
+    fun loadAddItem(): Flow<List<PodcastFeedItemEntity>>
 
     @Transaction
     @Query("SELECT * FROM podcast_feed WHERE id = :podcastId")

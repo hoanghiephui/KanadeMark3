@@ -34,6 +34,9 @@ internal fun LazyListScope.homeRecentlyPlayedSongsSection(
     onClickPlay: (Int, List<Song>) -> Unit,
     onClickMore: () -> Unit,
 ) {
+    if (songs.isEmpty()) {
+        return
+    }
     item {
         Spacer(Modifier.height(16.dp))
     }

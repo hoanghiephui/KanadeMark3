@@ -10,14 +10,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.LibraryAdd
 import androidx.compose.material.icons.filled.Shuffle
-import androidx.compose.material.icons.filled.TrendingUp
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -73,7 +73,7 @@ internal fun HomeHeaderSection(
         ImageButton(
             modifier = Modifier.weight(1f),
             textRes = R.string.song_header_most_played,
-            imageVector = Icons.Default.TrendingUp,
+            imageVector = Icons.AutoMirrored.Filled.TrendingUp,
             tintColor = Green60,
             backgroundColor = Green80.copy(alpha = 0.2f),
             onClick = onClickMostPlayed,

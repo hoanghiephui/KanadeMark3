@@ -91,7 +91,7 @@ class KanadeAppState(
         @Composable get() = when (currentDestination?.route) {
             HomeRoute -> LibraryDestination.Home
             DiscoverRoute -> LibraryDestination.Discover
-            PlaylistTopRoute -> LibraryDestination.Playlist
+            //PlaylistTopRoute -> LibraryDestination.Playlist
             SongTopRoute -> LibraryDestination.Song
             ArtistTopRoute -> LibraryDestination.Artist
             AlbumTopRoute -> LibraryDestination.Album

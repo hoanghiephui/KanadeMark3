@@ -20,10 +20,12 @@ import caios.android.kanade.core.repository.LastFmRepository
 import caios.android.kanade.core.repository.MusicRepository
 import caios.android.kanade.core.repository.PlaylistRepository
 import caios.android.kanade.core.repository.podcast.FeedDiscoveryRepository
+import caios.android.kanade.core.repository.toSong
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -50,22 +52,24 @@ class HomeViewModel @Inject constructor(
         playlistRepository.data,
         lastFmRepository.albumDetails,
         musicRepository.updateFlag,
+        feedDiscoveryRepository.loadLatestAdd(),
+        feedDiscoveryRepository.loadAddItem().map { podcastFeedItemEntities -> podcastFeedItemEntities.map { it.toSong() } }
     ) { data ->
         val config = data[0] as MusicConfig
         val queue = data[1] as Queue
         val playlist = data[2] as List<*>
-
+        val subscribedFeeds = data[5] as List<*>
+        val lastFeedItem = data[6] as List<*>
+        musicRepository.fetchSongsPodcast(lastFeedItem.filterIsInstance<Song>())
         withContext(ioDispatcher) {
             musicRepository.fetchSongs(config)
             musicRepository.fetchAlbumArtwork()
-            musicRepository.fetchSongsPodcast()
         }
 
         val songs = musicRepository.sortedSongs(config)
         val albums = musicRepository.sortedAlbums(config)
         val recentlyAddedAlbums = albums.sortedBy { it.addedDate }.take(10)
         val favorite = playlist.filterIsInstance<Playlist>().find { it.isSystemPlaylist }
-        val subscribedFeeds = feedDiscoveryRepository.loadLatestAdd()
 
         ScreenState.Idle(
             HomeUiState(
@@ -75,7 +79,7 @@ class HomeViewModel @Inject constructor(
                 recentlyPlayedSongs = getRecentlyPlayedSongs(6),
                 mostPlayedSongs = getMostPlayedSongs(6),
                 favoriteSongs = favorite?.songs ?: emptyList(),
-                subscribedFeeds = subscribedFeeds
+                subscribedFeeds = subscribedFeeds.filterIsInstance<PodcastModel>()
             ),
         )
     }.stateIn(

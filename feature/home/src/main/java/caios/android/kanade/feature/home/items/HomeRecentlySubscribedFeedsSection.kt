@@ -56,17 +56,18 @@ internal fun HomeRecentlySubscribedFeedsSection(
                 style = MaterialTheme.typography.titleMedium.bold(),
                 color = MaterialTheme.colorScheme.onSurface,
             )
-
-            Icon(
-                modifier = Modifier
-                    .size(32.dp)
-                    .clip(RoundedCornerShape(50))
-                    .clickable { onClickMore.invoke() }
-                    .padding(4.dp),
-                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
-            )
+            if (feeds.size >= 3) {
+                Icon(
+                    modifier = Modifier
+                        .size(32.dp)
+                        .clip(RoundedCornerShape(50))
+                        .clickable { onClickMore.invoke() }
+                        .padding(4.dp),
+                    imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                )
+            }
         }
 
         LazyRow(

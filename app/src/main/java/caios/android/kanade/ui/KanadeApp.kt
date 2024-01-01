@@ -152,7 +152,7 @@ private fun IdleScreen(
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-            KanadeDrawer(
+            PodcastDrawer(
                 state = drawerState,
                 userData = userData,
                 currentSong = musicViewModel.uiState.song,
