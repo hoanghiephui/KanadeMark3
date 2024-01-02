@@ -19,4 +19,10 @@ interface ItunesApi {
     suspend fun getLookFeed(
         @Query("id") id: String
     ): LookFeedResponse
+
+    @GET("search")
+    suspend fun searchPodcast(
+        @Query("media") media: String = "podcast",
+        @Query("term") query: String
+    ): LookFeedResponse
 }

@@ -77,7 +77,9 @@ import caios.android.kanade.feature.playlist.detail.navigateToPlaylistDetail
 import caios.android.kanade.feature.search.scan.navigateToScanMedia
 import caios.android.kanade.feature.setting.top.navigateToSettingTop
 import caios.android.kanade.feature.welcome.WelcomeNavHost
+import caios.android.kanade.navigation.LibraryDestination
 import caios.android.kanade.navigation.PodcastNavHost
+import caios.android.kanade.navigation.isLibraryDestinationInHierarchy
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
 
@@ -368,7 +370,7 @@ private fun IdleScreen(
                         LoadingDialog(R.string.common_analyzing)
                     }
 
-                    KanadeTopBar(
+                    PodcastTopBar(
                         modifier = Modifier
                             .fillMaxWidth()
                             .onGloballyPositioned {
@@ -399,6 +401,8 @@ private fun IdleScreen(
                         navigateToArtistMenu = { appState.showArtistMenuDialog(activity, it) },
                         navigateToAlbumMenu = { appState.showAlbumMenuDialog(activity, it) },
                         navigateToPlaylistMenu = { appState.showPlaylistMenuDialog(activity, it) },
+                        isPodcast = appState.currentDestination.isLibraryDestinationInHierarchy(
+                            LibraryDestination.Discover)
                     )
 
                     PodcastNavHost(

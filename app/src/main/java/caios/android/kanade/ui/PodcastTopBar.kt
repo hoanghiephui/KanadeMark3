@@ -54,7 +54,7 @@ import kotlinx.coroutines.launch
 @Suppress("ViewModelInjection")
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationGraphicsApi::class)
 @Composable
-fun KanadeTopBar(
+fun PodcastTopBar(
     active: Boolean,
     yOffset: Dp,
     isEnableBackHandler: Boolean,
@@ -69,6 +69,7 @@ fun KanadeTopBar(
     navigateToAlbumMenu: (Album) -> Unit,
     navigateToPlaylistMenu: (Playlist) -> Unit,
     modifier: Modifier = Modifier,
+    isPodcast: Boolean = false
 ) {
     val density = LocalDensity.current
     val scope = rememberCoroutineScope()
@@ -92,7 +93,7 @@ fun KanadeTopBar(
 
     LaunchedEffect(query) {
         if (!isEnableYTMusic) {
-            searchViewModel.search(listOf(query))
+            searchViewModel.search(listOf(query), isPodcast)
         }
     }
 
@@ -116,7 +117,7 @@ fun KanadeTopBar(
             onSearch = {
                 if (isEnableYTMusic) {
                     scope.launch {
-                        searchViewModel.search(listOf(query))
+                        searchViewModel.search(listOf(query), isPodcast)
                     }
                 }
             },
@@ -158,6 +159,7 @@ fun KanadeTopBar(
                 navigateToArtistMenu = navigateToArtistMenu,
                 navigateToAlbumMenu = navigateToAlbumMenu,
                 navigateToPlaylistMenu = navigateToPlaylistMenu,
+                isSearchPodcast = isPodcast
             )
         }
     }
@@ -166,7 +168,7 @@ fun KanadeTopBar(
 @Preview(showBackground = true)
 @Composable
 private fun Preview() {
-    KanadeTopBar(
+    PodcastTopBar(
         active = false,
         yOffset = 0.dp,
         isEnableBackHandler = false,

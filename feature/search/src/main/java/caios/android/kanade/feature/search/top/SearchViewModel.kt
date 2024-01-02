@@ -5,6 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import caios.android.kanade.core.common.network.Dispatcher
 import caios.android.kanade.core.common.network.KanadeDispatcher
+import caios.android.kanade.core.common.network.asFlowResult
+import caios.android.kanade.core.common.network.data
+import caios.android.kanade.core.common.network.extension.safeCollect
 import caios.android.kanade.core.design.R
 import caios.android.kanade.core.model.ScreenState
 import caios.android.kanade.core.model.entity.YTMusicSearch
@@ -13,10 +16,13 @@ import caios.android.kanade.core.model.music.Artist
 import caios.android.kanade.core.model.music.Playlist
 import caios.android.kanade.core.model.music.Song
 import caios.android.kanade.core.model.player.PlayerEvent
+import caios.android.kanade.core.model.podcast.PodcastSearchResult
 import caios.android.kanade.core.music.MusicController
 import caios.android.kanade.core.music.YTMusic
 import caios.android.kanade.core.repository.MusicRepository
 import caios.android.kanade.core.repository.UserDataRepository
+import caios.android.kanade.core.repository.podcast.PodcastSearcherRepository
+import caios.android.kanade.core.ui.error.ErrorsDispatcher
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
@@ -37,7 +43,9 @@ class SearchViewModel @Inject constructor(
     private val musicRepository: MusicRepository,
     private val userDataRepository: UserDataRepository,
     private val ytMusic: YTMusic,
+    private val searcherRepository: PodcastSearcherRepository,
     @Dispatcher(KanadeDispatcher.IO) private val ioDispatcher: CoroutineDispatcher,
+    private val errorsDispatcher: ErrorsDispatcher
 ) : ViewModel() {
 
     private val _screenState = MutableStateFlow<ScreenState<SearchUiState>>(ScreenState.Idle(SearchUiState()))
@@ -64,13 +72,69 @@ class SearchViewModel @Inject constructor(
         )
     }
 
-    suspend fun search(keywords: List<String>) {
-        _screenState.value = ScreenState.Loading
-        _screenState.value = kotlin.runCatching {
-            searchLibrary(keywords)
-        }.fold(
-            onSuccess = { ScreenState.Idle(it) },
-            onFailure = { ScreenState.Error(message = R.string.search_title) },
+    suspend fun search(keywords: List<String>, isSearchPodcast: Boolean) {
+        if (!isSearchPodcast) {
+            _screenState.value = ScreenState.Loading
+            _screenState.value = kotlin.runCatching {
+                searchLibrary(keywords)
+            }.fold(
+                onSuccess = { ScreenState.Idle(it) },
+                onFailure = { ScreenState.Error(message = R.string.search_title) },
+            )
+        } else {
+            _screenState.value = ScreenState.Loading
+            _screenState.value = kotlin.runCatching {
+                searchPodcast(keywords)
+            }.fold(
+                onSuccess = { ScreenState.Idle(it) },
+                onFailure = { ScreenState.Error(message = R.string.search_title) },
+            )
+        }
+    }
+
+    private suspend fun searchPodcast(keywords: List<String>): SearchUiState {
+        asFlowResult {
+            searcherRepository.searchPodcast(keywords.last())
+        }.safeCollect(
+            onEach = { result ->
+                val searchResult = result.data?.results?.map {
+                    PodcastSearchResult(
+                        title = it.collectionName.toString(),
+                        imageUrl = it.artworkUrl100.toString(),
+                        feedUrl = it.feedUrl.toString(),
+                        author = it.artistName.toString()
+                    )
+                } ?: emptyList()
+                SearchUiState(
+                    keywords = keywords,
+                    resultSongs = emptyList(),
+                    resultArtists = emptyList(),
+                    resultAlbums = emptyList(),
+                    resultPlaylists = emptyList(),
+                    resultYTMusic = emptyList(),
+                    resultSongsRangeMap = emptyMap(),
+                    resultArtistsRangeMap = emptyMap(),
+                    resultAlbumsRangeMap = emptyMap(),
+                    resultPlaylistsRangeMap = emptyMap(),
+                    isEnableYTMusic = false,
+                    resultSearchPodcast = searchResult
+                )
+            },
+            onError = errorsDispatcher::dispatch
+        )
+        return SearchUiState(
+            keywords = keywords,
+            resultSongs = emptyList(),
+            resultArtists = emptyList(),
+            resultAlbums = emptyList(),
+            resultPlaylists = emptyList(),
+            resultYTMusic = emptyList(),
+            resultSongsRangeMap = emptyMap(),
+            resultArtistsRangeMap = emptyMap(),
+            resultAlbumsRangeMap = emptyMap(),
+            resultPlaylistsRangeMap = emptyMap(),
+            isEnableYTMusic = false,
+            resultSearchPodcast = emptyList()
         )
     }
 
@@ -214,4 +278,5 @@ data class SearchUiState(
     val resultArtistsRangeMap: Map<Long, IntRange> = emptyMap(),
     val resultAlbumsRangeMap: Map<Long, IntRange> = emptyMap(),
     val resultPlaylistsRangeMap: Map<Long, IntRange> = emptyMap(),
+    val resultSearchPodcast: List<PodcastSearchResult> = emptyList()
 )

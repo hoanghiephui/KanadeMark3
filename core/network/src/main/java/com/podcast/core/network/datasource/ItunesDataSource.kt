@@ -17,6 +17,11 @@ interface ItunesDataSource {
     suspend fun getLookFeed(
         id: String
     ): LookFeedResponse
+
+    @AnyThread
+    suspend fun searchPodcast(
+        query: String
+    ): LookFeedResponse
 }
 
 class DefaultItunesDataSource @Inject constructor(
@@ -31,5 +36,10 @@ class DefaultItunesDataSource @Inject constructor(
     override suspend fun getLookFeed(id: String): LookFeedResponse =
         executor.execute {
             it.getLookFeed(id)
+        }
+
+    override suspend fun searchPodcast(query: String): LookFeedResponse =
+        executor.execute {
+            it.searchPodcast(query = query)
         }
 }

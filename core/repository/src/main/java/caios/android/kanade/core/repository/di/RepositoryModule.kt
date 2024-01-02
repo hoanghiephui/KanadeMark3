@@ -27,8 +27,10 @@ import caios.android.kanade.core.repository.YTMusicRepository
 import caios.android.kanade.core.repository.YTMusicRepositoryImpl
 import caios.android.kanade.core.repository.podcast.FeedDiscoveryRepository
 import caios.android.kanade.core.repository.podcast.FeedDiscoveryRepositoryImpl
+import caios.android.kanade.core.repository.podcast.ItunesSearcherRepositoryImpl
 import caios.android.kanade.core.repository.podcast.ParseRssRepository
 import caios.android.kanade.core.repository.podcast.ParseRssRepositoryImpl
+import caios.android.kanade.core.repository.podcast.PodcastSearcherRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -139,4 +141,10 @@ interface RepositoryModule {
     fun bindParseRssRepository(
         parseRssRepositoryImpl: ParseRssRepositoryImpl,
     ): ParseRssRepository
+
+    @Singleton
+    @Binds
+    fun binPodcastSearcherRepository(
+        itunesSearcherRepositoryImpl: ItunesSearcherRepositoryImpl
+    ): PodcastSearcherRepository
 }

@@ -27,6 +27,7 @@ fun SearchRoute(
     navigateToPlaylistMenu: (Playlist) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SearchViewModel = hiltViewModel(),
+    isSearchPodcast: Boolean
 ) {
     val screenState by viewModel.screenState.collectAsStateWithLifecycle()
 
@@ -41,6 +42,7 @@ fun SearchRoute(
         onClickArtistMenu = navigateToArtistMenu,
         onClickAlbumMenu = navigateToAlbumMenu,
         onClickPlaylistMenu = navigateToPlaylistMenu,
+        isSearchPodcast = isSearchPodcast
     )
 }
 
@@ -56,6 +58,7 @@ private fun SearchScreen(
     onClickAlbumMenu: (Album) -> Unit,
     onClickPlaylistMenu: (Playlist) -> Unit,
     modifier: Modifier = Modifier,
+    isSearchPodcast: Boolean
 ) {
     Column(
         modifier = modifier,
