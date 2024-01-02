@@ -24,7 +24,7 @@
     <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
 
     <application
-        android:name=".KanadeApplication"
+        android:name="caios.android.kanade.KanadeApplication"
         android:allowBackup="true"
         android:usesCleartextTraffic="true"
         android:networkSecurityConfig="@xml/network_security_config"
@@ -42,7 +42,7 @@
         tools:targetApi="tiramisu">
 
         <activity
-            android:name=".MainActivity"
+            android:name="caios.android.kanade.MainActivity"
             android:launchMode="singleTop"
             android:windowSoftInputMode="adjustPan"
             android:exported="true">
@@ -53,12 +53,12 @@
         </activity>
 
         <activity
-            android:name=".feature.report.CrushReportActivity"
+            android:name="caios.android.kanade.feature.report.CrushReportActivity"
             android:exported="false"
             android:theme="@style/Theme.Kanade" />
 
         <service
-            android:name=".core.music.MusicService"
+            android:name="caios.android.kanade.core.music.MusicService"
             android:enabled="true"
             android:exported="true"
             android:foregroundServiceType="mediaPlayback">
@@ -69,11 +69,11 @@
         </service>
 
         <service
-            android:name=".core.music.LastFmService"
+            android:name="caios.android.kanade.core.music.LastFmService"
             android:foregroundServiceType="dataSync" />
 
         <receiver
-            android:name=".core.music.MusicButtonReceiver"
+            android:name="caios.android.kanade.core.music.MusicButtonReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
@@ -95,7 +95,7 @@
         </receiver>
 
         <receiver
-            android:name=".feature.widget.horizontal.HorizontalControllerWidgetReceiver"
+            android:name="caios.android.kanade.feature.widget.horizontal.HorizontalControllerWidgetReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -106,7 +106,7 @@
         </receiver>
 
         <receiver
-            android:name=".feature.widget.square.SquareControllerWidgetReceiver"
+            android:name="caios.android.kanade.feature.widget.square.SquareControllerWidgetReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />

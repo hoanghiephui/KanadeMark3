@@ -13,7 +13,7 @@ plugins {
 }
 
 android {
-    namespace = "caios.android.kanade"
+    namespace = "podcast.music.player"
 
     splits {
         abi {
@@ -67,9 +67,9 @@ android {
     androidComponents {
         onVariants {
             val appName = when (it.buildType) {
-                "debug" -> "KanadeDebug3"
-                "billing" -> "KanadeBilling"
-                else -> "Kanade"
+                "debug" -> "PodcastDebug3"
+                "billing" -> "PodcastBilling"
+                else -> "Podcast"
             }
 
             it.resValues.put(it.makeResValueKey("string", "app_name"), ResValue(appName, null))

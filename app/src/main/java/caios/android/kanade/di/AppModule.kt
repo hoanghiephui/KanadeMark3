@@ -1,7 +1,7 @@
 package caios.android.kanade.di
 
 import android.content.Context
-import caios.android.kanade.BuildConfig
+import podcast.music.player.BuildConfig
 import caios.android.kanade.WidgetUpdater
 import caios.android.kanade.core.common.network.KanadeConfig
 import caios.android.kanade.core.common.network.di.ApplicationScope

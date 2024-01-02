@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:219107492798:android:ca57fc83f2e3f2541dafef",
         "android_client_info": {
-          "package_name": "caios.android.kanade"
+          "package_name": "podcast.music.player"
         }
       },
       "oauth_client": [
@@ -17,7 +17,7 @@
           "client_id": "219107492798-1db04ahf9ulbh8fdjmo84onv1g435dir.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "caios.android.kanade",
+            "package_name": "podcast.music.player",
             "certificate_hash": "c1f092ed93c31551c6ffb92072767ea838da5d19"
           }
         },
@@ -25,7 +25,7 @@
           "client_id": "219107492798-mt8m5ecmjp4vdlsui3crofg06n09gcie.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "caios.android.kanade",
+            "package_name": "podcast.music.player",
             "certificate_hash": "ab6a8b34af599e46620c90c5968fb76081645153"
           }
         },
@@ -55,7 +55,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:219107492798:android:eaa140e50a122ef71dafef",
         "android_client_info": {
-          "package_name": "caios.android.kanade.debug3"
+          "package_name": "podcast.music.player.debug3"
         }
       },
       "oauth_client": [

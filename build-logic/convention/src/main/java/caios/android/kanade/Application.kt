@@ -7,7 +7,7 @@ import org.gradle.api.plugins.ExtensionAware
 internal fun Project.configureApplication() {
     androidExt {
         defaultConfig {
-            applicationId = "caios.android.kanade"
+            applicationId = "podcast.music.player"
             
             versionName = libs.version("versionName")
             versionCode = libs.version("versionCode").toInt()
