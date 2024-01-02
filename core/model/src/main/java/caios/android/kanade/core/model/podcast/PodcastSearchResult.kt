@@ -1,6 +1,7 @@
 package caios.android.kanade.core.model.podcast
 
 data class PodcastSearchResult(
+    val id: Int,
     /**
      * The name of the podcast
      */
@@ -16,5 +17,17 @@ data class PodcastSearchResult(
     /**
      * artistName of the podcast feed
      */
-    val author: String
+    val author: String,
+    val trackCount: Int
 )
+
+fun dummy(id: Int = 0): PodcastSearchResult {
+    return PodcastSearchResult(
+        id = id,
+        title = "サンプル楽曲$id",
+        author = "CAIOS",
+        trackCount = 217392,
+        imageUrl = "Song",
+        feedUrl = "",
+    )
+}

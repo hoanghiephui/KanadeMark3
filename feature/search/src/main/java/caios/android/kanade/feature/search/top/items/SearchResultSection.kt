@@ -1,6 +1,11 @@
 package caios.android.kanade.feature.search.top.items
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -9,10 +14,19 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import caios.android.kanade.core.design.R
+import caios.android.kanade.core.design.theme.bold
 import caios.android.kanade.core.design.theme.center
 import caios.android.kanade.core.model.music.Album
 import caios.android.kanade.core.model.music.Artist
@@ -32,9 +46,20 @@ internal fun SearchResultSection(
     onClickAlbumMenu: (Album) -> Unit,
     onClickPlaylistMenu: (Playlist) -> Unit,
     modifier: Modifier = Modifier,
+    isSearchPodcast: Boolean
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val nestedScrollConnection = remember {
+        object : NestedScrollConnection {
+            override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+                val delta = available.y
+                keyboardController?.hide()
+                return Offset.Zero
+            }
+        }
+    }
     LazyColumn(
-        modifier = modifier,
+        modifier = modifier.nestedScroll(nestedScrollConnection),
         contentPadding = PaddingValues(bottom = 8.dp),
     ) {
         if (uiState.resultYTMusic.isNotEmpty()) {
@@ -153,23 +178,75 @@ internal fun SearchResultSection(
             }
         }
 
+        if (uiState.resultSearchPodcast.isNotEmpty()) {
+            items(
+                items = uiState.resultSearchPodcast,
+                key = { podcast -> podcast.id },
+            ) {
+                SearchPodcastHolder(
+                    modifier = Modifier.fillMaxWidth(),
+                    podcastSearchResult = it,
+                    range = 0..0,
+                    onClickHolder = {
+                        keyboardController?.hide()
+                    },
+                    onClickMenu = {
+                    },
+                )
+            }
+        }
+
+
         if (
-            uiState.resultSongs.isEmpty() &&
+            (uiState.resultSongs.isEmpty() &&
             uiState.resultAlbums.isEmpty() &&
             uiState.resultArtists.isEmpty() &&
             uiState.resultPlaylists.isEmpty() &&
-            uiState.isEnableYTMusic &&
+            uiState.resultSearchPodcast.isEmpty()) ||
             uiState.keywords.all { it.isBlank() }
         ) {
             item {
-                Text(
-                    modifier = Modifier
-                        .padding(top = 16.dp)
-                        .fillMaxWidth(),
-                    text = stringResource(R.string.search_empty_text_ytmusic),
-                    style = MaterialTheme.typography.bodyMedium.center(),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
+                Column(
+                    modifier = Modifier.fillMaxSize().fillMaxHeight(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                ) {
+                    Image(
+                        modifier = Modifier
+                            .padding(
+                                top = 24.dp,
+                            )
+                            .fillMaxWidth(),
+                        painter = painterResource(R.drawable.vec_empty_music),
+                        contentDescription = "empty music",
+                    )
+
+                    Text(
+                        modifier = Modifier
+                            .padding(
+                                top = 32.dp,
+                                start = 24.dp,
+                                end = 24.dp,
+                            )
+                            .fillMaxWidth(),
+                        text = stringResource(R.string.search_not_result),
+                        style = MaterialTheme.typography.titleMedium.center(),
+                        color = MaterialTheme.colorScheme.onSurface,
+                    )
+
+                    Text(
+                        modifier = Modifier
+                            .padding(
+                                top = 8.dp,
+                                start = 24.dp,
+                                end = 24.dp,
+                            )
+                            .fillMaxWidth(),
+                        text = stringResource(R.string.type_to_search),
+                        style = MaterialTheme.typography.bodyMedium.center(),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
             }
         }
     }

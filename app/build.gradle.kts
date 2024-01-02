@@ -54,8 +54,6 @@ android {
         debug {
             signingConfig = signingConfigs.getByName("debug")
             isDebuggable = true
-            versionNameSuffix = ".D"
-            applicationIdSuffix = ".debug3"
         }
         create("billing") {
             signingConfig = signingConfigs.getByName("billing")

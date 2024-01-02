@@ -79,6 +79,7 @@ private fun SearchScreen(
                 onClickArtistMenu = onClickArtistMenu,
                 onClickAlbumMenu = onClickAlbumMenu,
                 onClickPlaylistMenu = onClickPlaylistMenu,
+                isSearchPodcast = isSearchPodcast
             )
         }
     }

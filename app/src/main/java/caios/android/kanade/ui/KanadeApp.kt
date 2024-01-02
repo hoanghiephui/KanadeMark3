@@ -401,8 +401,7 @@ private fun IdleScreen(
                         navigateToArtistMenu = { appState.showArtistMenuDialog(activity, it) },
                         navigateToAlbumMenu = { appState.showAlbumMenuDialog(activity, it) },
                         navigateToPlaylistMenu = { appState.showPlaylistMenuDialog(activity, it) },
-                        isPodcast = appState.currentDestination.isLibraryDestinationInHierarchy(
-                            LibraryDestination.Discover)
+                        isPodcast = appState.currentLibraryDestination == LibraryDestination.Discover
                     )
 
                     PodcastNavHost(

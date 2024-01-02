@@ -69,7 +69,7 @@ fun PodcastTopBar(
     navigateToAlbumMenu: (Album) -> Unit,
     navigateToPlaylistMenu: (Playlist) -> Unit,
     modifier: Modifier = Modifier,
-    isPodcast: Boolean = false
+    isPodcast: Boolean
 ) {
     val density = LocalDensity.current
     val scope = rememberCoroutineScope()
@@ -134,6 +134,7 @@ fun PodcastTopBar(
                         .padding(6.dp)
                         .clickable {
                             if (active) {
+                                query = ""
                                 onChangeActive.invoke(false)
                             } else {
                                 onClickDrawerMenu.invoke()
@@ -182,5 +183,6 @@ private fun Preview() {
         navigateToArtistMenu = { },
         navigateToAlbumMenu = { },
         navigateToPlaylistMenu = { },
+        isPodcast = true
     )
 }

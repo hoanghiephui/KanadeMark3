@@ -34,6 +34,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 import javax.inject.Inject
 
 @Stable
@@ -82,17 +83,19 @@ class SearchViewModel @Inject constructor(
                 onFailure = { ScreenState.Error(message = R.string.search_title) },
             )
         } else {
+            if (keywords.all { it.isEmpty() }) {
+                _screenState.value = ScreenState.Idle(SearchUiState())
+                return
+            }
             _screenState.value = ScreenState.Loading
-            _screenState.value = kotlin.runCatching {
-                searchPodcast(keywords)
-            }.fold(
-                onSuccess = { ScreenState.Idle(it) },
-                onFailure = { ScreenState.Error(message = R.string.search_title) },
-            )
+            searchPodcast(keywords)
+        }
+        keywords.forEach {
+            Timber.d("SEARCH: $it")
         }
     }
 
-    private suspend fun searchPodcast(keywords: List<String>): SearchUiState {
+    private suspend fun searchPodcast(keywords: List<String>) {
         asFlowResult {
             searcherRepository.searchPodcast(keywords.last())
         }.safeCollect(
@@ -102,10 +105,12 @@ class SearchViewModel @Inject constructor(
                         title = it.collectionName.toString(),
                         imageUrl = it.artworkUrl100.toString(),
                         feedUrl = it.feedUrl.toString(),
-                        author = it.artistName.toString()
+                        author = it.artistName.toString(),
+                        id = it.collectionId ?: 0,
+                        trackCount = it.trackCount ?: 0
                     )
                 } ?: emptyList()
-                SearchUiState(
+               val state = SearchUiState(
                     keywords = keywords,
                     resultSongs = emptyList(),
                     resultArtists = emptyList(),
@@ -119,22 +124,13 @@ class SearchViewModel @Inject constructor(
                     isEnableYTMusic = false,
                     resultSearchPodcast = searchResult
                 )
+                if (searchResult.isEmpty()) {
+                    _screenState.value = ScreenState.Error(message = R.string.error_no_data)
+                } else {
+                    _screenState.value = ScreenState.Idle(state)
+                }
             },
             onError = errorsDispatcher::dispatch
-        )
-        return SearchUiState(
-            keywords = keywords,
-            resultSongs = emptyList(),
-            resultArtists = emptyList(),
-            resultAlbums = emptyList(),
-            resultPlaylists = emptyList(),
-            resultYTMusic = emptyList(),
-            resultSongsRangeMap = emptyMap(),
-            resultArtistsRangeMap = emptyMap(),
-            resultAlbumsRangeMap = emptyMap(),
-            resultPlaylistsRangeMap = emptyMap(),
-            isEnableYTMusic = false,
-            resultSearchPodcast = emptyList()
         )
     }
 
