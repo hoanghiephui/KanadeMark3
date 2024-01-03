@@ -80,8 +80,7 @@ internal fun SongTopScreen(
         ) { index, song ->
             SongHolder(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .animateItemPlacement(),
+                    .fillMaxWidth(),
                 song = song,
                 onClickHolder = { onClickSong.invoke(index, songs) },
                 onClickMenu = { onClickMenu.invoke(song) },

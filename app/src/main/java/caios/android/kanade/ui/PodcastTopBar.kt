@@ -18,8 +18,11 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
@@ -125,25 +128,39 @@ fun PodcastTopBar(
             onActiveChange = onChangeActive,
             colors = SearchBarDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh),
             windowInsets = WindowInsets(0, 0, 0, 0),
-            placeholder = { Text(stringResource(R.string.search_title)) },
+            placeholder = { Text(stringResource(if (isPodcast)
+                R.string.search_podcast_title else R.string.search_title)) },
+            trailingIcon = {
+                 if (query.isNotBlank()) {
+                     IconButton(onClick = { query = "" }) {
+                         Icon(
+                             modifier = Modifier
+                                 .padding(6.dp),
+                             imageVector = Icons.Default.Clear,
+                             contentDescription = null,
+                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                         )
+                     }
+
+                 }
+            },
             leadingIcon = {
-                Icon(
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clip(RoundedCornerShape(50))
-                        .padding(6.dp)
-                        .clickable {
-                            if (active) {
-                                query = ""
-                                onChangeActive.invoke(false)
-                            } else {
-                                onClickDrawerMenu.invoke()
-                            }
-                        },
-                    painter = rememberAnimatedVectorPainter(image, atEnd),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
+                IconButton(onClick = {
+                    if (active) {
+                        query = ""
+                        onChangeActive.invoke(false)
+                    } else {
+                        onClickDrawerMenu.invoke()
+                    }
+                }) {
+                    Icon(
+                        modifier = Modifier
+                            .padding(6.dp),
+                        painter = rememberAnimatedVectorPainter(image, atEnd),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
             },
         ) {
             BackHandler(isEnableBackHandler) {

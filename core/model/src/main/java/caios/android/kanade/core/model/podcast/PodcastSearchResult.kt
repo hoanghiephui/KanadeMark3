@@ -26,7 +26,7 @@ fun dummy(id: Int = 0): PodcastSearchResult {
         id = id,
         title = "サンプル楽曲$id",
         author = "CAIOS",
-        trackCount = 217392,
+        trackCount = 2,
         imageUrl = "Song",
         feedUrl = "",
     )

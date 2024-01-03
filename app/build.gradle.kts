@@ -149,7 +149,7 @@ dependencies {
     debugImplementation(libs.facebook.flipper.network)
     debugImplementation(libs.facebook.flipper.leakcanary)
     debugImplementation(libs.facebook.soloader)
-    //debugImplementation(libs.leakcanary)
+    debugImplementation(libs.leakcanary)
 }
 
 plugins.apply("com.google.gms.google-services")

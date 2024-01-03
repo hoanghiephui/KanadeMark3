@@ -94,6 +94,7 @@
 
     <!-- Search -->
     <string name="search_title">Search library</string>
+    <string name="search_podcast_title">Search podcast…</string>
     <string name="search_not_found">No media matched</string>
     <string name="search_not_result">No results were found</string>
     <string name="type_to_search">Type a query to search</string>

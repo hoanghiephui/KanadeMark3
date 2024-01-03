@@ -1,13 +1,24 @@
 package caios.android.kanade.feature.search.top
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import caios.android.kanade.core.design.R
+import caios.android.kanade.core.design.theme.center
 import caios.android.kanade.core.model.ScreenState
 import caios.android.kanade.core.model.music.Album
 import caios.android.kanade.core.model.music.Artist
@@ -68,19 +79,68 @@ private fun SearchScreen(
             modifier = Modifier.fillMaxSize(),
             screenState = screenState,
         ) { uiState ->
-            SearchResultSection(
-                modifier = Modifier.fillMaxSize(),
-                uiState = uiState,
-                onClickSong = onClickSong,
-                onClickArtist = onClickArtist,
-                onClickAlbum = onClickAlbum,
-                onClickPlaylist = onClickPlaylist,
-                onClickSongMenu = onClickSongMenu,
-                onClickArtistMenu = onClickArtistMenu,
-                onClickAlbumMenu = onClickAlbumMenu,
-                onClickPlaylistMenu = onClickPlaylistMenu,
-                isSearchPodcast = isSearchPodcast
-            )
+            if (
+                (uiState.resultSongs.isEmpty() &&
+                        uiState.resultAlbums.isEmpty() &&
+                        uiState.resultArtists.isEmpty() &&
+                        uiState.resultPlaylists.isEmpty() &&
+                        uiState.resultSearchPodcast.isEmpty()) ||
+                uiState.keywords.all { it.isBlank() }
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                ) {
+                    Image(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        painter = painterResource(R.drawable.vec_empty_music),
+                        contentDescription = "empty music",
+                    )
+
+                    Text(
+                        modifier = Modifier
+                            .padding(
+                                top = 32.dp,
+                                start = 24.dp,
+                                end = 24.dp,
+                            )
+                            .fillMaxWidth(),
+                        text = stringResource(R.string.search_not_result),
+                        style = MaterialTheme.typography.titleMedium.center(),
+                        color = MaterialTheme.colorScheme.onSurface,
+                    )
+
+                    Text(
+                        modifier = Modifier
+                            .padding(
+                                top = 8.dp,
+                                start = 24.dp,
+                                end = 24.dp,
+                            )
+                            .fillMaxWidth(),
+                        text = stringResource(R.string.type_to_search),
+                        style = MaterialTheme.typography.bodyMedium.center(),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+            } else {
+                SearchResultSection(
+                    modifier = Modifier.fillMaxSize(),
+                    uiState = uiState,
+                    onClickSong = onClickSong,
+                    onClickArtist = onClickArtist,
+                    onClickAlbum = onClickAlbum,
+                    onClickPlaylist = onClickPlaylist,
+                    onClickSongMenu = onClickSongMenu,
+                    onClickArtistMenu = onClickArtistMenu,
+                    onClickAlbumMenu = onClickAlbumMenu,
+                    onClickPlaylistMenu = onClickPlaylistMenu,
+                    isSearchPodcast = isSearchPodcast
+                )
+            }
+
         }
     }
 }

@@ -52,7 +52,6 @@ internal fun SearchResultSection(
     val nestedScrollConnection = remember {
         object : NestedScrollConnection {
             override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-                val delta = available.y
                 keyboardController?.hide()
                 return Offset.Zero
             }
@@ -193,60 +192,6 @@ internal fun SearchResultSection(
                     onClickMenu = {
                     },
                 )
-            }
-        }
-
-
-        if (
-            (uiState.resultSongs.isEmpty() &&
-            uiState.resultAlbums.isEmpty() &&
-            uiState.resultArtists.isEmpty() &&
-            uiState.resultPlaylists.isEmpty() &&
-            uiState.resultSearchPodcast.isEmpty()) ||
-            uiState.keywords.all { it.isBlank() }
-        ) {
-            item {
-                Column(
-                    modifier = Modifier.fillMaxSize().fillMaxHeight(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
-                ) {
-                    Image(
-                        modifier = Modifier
-                            .padding(
-                                top = 24.dp,
-                            )
-                            .fillMaxWidth(),
-                        painter = painterResource(R.drawable.vec_empty_music),
-                        contentDescription = "empty music",
-                    )
-
-                    Text(
-                        modifier = Modifier
-                            .padding(
-                                top = 32.dp,
-                                start = 24.dp,
-                                end = 24.dp,
-                            )
-                            .fillMaxWidth(),
-                        text = stringResource(R.string.search_not_result),
-                        style = MaterialTheme.typography.titleMedium.center(),
-                        color = MaterialTheme.colorScheme.onSurface,
-                    )
-
-                    Text(
-                        modifier = Modifier
-                            .padding(
-                                top = 8.dp,
-                                start = 24.dp,
-                                end = 24.dp,
-                            )
-                            .fillMaxWidth(),
-                        text = stringResource(R.string.type_to_search),
-                        style = MaterialTheme.typography.bodyMedium.center(),
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                }
             }
         }
     }

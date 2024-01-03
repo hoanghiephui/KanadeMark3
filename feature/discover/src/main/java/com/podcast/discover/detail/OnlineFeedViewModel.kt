@@ -148,10 +148,12 @@ class OnlineFeedViewModel @Inject constructor(
                             data = it.audio ?: "",
                             dateModified = actual.time,
                             uri = Uri.parse(it.audio ?: ""),
-                            albumArtwork = if (it.itunesItemData?.image != null) Artwork.Web(url = it.itunesItemData?.image.toString()) else Artwork.dummy(
+                            albumArtwork = if (it.itunesItemData?.image != null)
+                                Artwork.Web(url = it.itunesItemData?.image.toString()) else Artwork.dummy(
                                 it.title ?: "PO"
                             ),
-                            artistArtwork = if (it.itunesItemData?.image != null) Artwork.Web(url = it.itunesItemData?.image.toString()) else Artwork.dummy(
+                            artistArtwork = if (it.itunesItemData?.image != null)
+                                Artwork.Web(url = it.itunesItemData?.image.toString()) else Artwork.dummy(
                                 it.title ?: "PO"
                             ),
                             isStream = true,
@@ -163,12 +165,14 @@ class OnlineFeedViewModel @Inject constructor(
                             album = it.title ?: "",
                             albumId = artistId,
                             songs = listOf(song),
-                            artwork = if (item.image?.url != null) Artwork.Web(url = item.image?.url.toString()) else Artwork.dummy(
+                            artwork = if (item.image?.url != null)
+                                Artwork.Web(url = item.image?.url.toString()) else Artwork.dummy(
                                 it.title ?: "PO"
                             )
                         )
                     },
-                    artwork = if (item.image?.url != null) Artwork.Web(url = item.image?.url.toString()) else Artwork.dummy(
+                    artwork = if (item.image?.url != null)
+                        Artwork.Web(url = item.image?.url.toString()) else Artwork.dummy(
                         item.title ?: "PO"
                     ),
                     description = HtmlCompat.fromHtml(

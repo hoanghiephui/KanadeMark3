@@ -45,7 +45,8 @@ class SearchViewModel @Inject constructor(
     private val userDataRepository: UserDataRepository,
     private val ytMusic: YTMusic,
     private val searcherRepository: PodcastSearcherRepository,
-    @Dispatcher(KanadeDispatcher.IO) private val ioDispatcher: CoroutineDispatcher,
+    @Dispatcher(KanadeDispatcher.IO)
+    private val ioDispatcher: CoroutineDispatcher,
     private val errorsDispatcher: ErrorsDispatcher
 ) : ViewModel() {
 
@@ -125,7 +126,7 @@ class SearchViewModel @Inject constructor(
                     resultSearchPodcast = searchResult
                 )
                 if (searchResult.isEmpty()) {
-                    _screenState.value = ScreenState.Error(message = R.string.error_no_data)
+                    _screenState.value = ScreenState.Idle(SearchUiState())
                 } else {
                     _screenState.value = ScreenState.Idle(state)
                 }
