@@ -54,7 +54,8 @@ interface FeedDiscoveryRepository {
 
 class FeedDiscoveryRepositoryImpl @Inject constructor(
     private val networkDataSource: ItunesDataSource,
-    @Dispatcher(KanadeDispatcher.IO) private val dispatcher: CoroutineDispatcher,
+    @Dispatcher(KanadeDispatcher.IO)
+    private val dispatcher: CoroutineDispatcher,
     private val podcastDao: PodcastDao
 ) : FeedDiscoveryRepository {
     override suspend fun getTopPodcast(country: String, limit: Int): ItunesTopPodcastResponse =
@@ -86,8 +87,7 @@ class FeedDiscoveryRepositoryImpl @Inject constructor(
             val model = artist.toModel(imId)
             val idPodcast = podcastDao.insertPodcastFeed(model.podcastFeed)
 
-            podcastDao.insertPodcastFeedItem(*model.items.map { it.copy(idPodcast = idPodcast) }
-                .toTypedArray())
+            podcastDao.insertPodcastFeedItem(model.items.map { it.copy(idPodcast = idPodcast) })
         }
 
     override suspend fun onUnSubscribePodcast(imId: Long) =

@@ -93,7 +93,8 @@ fun PodcastNavHost(
     libraryTopBarHeight: Dp,
     modifier: Modifier = Modifier,
     startDestination: String = HomeRoute,
-    showSnackBar: (String) -> Unit
+    showSnackBar: (String) -> Unit,
+    openSearch: (id: Int) -> Unit
 ) {
     val navController = appState.navController
     val activity = (LocalContext.current as Activity)
@@ -244,6 +245,9 @@ fun PodcastNavHost(
             },
             navigateToFeedMore = {
                 navController.navigateToDiscoverMore(it)
+            },
+            navSearchWith = {
+                openSearch(it)
             }
         )
 

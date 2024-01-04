@@ -12,17 +12,17 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface PodcastDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(podcastItem: PodcastEntity)
+    suspend fun insert(podcastItem: PodcastEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertPodcastFeed(entity: PodcastFeedEntity): Long
+    suspend fun insertPodcastFeed(entity: PodcastFeedEntity): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertPodcastFeedItem(vararg entity: PodcastFeedItemEntity)
+    suspend fun insertPodcastFeedItem(entity: List<PodcastFeedItemEntity>)
 
     @Transaction
     @Query("DELETE FROM podcast_feed WHERE id = :podcastId")
-    fun delete(podcastId: Long)
+    suspend fun delete(podcastId: Long)
 
     @Transaction
     @Query("DELETE FROM podcast_feed_item WHERE id = :podcastItemId")
@@ -42,7 +42,7 @@ interface PodcastDao {
 
     @Transaction
     @Query("SELECT * FROM podcast_feed WHERE id = :podcastId")
-    fun load(podcastId: Long): PodcastModel?
+    suspend fun load(podcastId: Long): PodcastModel?
 
     @Transaction
     @Query("SELECT * FROM podcast_feed_item WHERE id = :podcastItemId")
@@ -50,15 +50,12 @@ interface PodcastDao {
 
     @Transaction
     @Query("SELECT * FROM podcast_feed_item WHERE song_id = :songId")
-    fun loadItemSong(songId: Long): PodcastFeedItemEntity?
+    suspend fun loadItemSong(songId: Long): PodcastFeedItemEntity?
 
     @Delete
-    fun delete(podcastItem: PodcastEntity)
-
-    @Query("SELECT * FROM podcast_download ORDER BY id ASC")
-    fun getAllItems(): LiveData<List<PodcastEntity>>
+    suspend fun delete(podcastItem: PodcastEntity)
 
     @Transaction
     @Query("SELECT * FROM podcast_download WHERE podcast_id = :podcastId")
-    fun getItemById(podcastId: Long): PodcastEntity?
+    suspend fun getItemById(podcastId: Long): PodcastEntity?
 }

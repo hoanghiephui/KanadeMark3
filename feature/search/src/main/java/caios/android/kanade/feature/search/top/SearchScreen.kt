@@ -26,6 +26,7 @@ import caios.android.kanade.core.model.music.Playlist
 import caios.android.kanade.core.model.music.Song
 import caios.android.kanade.core.ui.AsyncLoadContents
 import caios.android.kanade.feature.search.top.items.SearchResultSection
+import timber.log.Timber
 
 @Composable
 fun SearchRoute(
@@ -71,76 +72,71 @@ private fun SearchScreen(
     modifier: Modifier = Modifier,
     isSearchPodcast: Boolean
 ) {
-    Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        AsyncLoadContents(
-            modifier = Modifier.fillMaxSize(),
-            screenState = screenState,
-        ) { uiState ->
-            if (
-                (uiState.resultSongs.isEmpty() &&
-                        uiState.resultAlbums.isEmpty() &&
-                        uiState.resultArtists.isEmpty() &&
-                        uiState.resultPlaylists.isEmpty() &&
-                        uiState.resultSearchPodcast.isEmpty()) ||
-                uiState.keywords.all { it.isBlank() }
+    AsyncLoadContents(
+        modifier = modifier.fillMaxSize(),
+        screenState = screenState,
+    ) { uiState ->
+        if (
+            (uiState.resultSongs.isEmpty() &&
+                    uiState.resultAlbums.isEmpty() &&
+                    uiState.resultArtists.isEmpty() &&
+                    uiState.resultPlaylists.isEmpty() &&
+                    uiState.resultSearchPodcast.isEmpty()) ||
+            uiState.keywords.all { it.isBlank() }
+        ) {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
             ) {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
-                ) {
-                    Image(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        painter = painterResource(R.drawable.vec_empty_music),
-                        contentDescription = "empty music",
-                    )
+                Image(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    painter = painterResource(R.drawable.vec_empty_music),
+                    contentDescription = "empty music",
+                )
 
-                    Text(
-                        modifier = Modifier
-                            .padding(
-                                top = 32.dp,
-                                start = 24.dp,
-                                end = 24.dp,
-                            )
-                            .fillMaxWidth(),
-                        text = stringResource(R.string.search_not_result),
-                        style = MaterialTheme.typography.titleMedium.center(),
-                        color = MaterialTheme.colorScheme.onSurface,
-                    )
+                Text(
+                    modifier = Modifier
+                        .padding(
+                            top = 32.dp,
+                            start = 24.dp,
+                            end = 24.dp,
+                        )
+                        .fillMaxWidth(),
+                    text = stringResource(R.string.search_not_result),
+                    style = MaterialTheme.typography.titleMedium.center(),
+                    color = MaterialTheme.colorScheme.onSurface,
+                )
 
-                    Text(
-                        modifier = Modifier
-                            .padding(
-                                top = 8.dp,
-                                start = 24.dp,
-                                end = 24.dp,
-                            )
-                            .fillMaxWidth(),
-                        text = stringResource(R.string.type_to_search),
-                        style = MaterialTheme.typography.bodyMedium.center(),
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                }
-            } else {
-                SearchResultSection(
-                    modifier = Modifier.fillMaxSize(),
-                    uiState = uiState,
-                    onClickSong = onClickSong,
-                    onClickArtist = onClickArtist,
-                    onClickAlbum = onClickAlbum,
-                    onClickPlaylist = onClickPlaylist,
-                    onClickSongMenu = onClickSongMenu,
-                    onClickArtistMenu = onClickArtistMenu,
-                    onClickAlbumMenu = onClickAlbumMenu,
-                    onClickPlaylistMenu = onClickPlaylistMenu,
-                    isSearchPodcast = isSearchPodcast
+                Text(
+                    modifier = Modifier
+                        .padding(
+                            top = 8.dp,
+                            start = 24.dp,
+                            end = 24.dp,
+                        )
+                        .fillMaxWidth(),
+                    text = stringResource(R.string.type_to_search),
+                    style = MaterialTheme.typography.bodyMedium.center(),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
-
+        } else {
+            SearchResultSection(
+                modifier = Modifier.fillMaxSize(),
+                uiState = uiState,
+                onClickSong = onClickSong,
+                onClickArtist = onClickArtist,
+                onClickAlbum = onClickAlbum,
+                onClickPlaylist = onClickPlaylist,
+                onClickSongMenu = onClickSongMenu,
+                onClickArtistMenu = onClickArtistMenu,
+                onClickAlbumMenu = onClickAlbumMenu,
+                onClickPlaylistMenu = onClickPlaylistMenu,
+                isSearchPodcast = isSearchPodcast
+            )
         }
+
     }
 }

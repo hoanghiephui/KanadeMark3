@@ -41,6 +41,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -178,6 +179,7 @@ private fun IdleScreen(
         gesturesEnabled = (appState.currentLibraryDestination != null),
     ) {
         var isSearchActive by remember { mutableStateOf(false) }
+        var idSearchBy by remember { mutableIntStateOf(1) }
         val isShouldHideBottomController = isSearchActive || appState.currentLibraryDestination == null
 
         var topBarHeight by remember { mutableFloatStateOf(0f) }
@@ -401,7 +403,8 @@ private fun IdleScreen(
                         navigateToArtistMenu = { appState.showArtistMenuDialog(activity, it) },
                         navigateToAlbumMenu = { appState.showAlbumMenuDialog(activity, it) },
                         navigateToPlaylistMenu = { appState.showPlaylistMenuDialog(activity, it) },
-                        isPodcast = appState.currentLibraryDestination == LibraryDestination.Discover
+                        isPodcast = appState.currentLibraryDestination == LibraryDestination.Discover,
+                        idSearchBy = idSearchBy
                     )
 
                     PodcastNavHost(
@@ -413,6 +416,10 @@ private fun IdleScreen(
                             scope.launch {
                                 snackBarHostState.showSnackbar(it)
                             }
+                        },
+                        openSearch = {
+                            idSearchBy = it
+                            isSearchActive = true
                         }
                     )
 

@@ -6,8 +6,6 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-const val NAME_ITUNES = "itunes"
-
 interface ItunesApi {
     @GET("{country}/rss/toppodcasts/limit={limit}/explicit=true/json")
     suspend fun getTopPodcast(

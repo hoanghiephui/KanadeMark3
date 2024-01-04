@@ -2,6 +2,7 @@ plugins {
     id("kanade.library")
     id("kanade.library.compose")
     id("kanade.detekt")
+    id("kotlinx-serialization")
 }
 
 android {

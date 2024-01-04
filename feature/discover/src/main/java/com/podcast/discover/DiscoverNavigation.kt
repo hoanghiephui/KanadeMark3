@@ -19,7 +19,8 @@ fun NavController.navigateToDiscover(navOptions: NavOptions? = null) {
 fun NavGraphBuilder.discoverScreen(
     topMargin: Dp,
     navigateToFeedDetail: (String) -> Unit,
-    navigateToFeedMore: (List<EntryItem>) -> Unit
+    navigateToFeedMore: (List<EntryItem>) -> Unit,
+    navSearchWith: (id: Int) -> Unit
 ) {
     composable(
         route = DiscoverRoute,
@@ -40,7 +41,8 @@ fun NavGraphBuilder.discoverScreen(
             modifier = Modifier.fillMaxSize(),
             topMargin = topMargin,
             navigateToFeedDetail = navigateToFeedDetail,
-            navigateToFeedMore = navigateToFeedMore
+            navigateToFeedMore = navigateToFeedMore,
+            navSearchWith = navSearchWith
         )
     }
 }

@@ -37,7 +37,8 @@ internal fun DiscoverRouter(
     modifier: Modifier = Modifier,
     viewModel: DiscoverViewModel = hiltViewModel(),
     navigateToFeedDetail: (String) -> Unit,
-    navigateToFeedMore: (List<EntryItem>) -> Unit
+    navigateToFeedMore: (List<EntryItem>) -> Unit,
+    navSearchWith: (id: Int) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateLifecycleAware()
     AsyncLoadContents(
@@ -52,7 +53,8 @@ internal fun DiscoverRouter(
                 .background(MaterialTheme.colorScheme.surface),
             navigateToFeedDetail = navigateToFeedDetail,
             navigateToFeedMore = navigateToFeedMore,
-            itemsAdvance = viewModel.itemsAdvanced
+            itemsAdvance = viewModel.itemsAdvanced,
+            navSearchWith = navSearchWith
         )
     }
 }
@@ -64,7 +66,8 @@ internal fun DiscoverScreen(
     uiState: Discover,
     itemsAdvance: List<Advanced>,
     navigateToFeedDetail: (String) -> Unit,
-    navigateToFeedMore: (List<EntryItem>) -> Unit
+    navigateToFeedMore: (List<EntryItem>) -> Unit,
+    navSearchWith: (id: Int) -> Unit
 ) {
 
     LazyColumn(
@@ -97,7 +100,7 @@ internal fun DiscoverScreen(
                     .height(50.dp)
                     .fillMaxWidth()
                     .clickable {
-
+                        navSearchWith.invoke(it.id)
                     },
                 verticalAlignment = Alignment.CenterVertically
             ) {

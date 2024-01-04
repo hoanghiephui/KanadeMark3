@@ -149,7 +149,8 @@ internal fun DownloadInputDialog(
                     Text(
                         text = stringResource(R.string.common_download),
                         style = MaterialTheme.typography.labelMedium,
-                        color = if (uiState.url.isNotBlank() && uiState.error == null) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
+                        color = if (uiState.url.isNotBlank() && uiState.error == null)
+                            MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
                     )
                 }
             }

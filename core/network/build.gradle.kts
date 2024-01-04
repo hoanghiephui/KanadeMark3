@@ -21,6 +21,7 @@ dependencies {
 
     implementation(libs.jsoup)
     implementation(libs.moshi.kotlin)
+    implementation(libs.moshi.adapters)
     ksp(libs.moshi.codegen)
     implementation(libs.retrofit.core)
     implementation(libs.retrofit.converter.moshi)

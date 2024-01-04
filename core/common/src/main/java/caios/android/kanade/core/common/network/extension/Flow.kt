@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.withIndex
+import timber.log.Timber
 
 suspend inline fun <T> Flow<T>.safeCollect(
     crossinline onEach: suspend (value: T) -> Unit,
@@ -20,6 +21,7 @@ suspend inline fun <T> Flow<T>.safeCollect(
             try {
                 onEach(it)
             } catch (e: Throwable) {
+                Timber.e(e)
                 onError(e)
             }
         }

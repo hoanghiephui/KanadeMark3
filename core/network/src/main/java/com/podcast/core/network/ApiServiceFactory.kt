@@ -1,5 +1,6 @@
 package com.podcast.core.network
 
+import com.podcast.core.network.api.FYYDApi
 import com.podcast.core.network.api.ItunesApi
 import com.squareup.moshi.Moshi
 import okhttp3.OkHttpClient
@@ -19,6 +20,17 @@ internal object ApiServiceFactory {
             moshi = moshi,
         )
 
+    fun createFYYD(
+        baseUrl: String,
+        okHttpClient: OkHttpClient,
+        moshi: Moshi,
+    ): FYYDApi =
+        setupFYYDService(
+            baseUrl = baseUrl,
+            okHttpClient = okHttpClient,
+            moshi = moshi,
+        )
+
     private fun setupService(
         baseUrl: String,
         okHttpClient: OkHttpClient,
@@ -31,5 +43,18 @@ internal object ApiServiceFactory {
             .build()
 
         return retrofit.create(ItunesApi::class.java)
+    }
+    private fun setupFYYDService(
+        baseUrl: String,
+        okHttpClient: OkHttpClient,
+        moshi: Moshi,
+    ): FYYDApi {
+        val retrofit = Retrofit.Builder()
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .baseUrl(baseUrl)
+            .client(okHttpClient)
+            .build()
+
+        return retrofit.create(FYYDApi::class.java)
     }
 }

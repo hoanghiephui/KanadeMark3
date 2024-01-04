@@ -1,6 +1,5 @@
 package caios.android.kanade.core.ui.controller
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -47,7 +46,7 @@ fun BottomController(
     onClickPause: () -> Unit,
     onClickSkipToNext: () -> Unit,
     onClickSkipToPrevious: () -> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     ConstraintLayout(modifier) {
         val (indicator, artwork, title, artist, buttons) = createRefs()

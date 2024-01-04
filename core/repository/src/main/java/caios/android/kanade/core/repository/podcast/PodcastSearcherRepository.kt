@@ -3,9 +3,7 @@ package caios.android.kanade.core.repository.podcast
 import caios.android.kanade.core.common.network.Dispatcher
 import caios.android.kanade.core.common.network.KanadeDispatcher
 import caios.android.kanade.core.model.podcast.LookFeedResponse
-import caios.android.kanade.core.model.podcast.PodcastSearchResult
 import com.podcast.core.network.datasource.ItunesDataSource
-import com.prof18.rssparser.RssParser
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -15,7 +13,6 @@ interface PodcastSearcherRepository {
 }
 
 class ItunesSearcherRepositoryImpl @Inject constructor(
-    private val rssParserBuilder: RssParser,
     @Dispatcher(KanadeDispatcher.IO)
     private val dispatcher: CoroutineDispatcher,
     private val networkDataSource: ItunesDataSource,

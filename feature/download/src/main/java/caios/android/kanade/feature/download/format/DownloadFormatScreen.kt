@@ -172,7 +172,7 @@ private fun DownloadFormatScreen(
         SimpleAlertDialog(
             title = R.string.common_caution,
             message = R.string.download_format_alert_message,
-            positiveText = R.string.download_format_alert_confirm,
+            positiveText = R.string.common_back,
             negativeText = R.string.common_cancel,
             onPositiveClick = { onTerminate.invoke() },
             onNegativeClick = { isShowBackAlert = false },

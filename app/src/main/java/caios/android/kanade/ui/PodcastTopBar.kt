@@ -72,7 +72,8 @@ fun PodcastTopBar(
     navigateToAlbumMenu: (Album) -> Unit,
     navigateToPlaylistMenu: (Playlist) -> Unit,
     modifier: Modifier = Modifier,
-    isPodcast: Boolean
+    isPodcast: Boolean,
+    idSearchBy: Int
 ) {
     val density = LocalDensity.current
     val scope = rememberCoroutineScope()
@@ -96,7 +97,7 @@ fun PodcastTopBar(
 
     LaunchedEffect(query) {
         if (!isEnableYTMusic) {
-            searchViewModel.search(listOf(query), isPodcast)
+            searchViewModel.search(listOf(query), isPodcast, idSearchBy)
         }
     }
 
@@ -120,7 +121,7 @@ fun PodcastTopBar(
             onSearch = {
                 if (isEnableYTMusic) {
                     scope.launch {
-                        searchViewModel.search(listOf(query), isPodcast)
+                        searchViewModel.search(listOf(query), isPodcast, idSearchBy)
                     }
                 }
             },
@@ -200,6 +201,7 @@ private fun Preview() {
         navigateToArtistMenu = { },
         navigateToAlbumMenu = { },
         navigateToPlaylistMenu = { },
-        isPodcast = true
+        isPodcast = true,
+        idSearchBy = 0
     )
 }
