@@ -32,7 +32,7 @@
     <string name="common_retry_button">Try again</string>
     <string name="common_error_no_network">You\'re not connected to the network 🌎, please check your network connection and try again.</string>
     <string name="common_error_unexpected">Minor fail: an error has happened. 😵</string>
-
+    <string name="not_connected">⚠️ You aren’t connected to the internet</string>
     <!-- Common Unit -->
     <string name="unit_song">%1$d songs</string>
     <string name="unit_artist">%1$d name</string>
@@ -48,6 +48,8 @@
     <string name="error_network">A communication error occurred</string>
     <string name="error_developing_feature">Feature under development</string>
     <string name="error_billing">Failed to retrieve purchase information</string>
+    <string name="download_error_not_found">The podcast host\'s server does not know where to find the file. It may have been deleted.</string>
+
 
     <!-- Music -->
     <string name="music_title">Title</string>

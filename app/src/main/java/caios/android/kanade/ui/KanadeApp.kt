@@ -34,6 +34,7 @@ import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.rememberDrawerState
@@ -54,8 +55,10 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import caios.android.kanade.core.common.network.util.ToastUtil
 import caios.android.kanade.core.design.R
 import caios.android.kanade.core.design.animation.NavigateAnimation
@@ -95,6 +98,19 @@ fun KanadeApp(
 ) {
     val activity = (LocalContext.current as Activity)
     var isShowWelcomeScreen by remember { mutableStateOf(!isAgreedTeams || !isAllowedPermission) }
+    val isOffline by appState.isOffline.collectAsStateWithLifecycle()
+    // If user is not connected to the internet show a snack bar to inform them.
+    val notConnectedMessage = stringResource(R.string.not_connected)
+    val snackBarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(isOffline) {
+        if (isOffline) {
+            snackBarHostState.showSnackbar(
+                message = notConnectedMessage,
+                duration = SnackbarDuration.Indefinite,
+            )
+        }
+    }
 
     LaunchedEffect(true) {
         if (userData.kanadeId.isBlank()) {
@@ -121,6 +137,7 @@ fun KanadeApp(
                     musicViewModel = musicViewModel,
                     userData = userData,
                     appState = appState,
+                    snackBarHostState = snackBarHostState
                 )
             }
         }
@@ -135,6 +152,7 @@ private fun IdleScreen(
     userData: UserData,
     appState: KanadeAppState,
     modifier: Modifier = Modifier,
+    snackBarHostState: SnackbarHostState,
 ) {
     val density = LocalDensity.current
     val activity = (LocalContext.current as Activity)
@@ -271,7 +289,7 @@ private fun IdleScreen(
                 activity.startService(Intent(activity, LastFmService::class.java))
             }
         }
-        val snackBarHostState = remember { SnackbarHostState() }
+
 
         Scaffold(
             snackbarHost = { SnackbarHost(snackBarHostState) },

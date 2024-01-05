@@ -88,6 +88,10 @@ class SearchViewModel @Inject constructor(
         )
     }
 
+    suspend fun showBlank() {
+        _screenState.emit(ScreenState.Idle(SearchUiState()))
+    }
+
     suspend fun search(
         keywords: List<String>,
         isSearchPodcast: Boolean,

@@ -188,7 +188,7 @@ class OnlineFeedViewModel @Inject constructor(
 
         podcastRssResult.isLoading -> ScreenState.Loading
         else -> ScreenState.Error(
-            message = R.string.error_no_data,
+            message = R.string.download_error_not_found,
             retryTitle = R.string.common_close
         )
     }

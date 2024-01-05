@@ -5,6 +5,8 @@ import com.podcast.core.network.datasource.DefaultFyyDDataSource
 import com.podcast.core.network.datasource.DefaultItunesDataSource
 import com.podcast.core.network.datasource.FyyDDataSource
 import com.podcast.core.network.datasource.ItunesDataSource
+import com.podcast.core.network.util.ConnectivityManagerNetworkMonitor
+import com.podcast.core.network.util.NetworkMonitor
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -19,4 +21,10 @@ interface DataSourceModule {
 
     @Binds
     fun bindsFyyDDataSource(impl: DefaultFyyDDataSource): FyyDDataSource
+
+
+    @Binds
+    fun bindsNetworkMonitor(
+        networkMonitor: ConnectivityManagerNetworkMonitor,
+    ): NetworkMonitor
 }

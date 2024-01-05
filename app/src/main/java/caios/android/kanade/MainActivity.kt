@@ -36,6 +36,7 @@ import caios.android.kanade.core.ui.AsyncLoadContents
 import caios.android.kanade.ui.KanadeApp
 import caios.android.kanade.ui.rememberKanadeAppState
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.podcast.core.network.util.NetworkMonitor
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
@@ -51,6 +52,9 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var musicController: MusicController
+
+    @Inject
+    lateinit var networkMonitor: NetworkMonitor
 
     override fun onCreate(savedInstanceState: android.os.Bundle?) {
         val splashScreen = installSplashScreen()
@@ -87,7 +91,7 @@ class MainActivity : ComponentActivity() {
                 modifier = Modifier.fillMaxSize(),
                 screenState = screenState,
             ) { userData ->
-                val appState = rememberKanadeAppState(windowSize, musicViewModel, userData)
+                val appState = rememberKanadeAppState(windowSize, musicViewModel, userData, networkMonitor)
                 val isAgreedTeams = remember { userData.isAgreedPrivacyPolicy && userData.isAgreedTermsOfService }
                 val isAllowedPermission = remember { !shouldAllowPermission() }
 

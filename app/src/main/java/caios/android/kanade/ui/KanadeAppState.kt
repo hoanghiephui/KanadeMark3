@@ -47,15 +47,20 @@ import caios.android.kanade.feature.song.top.SongTopRoute
 import caios.android.kanade.feature.song.top.navigateToSongTop
 import caios.android.kanade.feature.tag.navigateToTagEdit
 import caios.android.kanade.navigation.LibraryDestination
+import com.podcast.core.network.util.NetworkMonitor
 import com.podcast.discover.DiscoverRoute
 import com.podcast.discover.navigateToDiscover
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 
 @Composable
 fun rememberKanadeAppState(
     windowSize: WindowSizeClass,
     musicViewModel: MusicViewModel,
     userData: UserData?,
+    networkMonitor: NetworkMonitor,
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     navController: NavHostController = rememberNavController(),
 ): KanadeAppState {
@@ -65,6 +70,7 @@ fun rememberKanadeAppState(
         userData,
         coroutineScope,
         windowSize,
+        networkMonitor
     ) {
         KanadeAppState(
             navController,
@@ -72,6 +78,7 @@ fun rememberKanadeAppState(
             userData,
             coroutineScope,
             windowSize,
+            networkMonitor
         )
     }
 }
@@ -83,7 +90,16 @@ class KanadeAppState(
     val userData: UserData?,
     val coroutineScope: CoroutineScope,
     val windowSize: WindowSizeClass,
+    networkMonitor: NetworkMonitor,
 ) {
+
+    val isOffline = networkMonitor.isOnline
+        .map(Boolean::not)
+        .stateIn(
+            scope = coroutineScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = false,
+        )
     val currentDestination: NavDestination?
         @Composable get() = navController.currentBackStackEntryAsState().value?.destination
 

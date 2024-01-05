@@ -98,8 +98,10 @@ fun PodcastTopBar(
     }
 
     LaunchedEffect(query) {
-        if (!isEnableYTMusic) {
+        if (!isEnableYTMusic && !isPodcast) {
             searchViewModel.search(listOf(query), isPodcast, idSearchBy)
+        } else if (isPodcast && query.isBlank()) {
+            searchViewModel.showBlank()
         }
     }
 
@@ -121,7 +123,7 @@ fun PodcastTopBar(
             query = query,
             onQueryChange = { query = it },
             onSearch = {
-                if (isEnableYTMusic) {
+                if (isEnableYTMusic || isPodcast) {
                     scope.launch {
                         searchViewModel.search(listOf(query), isPodcast, idSearchBy)
                     }

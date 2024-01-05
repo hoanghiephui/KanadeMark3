@@ -70,7 +70,11 @@ fun OnlineFeedRoute(
         modifier = modifier,
         screenState = screenState,
         retryAction = {
-            viewModel.getLookFeed(feedId)
+            if (feedUrl != null) {
+                terminate.invoke()
+            } else {
+                viewModel.getLookFeed(feedId)
+            }
         },
     ) { artist ->
 
