@@ -45,12 +45,19 @@ fun OnlineFeedRoute(
     viewModel: OnlineFeedViewModel = hiltViewModel(),
     terminate: () -> Unit,
     feedId: String,
+    feedUrl: String?,
     showSnackBar: (String) -> Unit
 ) {
     val screenState by viewModel.screenState.collectAsStateWithLifecycle()
-    LaunchedEffect(key1 = feedId, block = {
-        viewModel.getLookFeed(feedId)
-    })
+    if (feedUrl != null) {
+        LaunchedEffect(key1 = feedUrl, block = {
+            viewModel.fetchRssDetail(feedUrl, feedId)
+        })
+    } else {
+        LaunchedEffect(key1 = feedId, block = {
+            viewModel.getLookFeed(feedId)
+        })
+    }
     val context = LocalContext.current
     val permission = (context as Activity).shouldAllowPermission()
     val mDownloadStatus: SnapshotStateMap<Long, Int> = remember {

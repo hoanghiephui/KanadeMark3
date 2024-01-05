@@ -92,7 +92,7 @@ class OnlineFeedViewModel @Inject constructor(
                 }.safeCollect(
                     onEach = {
                         val feedUrlName = it.data?.results?.first()?.feedUrl ?: return@safeCollect
-                        fetchRssDetail(feedUrlName)
+                        fetchRssDetail(feedUrlName, feedId)
                     },
                     onError = errorsDispatcher::dispatch
                 )
@@ -100,7 +100,8 @@ class OnlineFeedViewModel @Inject constructor(
         }
     }
 
-    private suspend fun fetchRssDetail(feedUrl: String) {
+    suspend fun fetchRssDetail(feedUrl: String, feedId: String) {
+        this.imId = feedId
         asFlowResult {
             repository.getRssDetail(feedUrl)
         }.onResultError(errorsDispatcher::dispatch).safeCollect(

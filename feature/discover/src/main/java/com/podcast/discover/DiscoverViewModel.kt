@@ -72,8 +72,7 @@ class DiscoverViewModel @Inject constructor(
     val itemsAdvanced = mutableListOf(
         Advanced(1, R.drawable.baseline_search_24, "Search Apple Podcasts"),
         Advanced(2, R.drawable.baseline_search_24, "Search fyyd"),
-        Advanced(3, R.drawable.baseline_search_24, "Search gpodder.net"),
-        Advanced(4, R.drawable.baseline_search_24, "Search Podcast Index")
+        Advanced(3, R.drawable.baseline_search_24, "Search Podcast Index")
     )
 
     @AnyThread

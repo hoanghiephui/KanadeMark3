@@ -50,6 +50,7 @@ import caios.android.kanade.core.model.music.Album
 import caios.android.kanade.core.model.music.Artist
 import caios.android.kanade.core.model.music.Playlist
 import caios.android.kanade.core.model.music.Song
+import caios.android.kanade.core.model.podcast.PodcastSearchResult
 import caios.android.kanade.feature.search.top.SearchRoute
 import caios.android.kanade.feature.search.top.SearchViewModel
 import kotlinx.coroutines.launch
@@ -71,6 +72,7 @@ fun PodcastTopBar(
     navigateToArtistMenu: (Artist) -> Unit,
     navigateToAlbumMenu: (Album) -> Unit,
     navigateToPlaylistMenu: (Playlist) -> Unit,
+    navigateToPodcast: (PodcastSearchResult) -> Unit,
     modifier: Modifier = Modifier,
     isPodcast: Boolean,
     idSearchBy: Int
@@ -178,7 +180,8 @@ fun PodcastTopBar(
                 navigateToArtistMenu = navigateToArtistMenu,
                 navigateToAlbumMenu = navigateToAlbumMenu,
                 navigateToPlaylistMenu = navigateToPlaylistMenu,
-                isSearchPodcast = isPodcast
+                isSearchPodcast = isPodcast,
+                navigateToPodcast = navigateToPodcast
             )
         }
     }
@@ -202,6 +205,7 @@ private fun Preview() {
         navigateToAlbumMenu = { },
         navigateToPlaylistMenu = { },
         isPodcast = true,
-        idSearchBy = 0
+        idSearchBy = 0,
+        navigateToPodcast = {}
     )
 }

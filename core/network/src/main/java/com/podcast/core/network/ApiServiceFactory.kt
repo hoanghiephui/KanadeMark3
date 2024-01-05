@@ -1,6 +1,7 @@
 package com.podcast.core.network
 
 import com.podcast.core.network.api.FYYDApi
+import com.podcast.core.network.api.IndexApi
 import com.podcast.core.network.api.ItunesApi
 import com.squareup.moshi.Moshi
 import okhttp3.OkHttpClient
@@ -14,47 +15,44 @@ internal object ApiServiceFactory {
         okHttpClient: OkHttpClient,
         moshi: Moshi,
     ): ItunesApi =
-        setupService(
+        setupRetrofit(
             baseUrl = baseUrl,
             okHttpClient = okHttpClient,
             moshi = moshi,
-        )
+        ).create(ItunesApi::class.java)
 
     fun createFYYD(
         baseUrl: String,
         okHttpClient: OkHttpClient,
         moshi: Moshi,
     ): FYYDApi =
-        setupFYYDService(
+        setupRetrofit(
             baseUrl = baseUrl,
             okHttpClient = okHttpClient,
             moshi = moshi,
-        )
+        ).create(FYYDApi::class.java)
 
-    private fun setupService(
+    fun createIndex(
         baseUrl: String,
         okHttpClient: OkHttpClient,
         moshi: Moshi,
-    ): ItunesApi {
-        val retrofit = Retrofit.Builder()
+    ): IndexApi =
+        setupRetrofit(
+            baseUrl = baseUrl,
+            okHttpClient = okHttpClient,
+            moshi = moshi,
+        ).create(IndexApi::class.java)
+
+    private fun setupRetrofit(
+        baseUrl: String,
+        okHttpClient: OkHttpClient,
+        moshi: Moshi,
+    ): Retrofit {
+
+        return Retrofit.Builder()
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .baseUrl(baseUrl)
             .client(okHttpClient)
             .build()
-
-        return retrofit.create(ItunesApi::class.java)
-    }
-    private fun setupFYYDService(
-        baseUrl: String,
-        okHttpClient: OkHttpClient,
-        moshi: Moshi,
-    ): FYYDApi {
-        val retrofit = Retrofit.Builder()
-            .addConverterFactory(MoshiConverterFactory.create(moshi))
-            .baseUrl(baseUrl)
-            .client(okHttpClient)
-            .build()
-
-        return retrofit.create(FYYDApi::class.java)
     }
 }

@@ -29,7 +29,6 @@ fun SearchPodcastHolder(
     podcastSearchResult: PodcastSearchResult,
     range: IntRange,
     onClickHolder: () -> Unit,
-    onClickMenu: (PodcastSearchResult) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     ConstraintLayout(modifier.clickable { onClickHolder.invoke() }) {
@@ -103,7 +102,6 @@ private fun SearchSongHolderPreview() {
             modifier = Modifier.fillMaxWidth(),
             podcastSearchResult = dummy(),
             range = 4..5,
-            onClickMenu = {},
             onClickHolder = {},
         )
     }

@@ -24,6 +24,7 @@ import caios.android.kanade.core.music.YTMusic
 import caios.android.kanade.core.repository.MusicRepository
 import caios.android.kanade.core.repository.UserDataRepository
 import caios.android.kanade.core.repository.podcast.FyyDRepository
+import caios.android.kanade.core.repository.podcast.IndexRepository
 import caios.android.kanade.core.repository.podcast.PodcastSearcherRepository
 import caios.android.kanade.core.ui.error.ErrorsDispatcher
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -53,7 +54,8 @@ class SearchViewModel @Inject constructor(
     @Dispatcher(KanadeDispatcher.IO)
     private val ioDispatcher: CoroutineDispatcher,
     private val errorsDispatcher: ErrorsDispatcher,
-    private val fyyDRepository: FyyDRepository
+    private val fyyDRepository: FyyDRepository,
+    private val indexRepository: IndexRepository
 ) : ViewModel() {
 
     private val _screenState =
@@ -166,6 +168,23 @@ class SearchViewModel @Inject constructor(
                             author = it.author,
                             id = it.id,
                             trackCount = it.countEpisodes ?: 0
+                        )
+                    }
+                }
+            }
+
+            SearchType.SEARCH_BY_INDEX -> {
+                asFlowResult {
+                    indexRepository.searchPodcast(keywords.last())
+                }.mapResultData { response ->
+                    response.feeds?.map {
+                        PodcastSearchResult(
+                            title = it.title ?: "",
+                            imageUrl = it.image ?: "",
+                            feedUrl = it.url ?: "",
+                            author = it.author ?: "",
+                            id = it.id ?: 0,
+                            trackCount = it.episodeCount ?: 0
                         )
                     }
                 }
@@ -327,12 +346,7 @@ class SearchViewModel @Inject constructor(
                 return type.toString()
             }
         },
-        SEARCH_BY_GPOD(3) {
-            override fun toString(): String {
-                return type.toString()
-            }
-        },
-        SEARCH_BY_INDEX(4) {
+        SEARCH_BY_INDEX(3) {
             override fun toString(): String {
                 return type.toString()
             }

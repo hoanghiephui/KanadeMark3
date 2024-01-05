@@ -29,6 +29,8 @@ import caios.android.kanade.core.repository.podcast.FeedDiscoveryRepository
 import caios.android.kanade.core.repository.podcast.FeedDiscoveryRepositoryImpl
 import caios.android.kanade.core.repository.podcast.FyyDRepository
 import caios.android.kanade.core.repository.podcast.FyyDRepositoryImpl
+import caios.android.kanade.core.repository.podcast.IndexRepository
+import caios.android.kanade.core.repository.podcast.IndexRepositoryImpl
 import caios.android.kanade.core.repository.podcast.ItunesSearcherRepositoryImpl
 import caios.android.kanade.core.repository.podcast.ParseRssRepository
 import caios.android.kanade.core.repository.podcast.ParseRssRepositoryImpl
@@ -155,4 +157,10 @@ interface RepositoryModule {
     fun bindFyyDRepository(
         fyyDRepositoryImpl: FyyDRepositoryImpl
     ): FyyDRepository
+
+    @Singleton
+    @Binds
+    fun bindIndexRepository(
+        indexRepositoryImpl: IndexRepositoryImpl
+    ): IndexRepository
 }

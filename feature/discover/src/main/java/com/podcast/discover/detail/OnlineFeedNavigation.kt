@@ -2,6 +2,7 @@ package com.podcast.discover.detail
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
+import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
@@ -11,14 +12,23 @@ import caios.android.kanade.core.design.animation.NavigateAnimation
 import caios.android.kanade.core.model.music.Album
 import caios.android.kanade.core.model.music.Artist
 import caios.android.kanade.core.model.music.Song
+import caios.android.kanade.core.ui.navigate
 
 const val OnlineDetailId = "onlineDetailId"
-const val OnlineDetailRoute = "onlineDetail/{$OnlineDetailId}"
+const val OnlineDetailUrl = "onlineDetailUrl"
+const val OnlineDetailRoute = "onlineDetail"
 
-fun NavController.navigateToOnlineDetail(feedId: String) {
-    this.navigate("onlineDetail/$feedId") {
+fun NavController.navigateToOnlineDetail(
+    feedId: String,
+    feedUrl: String? = null
+) {
+    val bundle = bundleOf(
+        OnlineDetailId to feedId,
+        OnlineDetailUrl to feedUrl
+    )
+    this.navigate(route = OnlineDetailRoute, args = bundle, builder = {
         launchSingleTop = true
-    }
+    })
 }
 
 fun NavGraphBuilder.feedDetailScreen(
@@ -32,9 +42,6 @@ fun NavGraphBuilder.feedDetailScreen(
 ) {
     composable(
         route = OnlineDetailRoute,
-        arguments = listOf(
-            navArgument(OnlineDetailId) { type = NavType.StringType },
-        ),
         enterTransition = { NavigateAnimation.Vertical.enter },
         exitTransition = { NavigateAnimation.Vertical.exit },
         popEnterTransition = { NavigateAnimation.Vertical.popEnter },
@@ -44,7 +51,8 @@ fun NavGraphBuilder.feedDetailScreen(
             modifier = Modifier.fillMaxSize(),
             feedId = it.arguments?.getString(OnlineDetailId) ?: "",
             terminate = terminate,
-            showSnackBar = showSnackBar
+            showSnackBar = showSnackBar,
+            feedUrl = it.arguments?.getString(OnlineDetailUrl)
         )
     }
 }

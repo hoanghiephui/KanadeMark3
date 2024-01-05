@@ -28,6 +28,7 @@ fun newBuilder(context: Context): OkHttpClient.Builder {
     )
     val builder = OkHttpClient.Builder()
     builder.networkInterceptors().add(UserAgentInterceptor())
+    builder.addInterceptor(IndexInterceptor())
 
     // set cookie handler
     val cm = CookieManager()

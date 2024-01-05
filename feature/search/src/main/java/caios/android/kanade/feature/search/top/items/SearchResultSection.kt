@@ -32,6 +32,7 @@ import caios.android.kanade.core.model.music.Album
 import caios.android.kanade.core.model.music.Artist
 import caios.android.kanade.core.model.music.Playlist
 import caios.android.kanade.core.model.music.Song
+import caios.android.kanade.core.model.podcast.PodcastSearchResult
 import caios.android.kanade.feature.search.top.SearchUiState
 
 @Composable
@@ -45,6 +46,7 @@ internal fun SearchResultSection(
     onClickArtistMenu: (Artist) -> Unit,
     onClickAlbumMenu: (Album) -> Unit,
     onClickPlaylistMenu: (Playlist) -> Unit,
+    navigateToPodcast: (PodcastSearchResult) -> Unit,
     modifier: Modifier = Modifier,
     isSearchPodcast: Boolean
 ) {
@@ -188,9 +190,8 @@ internal fun SearchResultSection(
                     range = 0..0,
                     onClickHolder = {
                         keyboardController?.hide()
-                    },
-                    onClickMenu = {
-                    },
+                        navigateToPodcast.invoke(it)
+                    }
                 )
             }
         }

@@ -24,6 +24,7 @@ import caios.android.kanade.core.model.music.Album
 import caios.android.kanade.core.model.music.Artist
 import caios.android.kanade.core.model.music.Playlist
 import caios.android.kanade.core.model.music.Song
+import caios.android.kanade.core.model.podcast.PodcastSearchResult
 import caios.android.kanade.core.ui.AsyncLoadContents
 import caios.android.kanade.feature.search.top.items.SearchResultSection
 import timber.log.Timber
@@ -37,6 +38,7 @@ fun SearchRoute(
     navigateToArtistMenu: (Artist) -> Unit,
     navigateToAlbumMenu: (Album) -> Unit,
     navigateToPlaylistMenu: (Playlist) -> Unit,
+    navigateToPodcast: (PodcastSearchResult) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SearchViewModel = hiltViewModel(),
     isSearchPodcast: Boolean
@@ -54,7 +56,8 @@ fun SearchRoute(
         onClickArtistMenu = navigateToArtistMenu,
         onClickAlbumMenu = navigateToAlbumMenu,
         onClickPlaylistMenu = navigateToPlaylistMenu,
-        isSearchPodcast = isSearchPodcast
+        isSearchPodcast = isSearchPodcast,
+        navigateToPodcast = navigateToPodcast
     )
 }
 
@@ -69,6 +72,7 @@ private fun SearchScreen(
     onClickArtistMenu: (Artist) -> Unit,
     onClickAlbumMenu: (Album) -> Unit,
     onClickPlaylistMenu: (Playlist) -> Unit,
+    navigateToPodcast: (PodcastSearchResult) -> Unit,
     modifier: Modifier = Modifier,
     isSearchPodcast: Boolean
 ) {
@@ -134,7 +138,8 @@ private fun SearchScreen(
                 onClickArtistMenu = onClickArtistMenu,
                 onClickAlbumMenu = onClickAlbumMenu,
                 onClickPlaylistMenu = onClickPlaylistMenu,
-                isSearchPodcast = isSearchPodcast
+                isSearchPodcast = isSearchPodcast,
+                navigateToPodcast = navigateToPodcast
             )
         }
 

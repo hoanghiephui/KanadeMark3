@@ -80,7 +80,7 @@ import caios.android.kanade.feature.setting.top.navigateToSettingTop
 import caios.android.kanade.feature.welcome.WelcomeNavHost
 import caios.android.kanade.navigation.LibraryDestination
 import caios.android.kanade.navigation.PodcastNavHost
-import caios.android.kanade.navigation.isLibraryDestinationInHierarchy
+import com.podcast.discover.detail.navigateToOnlineDetail
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
 
@@ -404,7 +404,13 @@ private fun IdleScreen(
                         navigateToAlbumMenu = { appState.showAlbumMenuDialog(activity, it) },
                         navigateToPlaylistMenu = { appState.showPlaylistMenuDialog(activity, it) },
                         isPodcast = appState.currentLibraryDestination == LibraryDestination.Discover,
-                        idSearchBy = idSearchBy
+                        idSearchBy = idSearchBy,
+                        navigateToPodcast = {
+                            appState.navController.navigateToOnlineDetail(
+                                feedId = it.id.toString(),
+                                feedUrl = it.feedUrl
+                            )
+                        }
                     )
 
                     PodcastNavHost(

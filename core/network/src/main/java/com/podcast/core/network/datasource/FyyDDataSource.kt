@@ -2,6 +2,7 @@ package com.podcast.core.network.datasource
 
 import androidx.annotation.AnyThread
 import caios.android.kanade.core.model.podcast.FyydResponse
+import caios.android.kanade.core.model.podcast.IndexResponse
 import com.podcast.core.network.ApiServiceExecutor
 import javax.inject.Inject
 
@@ -11,6 +12,11 @@ interface FyyDDataSource {
         query: String,
         limit: Int = 10
     ): FyydResponse
+
+    @AnyThread
+    suspend fun searchPodcasts(
+        query: String
+    ): IndexResponse
 }
 
 class DefaultFyyDDataSource @Inject constructor(
@@ -21,4 +27,8 @@ class DefaultFyyDDataSource @Inject constructor(
             it.searchPodcasts(query, limit)
         }
 
+    override suspend fun searchPodcasts(query: String) =
+        executor.executeIndex {
+            it.searchPodcasts(query)
+        }
 }

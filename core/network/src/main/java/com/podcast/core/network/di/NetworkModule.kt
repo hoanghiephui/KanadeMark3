@@ -9,6 +9,7 @@ import com.podcast.core.network.BuildConfig
 import com.podcast.core.network.OkHttpClientFactory
 import com.podcast.core.network.adapter.StatusCodeAdapter
 import com.podcast.core.network.api.FYYDApi
+import com.podcast.core.network.api.IndexApi
 import com.podcast.core.network.api.ItunesApi
 import com.podcast.core.network.util.PodcastDownloader
 import com.prof18.rssparser.RssParser
@@ -61,6 +62,18 @@ object NetworkModule {
     ): FYYDApi =
         ApiServiceFactory.createFYYD(
             baseUrl = "https://api.fyyd.de/0.2/",
+            okHttpClient = okHttpClient,
+            moshi = moshi,
+        )
+
+    @Provides
+    @Singleton
+    fun provideIndexApiService(
+        okHttpClient: OkHttpClient,
+        @MoshiApiService moshi: Moshi,
+    ): IndexApi =
+        ApiServiceFactory.createIndex(
+            baseUrl = "https://api.podcastindex.org/api/1.0/",
             okHttpClient = okHttpClient,
             moshi = moshi,
         )
