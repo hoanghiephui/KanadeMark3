@@ -52,6 +52,7 @@ internal fun HomeRoute(
     navigateToAlbumMenu: (Album) -> Unit,
     onClickRecentlyAddedFeed: () -> Unit,
     onClickFeed: (imId: String) -> Unit,
+    navToAddPodcast: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
@@ -113,7 +114,8 @@ internal fun HomeRoute(
                 onClickQueueItem = viewModel::onSkipToQueue,
                 recentlySubscribedFeeds = homeUiState.subscribedFeeds.toImmutableList(),
                 onClickRecentlyAddedFeed = onClickRecentlyAddedFeed,
-                onClickFeed = onClickFeed
+                onClickFeed = onClickFeed,
+                onClickAddPodcast = navToAddPodcast
             )
         }
     }
@@ -132,6 +134,7 @@ internal fun HomeScreen(
     onClickRecentlyAdded: () -> Unit,
     onClickRecentlyAddedFeed: () -> Unit,
     onClickFeed: (imId: String) -> Unit,
+    onClickAddPodcast: () -> Unit,
     onClickMostPlayed: () -> Unit,
     onClickPlay: (Int, List<Song>) -> Unit,
     onClickSongMenu: (Song) -> Unit,
@@ -158,6 +161,17 @@ internal fun HomeScreen(
                 onClickShuffle = { onClickShuffle.invoke(songs) },
             )
         }
+        if (recentlySubscribedFeeds.isNotEmpty()) {
+            item {
+                HomeRecentlySubscribedFeedsSection(
+                    modifier = Modifier.fillMaxWidth(),
+                    feeds = recentlySubscribedFeeds,
+                    onClickMore = onClickRecentlyAddedFeed,
+                    onClickFeed = onClickFeed,
+                    onClickAddPodcast = onClickAddPodcast
+                )
+            }
+        }
 
         item {
             HomeQueueSection(
@@ -168,16 +182,6 @@ internal fun HomeScreen(
                 onClickQueue = onClickQueue,
                 onClickQueueItem = onClickQueueItem,
             )
-        }
-        if (recentlySubscribedFeeds.isNotEmpty()) {
-            item {
-                HomeRecentlySubscribedFeedsSection(
-                    modifier = Modifier.fillMaxWidth(),
-                    feeds = recentlySubscribedFeeds,
-                    onClickMore = onClickRecentlyAddedFeed,
-                    onClickFeed = onClickFeed,
-                )
-            }
         }
 
         if (recentlyAddedAlbums.isNotEmpty()) {

@@ -27,6 +27,7 @@ import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Podcasts
 import androidx.compose.material.icons.filled.Scanner
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.CloudDownload
@@ -111,9 +112,10 @@ fun PodcastDrawer(
 
             NavigationDrawerItem(
                 state = state,
-                label = stringResource(R.string.navigation_playlist),
-                icon = Icons.AutoMirrored.Filled.QueueMusic,
-                onClick = { onClickItem.invoke(LibraryDestination.Playlist) },
+                label = stringResource(R.string.navigation_podcast),
+                isSelected = currentDestination.isLibraryDestinationInHierarchy(LibraryDestination.Discover),
+                icon = Icons.Default.Podcasts,
+                onClick = { onClickItem.invoke(LibraryDestination.Discover) },
             )
 
             NavigationDrawerItem(
@@ -148,6 +150,13 @@ fun PodcastDrawer(
 
             NavigationDrawerItem(
                 state = state,
+                label = stringResource(R.string.navigation_playlist),
+                icon = Icons.AutoMirrored.Filled.QueueMusic,
+                onClick = { onClickItem.invoke(LibraryDestination.Playlist) },
+            )
+
+            NavigationDrawerItem(
+                state = state,
                 label = stringResource(R.string.navigation_queue),
                 icon = Icons.AutoMirrored.Filled.PlaylistPlay,
                 onClick = navigateToQueue,
@@ -174,12 +183,12 @@ fun PodcastDrawer(
                 onClick = navigateToSetting,
             )
 
-            NavigationDrawerItem(
+            /*NavigationDrawerItem(
                 state = state,
                 label = stringResource(R.string.navigation_app_info),
                 icon = Icons.Outlined.Info,
                 onClick = navigateToAbout,
-            )
+            )*/
 
             /* NavigationDrawerItem(
                  state = state,
@@ -202,6 +211,7 @@ fun PodcastDrawer(
                 isDeveloperMode = userData?.isDeveloperMode == true,
                 onClick = navigateToBillingPlus,
             )
+            Spacer(modifier = Modifier.height(30.dp))
         }
     }
 }

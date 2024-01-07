@@ -46,6 +46,7 @@ import caios.android.kanade.core.ui.controller.items.MainControllerBottomButtonS
 import caios.android.kanade.core.ui.controller.items.MainControllerControlButtonSection
 import caios.android.kanade.core.ui.controller.items.MainControllerEmptyLyricsItem
 import caios.android.kanade.core.ui.controller.items.MainControllerInfoSection
+import caios.android.kanade.core.ui.controller.items.MainControllerPodcastContentItem
 import caios.android.kanade.core.ui.controller.items.MainControllerTextSection
 import caios.android.kanade.core.ui.controller.items.MainControllerToolBarSection
 import kotlinx.collections.immutable.toImmutableList
@@ -208,7 +209,12 @@ fun MainController(
                 enter = fadeIn(),
                 exit = fadeOut(),
             ) {
-                if (uiState.lyrics != null) {
+                if (uiState.song?.isStream == true) {
+                    MainControllerPodcastContentItem(
+                        song = uiState.song!!,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                } else if (uiState.lyrics != null) {
                     LyricsView(
                         state = state,
                         modifier = Modifier.fillMaxWidth(),
@@ -283,6 +289,9 @@ fun MainController(
                 isFavorite = isFavorite,
                 onClickLyrics = onClickLyrics,
                 onClickLyricsEdit = {
+                    if (uiState.song?.isStream == true) {
+                        return@MainControllerBottomButtonSection
+                    }
                     scope.launch {
                         uiState.song?.let {
                             onClickClose.invoke()

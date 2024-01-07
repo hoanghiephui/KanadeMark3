@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -97,7 +98,7 @@ private fun SettingThemeDialog(
                                 .clip(RoundedCornerShape(50))
                                 .padding(6.dp)
                                 .clickable { onTerminate.invoke() },
-                            imageVector = Icons.Outlined.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
@@ -128,7 +129,7 @@ private fun SettingThemeDialog(
                     description = R.string.setting_theme_theme_dynamic_color_description,
                     value = userData.isDynamicColor,
                     onValueChanged = {
-                        if (!userData.hasPrivilege) {
+                        if (userData.hasPrivilege) {
                             onClickDynamicColor.invoke(it)
                         } else {
                             ToastUtil.show(context, R.string.billing_plus_toast_require_plus)

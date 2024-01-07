@@ -15,10 +15,10 @@ import androidx.compose.ui.res.stringResource
 import caios.android.kanade.core.common.network.KanadeConfig
 import caios.android.kanade.core.design.R
 import caios.android.kanade.core.model.UserData
+import caios.android.kanade.feature.setting.BuildConfig
 import caios.android.kanade.feature.setting.SettingSwitchItem
 import caios.android.kanade.feature.setting.SettingTextItem
 import com.yausername.youtubedl_android.YoutubeDL
-import kotlinx.coroutines.launch
 
 @Composable
 internal fun SettingTopOthersSection(
@@ -60,29 +60,19 @@ internal fun SettingTopOthersSection(
 
         SettingTextItem(
             modifier = Modifier.fillMaxWidth(),
-            title = stringResource(R.string.setting_top_others_ytdlp_version),
-            description = ytDlpVersion ?: "Unknown",
-            onClick = {
-                scope.launch {
-                    ytDlpVersion = context.getString(R.string.setting_top_others_ytdlp_version_checking)
-                    ytDlpVersion = onClickYtDlpVersion.invoke(context)
-                }
-            },
-        )
-
-        SettingTextItem(
-            modifier = Modifier.fillMaxWidth(),
             title = stringResource(R.string.setting_top_others_open_source_license),
             description = stringResource(R.string.setting_top_others_open_source_license_description),
             onClick = { onClickOpenSourceLicense.invoke() },
         )
 
-        SettingSwitchItem(
-            modifier = Modifier.fillMaxWidth(),
-            title = R.string.setting_top_others_developer_mode,
-            description = R.string.setting_top_others_developer_mode_description,
-            value = userData.isDeveloperMode,
-            onValueChanged = onClickDeveloperMode,
-        )
+        if (BuildConfig.DEBUG) {
+            SettingSwitchItem(
+                modifier = Modifier.fillMaxWidth(),
+                title = R.string.setting_top_others_developer_mode,
+                description = R.string.setting_top_others_developer_mode_description,
+                value = userData.isDeveloperMode,
+                onValueChanged = onClickDeveloperMode,
+            )
+        }
     }
 }

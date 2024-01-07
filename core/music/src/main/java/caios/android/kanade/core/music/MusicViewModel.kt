@@ -71,12 +71,14 @@ class MusicViewModel @Inject constructor(
                 val state = data[4] as PlayerState
                 val position = data[5] as Long
                 val isAnalyzing = data[6] as Boolean
-
+                val queueItems = queue?.items?.find { it.id == song?.id }
                 uiState.copy(
                     userData = userData,
                     song = song,
                     lyrics = song?.let { musicRepository.getLyrics(it) },
-                    queueItems = if (queue?.items?.isNotEmpty() == true) queue.items else if (song != null) listOf(song) else emptyList(),
+                    queueItems = if (queueItems != null) queue.items else if (song != null) listOf(
+                        song
+                    ) else emptyList(),
                     queueIndex = queue?.index ?: if (song != null) 1 else 0,
                     progress = position,
                     state = state,

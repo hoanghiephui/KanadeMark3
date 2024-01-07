@@ -81,6 +81,7 @@ import com.podcast.discover.detail.feedDetailScreen
 import com.podcast.discover.detail.navigateToOnlineDetail
 import com.podcast.discover.discoverMoreScreen
 import com.podcast.discover.discoverScreen
+import com.podcast.discover.navigateToDiscover
 import com.podcast.discover.navigateToDiscoverMore
 import kotlinx.collections.immutable.ImmutableList
 import kotlin.reflect.KClass
@@ -235,6 +236,9 @@ fun PodcastNavHost(
             },
             navigateToFeed =  {
                 navController.navigateToOnlineDetail(it)
+            },
+            navigateToAddPodcast = {
+                appState.navigateToLibrary(LibraryDestination.Discover)
             }
         )
 

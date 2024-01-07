@@ -108,7 +108,7 @@
     <string name="home_button_shuffle_all">Shuffle</string>
     <string name="home_title_queue">Playback queue list</string>
     <string name="home_title_recently_added_albums">Recently added albums</string>
-    <string name="home_title_recently_subscribed">Check your classics</string>
+    <string name="home_title_recently_subscribed">Subscriptions</string>
     <string name="home_title_recently_played_songs">Recently played songs</string>
     <string name="home_title_most_played_songs">Most played songs</string>
     <string name="home_empty_title">Home is empty</string>
@@ -149,6 +149,7 @@
     <string name="menu_toast_add_to_playlist">Added to playlist</string>
 
     <!-- Sort -->
+    <string name="sort_title">Sort by</string>
     <string name="sort_order_asc">Ascending order</string>
     <string name="sort_order_desc">Descending order</string>
     <string name="sort_option_title">Title</string>
@@ -260,7 +261,7 @@
 
     <!-- Settings -->
     <string name="setting_title">Settings</string>
-    <string name="setting_top_ytmusic">連携</string>
+    <string name="setting_top_ytmusic">Integration</string>
     <string name="setting_top_theme">Theme</string>
     <string name="setting_top_theme_app">App theme</string>
     <string name="setting_top_theme_app_description">Change the app theme. </string>
@@ -279,10 +280,10 @@
     <string name="setting_top_playing_stop_when_taskkill">Stop on task kill</string>
     <string name="setting_top_playing_stop_when_taskkill_description">Stop playing music when exiting the app. </string>
     <string name="setting_top_library">Library</string>
-    <string name="setting_top_library_ytmusic_title">Youtube Music と連携 (未提供)</string>
-    <string name="setting_top_library_ytmusic_description">連携を行うと、Youtube Music のデータを Kanade で使用できるようになります。この機能は次回以降のアップデートで提供予定です。</string>
-    <string name="setting_top_library_ytmusic_remove_token_title">連携情報を削除</string>
-    <string name="setting_top_library_ytmusic_remove_token_description">Youtube Music との連携情報を削除します</string>
+    <string name="setting_top_library_ytmusic_title">"Integration with YouTube Music (Not available).</string>
+    <string name="setting_top_library_ytmusic_description">By linking, you will be able to use Youtube Music data in Podcast. This feature is scheduled to be provided in the next update and beyond.</string>
+    <string name="setting_top_library_ytmusic_remove_token_title">Delete collaboration information.</string>
+    <string name="setting_top_library_ytmusic_remove_token_description">Delete collaboration information with YouTube Music.</string>
     <string name="setting_top_library_scan">Song scan</string>
     <string name="setting_top_library_scan_description">Scans and registers songs that the app cannot recognize. </string>
     <string name="setting_top_library_ignore_short_music">Ignore short songs</string>
@@ -290,7 +291,7 @@
     <string name="setting_top_library_ignore_not_music">Ignore audio files that are not songs</string>
     <string name="setting_top_library_ignore_not_music_description">Build a library by ignoring files that do not have a music flag specified. </string>
     <string name="setting_top_others">Others</string>
-    <string name="setting_top_others_id">Kanade ID</string>
+    <string name="setting_top_others_id">Podcast ID</string>
     <string name="setting_top_others_version">App version</string>
     <string name="setting_top_others_ytdlp_version">yt-dlp version</string>
     <string name="setting_top_others_ytdlp_version_checking">Checking for updates…</string>
@@ -307,16 +308,16 @@
     <string name="setting_theme_color_description">Sets the app\'s theme color. Cannot be used at the same time as Dynamic Color. </string>
     <string name="setting_developer_title">Development mode</string>
     <string name="setting_developer_warning">You are trying to turn on this mode.Please enter the developer\'s PIN.\n\n[Warning] When this mode is turned on, you will not be able to receive any support. </string>
-    <string name="setting_ytmusic_login_title1">Google アカウントにサインイン</string>
-    <string name="setting_ytmusic_login_description1">Youtube Music との連携には Google アカウントにサインインする必要があります。サインイン画面に表示されているコードが以下と一致しているかご確認の上、サインインを行ってください。\n\nサインイン後は Kanade を開き、「Youtube Music と連携」ボタンを押してください。</string>
-    <string name="setting_ytmusic_login_button1">サインイン</string>
-    <string name="setting_ytmusic_login_title2">Youtube Music と連携</string>
-    <string name="setting_ytmusic_login_description2">Google アカウントにサインイン後に以下の「連携」ボタンを押してください。</string>
-    <string name="setting_ytmusic_login_button2">連携</string>
-    <string name="setting_ytmusic_login_toast_success">Youtube Music と連携しました</string>
-    <string name="setting_ytmusic_login_toast_success2">Youtube Music と連携しましたが、この機能は次回以降のアップデートで提供されます</string>
-    <string name="setting_ytmusic_login_toast_failure">連携に失敗しました</string>
-    <string name="setting_ytmusic_login_toast_remove_token">連携情報を削除しました</string>
+    <string name="setting_ytmusic_login_title1">Sign in to your Google account</string>
+    <string name="setting_ytmusic_login_description1">After signing in, open Podcast and press the "Link with YouTube Music" button.</string>
+    <string name="setting_ytmusic_login_button1">Sign in</string>
+    <string name="setting_ytmusic_login_title2">Integrate with YouTube Music.</string>
+    <string name="setting_ytmusic_login_description2">After signing in to your Google account, please press the "Link" button below.</string>
+    <string name="setting_ytmusic_login_button2">Integration</string>
+    <string name="setting_ytmusic_login_toast_success">Linked with YouTube Music.</string>
+    <string name="setting_ytmusic_login_toast_success2">Linked with YouTube Music, but this feature will be provided in the next update.</string>
+    <string name="setting_ytmusic_login_toast_failure">Failed to link/integrate.</string>
+    <string name="setting_ytmusic_login_toast_remove_token">Deleted collaboration information.</string>
 
     <!-- Share -->
     <string name="share_title">Select share destination</string>

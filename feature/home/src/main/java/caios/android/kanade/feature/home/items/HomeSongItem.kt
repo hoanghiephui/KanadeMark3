@@ -34,7 +34,6 @@ internal fun HomeSongItem(
 ) {
     Box(modifier.padding(6.dp)) {
         Card(
-            modifier = Modifier.clickable { onClickHolder.invoke() },
             shape = RoundedCornerShape(4.dp),
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.applyTonalElevation(
@@ -42,6 +41,9 @@ internal fun HomeSongItem(
                     elevation = 1.dp,
                 ),
             ),
+            onClick = {
+                onClickHolder.invoke()
+            }
         ) {
             ConstraintLayout(Modifier.fillMaxWidth()) {
                 val (artwork, title, artist, shadow) = createRefs()

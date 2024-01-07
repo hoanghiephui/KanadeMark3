@@ -8,19 +8,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.NavigateNext
+import androidx.compose.material.icons.automirrored.filled.PlaylistAdd
 import androidx.compose.material.icons.filled.Album
-import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.DoubleArrow
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.LibraryAdd
 import androidx.compose.material.icons.filled.Lyrics
-import androidx.compose.material.icons.filled.NavigateNext
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.PlaylistAdd
 import androidx.compose.material.icons.filled.Share
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -83,7 +82,7 @@ private fun SongMenuDialog(
             },
         )
 
-        Divider()
+        HorizontalDivider()
 
         MenuItemSection(
             titleRes = R.string.menu_play_next,
@@ -97,7 +96,7 @@ private fun SongMenuDialog(
 
         MenuItemSection(
             titleRes = R.string.menu_play_only,
-            imageVector = Icons.Default.NavigateNext,
+            imageVector = Icons.AutoMirrored.Filled.NavigateNext,
             onClick = {
                 ToastUtil.show(context, R.string.menu_toast_add_to_queue)
                 onDismiss.invoke()
@@ -117,14 +116,43 @@ private fun SongMenuDialog(
 
         MenuItemSection(
             titleRes = R.string.menu_add_to_playlist,
-            imageVector = Icons.Default.PlaylistAdd,
+            imageVector = Icons.AutoMirrored.Filled.PlaylistAdd,
             onClick = {
                 onDismiss.invoke()
                 onClickAddToPlaylist.invoke(song)
             },
         )
 
-        Divider(
+        if (!song.isStream) {
+            HorizontalDivider(
+                modifier = Modifier
+                    .padding(
+                        top = 8.dp,
+                        bottom = 8.dp,
+                        start = 54.dp,
+                    ),
+            )
+            MenuItemSection(
+                titleRes = R.string.menu_artist,
+                imageVector = Icons.Default.Person,
+                onClick = {
+                    onDismiss.invoke()
+                    onClickArtist.invoke(song)
+                },
+            )
+
+            MenuItemSection(
+                titleRes = R.string.menu_album,
+                imageVector = Icons.Default.Album,
+                onClick = {
+                    onDismiss.invoke()
+                    onClickAlbum.invoke(song)
+                },
+            )
+        }
+
+
+        HorizontalDivider(
             modifier = Modifier
                 .padding(
                     top = 8.dp,
@@ -133,41 +161,14 @@ private fun SongMenuDialog(
                 ),
         )
 
-        MenuItemSection(
-            titleRes = R.string.menu_artist,
-            imageVector = Icons.Default.Person,
-            onClick = {
-                onDismiss.invoke()
-                onClickArtist.invoke(song)
-            },
-        )
-
-        MenuItemSection(
-            titleRes = R.string.menu_album,
-            imageVector = Icons.Default.Album,
-            onClick = {
-                onDismiss.invoke()
-                onClickAlbum.invoke(song)
-            },
-        )
-
-        Divider(
-            modifier = Modifier
-                .padding(
-                    top = 8.dp,
-                    bottom = 8.dp,
-                    start = 54.dp,
-                ),
-        )
-
-        MenuItemSection(
+        /*MenuItemSection(
             titleRes = R.string.menu_analyze,
             imageVector = Icons.Default.Code,
             onClick = {
                 onDismiss.invoke()
                 onClickAnalyzeMusicInfo.invoke(song)
             },
-        )
+        )*/
 
         MenuItemSection(
             titleRes = R.string.menu_edit,
@@ -178,14 +179,16 @@ private fun SongMenuDialog(
             },
         )
 
-        MenuItemSection(
-            titleRes = R.string.menu_lyrics,
-            imageVector = Icons.Default.Lyrics,
-            onClick = {
-                onDismiss.invoke()
-                onClickLyrics.invoke(song)
-            },
-        )
+        if (!song.isStream) {
+            MenuItemSection(
+                titleRes = R.string.menu_lyrics,
+                imageVector = Icons.Default.Lyrics,
+                onClick = {
+                    onDismiss.invoke()
+                    onClickLyrics.invoke(song)
+                },
+            )
+        }
 
         MenuItemSection(
             titleRes = R.string.menu_detail_info,

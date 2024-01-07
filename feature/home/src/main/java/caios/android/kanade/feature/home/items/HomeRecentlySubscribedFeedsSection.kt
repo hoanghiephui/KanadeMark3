@@ -2,6 +2,7 @@ package caios.android.kanade.feature.home.items
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -14,20 +15,23 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color.Companion.Red
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import caios.android.kanade.core.database.podcast.PodcastModel
 import caios.android.kanade.core.design.R
+import caios.android.kanade.core.design.component.dashedBorder
 import caios.android.kanade.core.design.theme.bold
-import caios.android.kanade.core.model.music.Album
-import caios.android.kanade.core.model.music.Song
 import caios.android.kanade.core.repository.toFeedModel
 import caios.android.kanade.core.ui.music.FeedPodcastHolder
 import kotlinx.collections.immutable.ImmutableList
@@ -38,6 +42,7 @@ internal fun HomeRecentlySubscribedFeedsSection(
     onClickMore: () -> Unit,
     onClickFeed: (imId: String) -> Unit,
     modifier: Modifier = Modifier,
+    onClickAddPodcast: () -> Unit
 ) {
     Column(
         modifier = modifier.padding(vertical = 16.dp),
@@ -79,12 +84,34 @@ internal fun HomeRecentlySubscribedFeedsSection(
                 key = { "added-${it.podcastFeed.idPodcast}" },
             ) { feed ->
                 FeedPodcastHolder(
-                    modifier = Modifier.width(150.dp),
+                    modifier = Modifier.width(120.dp),
                     feed = feed.toFeedModel(),
                     onClickHolder = {
                         onClickFeed.invoke(feed.podcastFeed.imId)
                     },
                 )
+            }
+            if (feeds.size <= 2) {
+                item {
+                    Box(
+                        Modifier
+                            .size(120.dp)
+                            .padding(6.dp)
+                            .dashedBorder(1.dp, MaterialTheme.colorScheme.primary, 8.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        IconButton(onClick = {
+                            onClickAddPodcast.invoke()
+                        }) {
+                            Icon(
+                                modifier = Modifier.size(24.dp),
+                                imageVector = Icons.Default.Add,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary,
+                            )
+                        }
+                    }
+                }
             }
         }
     }
