@@ -11,7 +11,7 @@ data class Artist(
     val isSubscribe: Boolean = false
 ) {
     val songs: List<Song>
-        get() = albums.flatMap { it.songs }
+        get() = albums.flatMap { it.songs }.distinctBy { it.id }
 
     val duration: Long
         get() = albums.sumOf { it.duration }

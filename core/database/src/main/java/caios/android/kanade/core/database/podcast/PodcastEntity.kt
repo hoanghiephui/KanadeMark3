@@ -22,10 +22,6 @@ data class PodcastFeedEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo("id")
     val id: Long,
-    @ColumnInfo(name = "im_id")
-    val imId: String,
-    @ColumnInfo(name = "id_podcast")
-    val idPodcast: Long,
     @ColumnInfo(name = "title")
     val title: String,
     @ColumnInfo(name = "description")

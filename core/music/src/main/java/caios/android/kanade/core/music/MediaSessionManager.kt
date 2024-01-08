@@ -18,8 +18,12 @@ import androidx.media.AudioAttributesCompat
 import androidx.media.AudioFocusRequestCompat
 import androidx.media.AudioManagerCompat
 import androidx.media3.common.MediaItem
-import androidx.media3.common.MimeTypes
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.datasource.DataSource
+import androidx.media3.datasource.DefaultDataSource
+import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import caios.android.kanade.core.design.databinding.LayoutDefaultArtworkBinding
 import caios.android.kanade.core.design.theme.Blue40
 import caios.android.kanade.core.design.theme.Green40
@@ -41,6 +45,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
+@UnstableApi
 class MediaSessionManager(
     private val service: Service,
     private val player: ExoPlayer,
@@ -68,6 +73,17 @@ class MediaSessionManager(
             build()
         }
     }
+    private val httpDataSourceFactory = DefaultHttpDataSource.Factory().also {
+        it.setUserAgent("Player")
+        it.setKeepPostFor302Redirects(true)
+        it.setAllowCrossProtocolRedirects(true)
+        it.setConnectTimeoutMs(DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS)
+        it.setReadTimeoutMs(DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS)
+    }
+
+
+    private val dataSourceFactory: DataSource.Factory =
+        DefaultDataSource.Factory(service.applicationContext, httpDataSourceFactory)
 
     private val audioFocusChangeListener = AudioManager.OnAudioFocusChangeListener { type ->
         Timber.d("onAudioFocusChange: type = $type")
@@ -75,16 +91,20 @@ class MediaSessionManager(
             AudioManager.AUDIOFOCUS_LOSS -> {
                 musicController.playerEvent(PlayerEvent.Pause)
             }
+
             AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> {
                 musicController.playerEvent(PlayerEvent.PauseTransient)
             }
+
             AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> {
                 musicController.playerEvent(PlayerEvent.Dack(true))
             }
+
             AudioManager.AUDIOFOCUS_GAIN -> {
                 musicController.playerEvent(PlayerEvent.Dack(false))
                 musicController.playerEvent(PlayerEvent.Play)
             }
+
             else -> {
                 musicController.playerEvent(PlayerEvent.Pause)
             }
@@ -167,6 +187,7 @@ class MediaSessionManager(
 
                     loadSong(song, playWhenReady, progress)
                 }
+
                 ControlAction.NEW_PLAY -> {
                     val song = queueManager.getCurrentSong() ?: return
                     val playWhenReady = extras?.getBoolean(ControlKey.PLAY_WHEN_READY) ?: false
@@ -174,6 +195,7 @@ class MediaSessionManager(
                     if (playWhenReady) requestAudioFocus()
                     loadSong(song, playWhenReady)
                 }
+
                 ControlAction.PREVIEW_PLAY -> {
                     val song = queueManager.getCurrentSongPreview() ?: return
                     val playWhenReady = extras?.getBoolean(ControlKey.PLAY_WHEN_READY) ?: false
@@ -192,7 +214,10 @@ class MediaSessionManager(
 
         scope.launch {
             val metadata = song.getMetadataBuilder().apply {
-                putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, song.albumArtwork.toBitmap(service))
+                putBitmap(
+                    MediaMetadataCompat.METADATA_KEY_ALBUM_ART,
+                    song.albumArtwork.toBitmap(service)
+                )
             }
 
             mediaSession.setMetadata(metadata.build())
@@ -213,11 +238,14 @@ class MediaSessionManager(
 
         player.playWhenReady = playWhenReady
         if (song.isStream) {
+
             val mediaItem = MediaItem.Builder()
                 .setUri(song.data)
                 .setMimeType(song.mimeType)
                 .build()
-            player.setMediaItem(mediaItem, startPosition)
+            val hlsMediaSource = ProgressiveMediaSource.Factory(dataSourceFactory)
+                .createMediaSource(mediaItem)
+            player.setMediaSource(hlsMediaSource, startPosition)
         } else {
             player.setMediaItem(MediaItem.fromUri(song.uri), startPosition)
         }
@@ -243,7 +271,10 @@ class MediaSessionManager(
     }
 
     private fun releaseAudioFocus(): Boolean {
-        return (AudioManagerCompat.abandonAudioFocusRequest(audioManager, audioFocusRequest) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED)
+        return (AudioManagerCompat.abandonAudioFocusRequest(
+            audioManager,
+            audioFocusRequest
+        ) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED)
     }
 
     private fun setForeground(isForeground: Boolean) {
@@ -276,6 +307,7 @@ class MediaSessionManager(
 
                     return binding.root.toBitmap()
                 }
+
                 is Artwork.Web -> ImageRequest.Builder(context).data(url)
                 is Artwork.MediaStore -> ImageRequest.Builder(context).data(uri)
                 else -> return null

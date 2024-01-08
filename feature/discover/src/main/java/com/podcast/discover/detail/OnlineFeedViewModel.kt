@@ -120,14 +120,14 @@ class OnlineFeedViewModel @Inject constructor(
     ): ScreenState<Artist> = when {
 
         item != null -> withContext(ioDispatcher) {
-            val artistId = BigInteger(imId?.toByteArray()).toLong()
+            val artistId = imId?.toLong() ?: 0L
             val isSubscribe = feedRepository.isSubscribe(artistId)
             ScreenState.Idle(
                 Artist(
                     isSubscribe = isSubscribe,
                     artist = item.title ?: "",
                     artistId = artistId,
-                    albums = item.items.map {
+                    albums = item.items.distinctBy { it.guid }.map {
                         val actual: Date = DateUtils.parse(it.pubDate)
                         val id = BigInteger(it.guid?.toByteArray()).toLong()
                         val localPodcast = feedRepository.loadPodcast(id)
@@ -141,11 +141,12 @@ class OnlineFeedViewModel @Inject constructor(
                             ).toString(),
                             album = "",
                             albumId = artistId,
-                            duration = inMillis(it.itunesItemData?.duration.toString()),
+                            duration = if (it.itunesItemData?.duration != null) inMillis(it.itunesItemData?.duration.toString())
+                            else 0,
                             year = Instant.fromEpochMilliseconds(actual.time)
                                 .toLocalDateTime(ZoneId.systemDefault().toKotlinTimeZone()).year,
                             track = 1,
-                            mimeType = MimeTypes.AUDIO_MPEG,
+                            mimeType = MimeTypes.AUDIO_DTS_HD,
                             data = it.audio ?: "",
                             dateModified = actual.time,
                             uri = Uri.parse(it.audio ?: ""),
@@ -235,7 +236,7 @@ class OnlineFeedViewModel @Inject constructor(
         artist: Artist
     ) {
         viewModelScope.launch(defaultDispatcher) {
-            feedRepository.subscribePodcast(imId, artist)
+            feedRepository.subscribePodcast(imId.toLong(), artist)
         }
     }
 

@@ -68,12 +68,6 @@ class MusicService : MediaBrowserServiceCompat() {
         ExoPlayer.Builder(baseContext).build().apply {
             setHandleAudioBecomingNoisy(true)
             addListener(playerEventListener)
-        }.also { exoPlayer ->
-            // Update the track selection parameters to only pick standard definition tracks
-            exoPlayer.trackSelectionParameters = exoPlayer.trackSelectionParameters
-                .buildUpon()
-                .setMaxVideoSizeSd()
-                .build()
         }
     }
 
@@ -106,12 +100,19 @@ class MusicService : MediaBrowserServiceCompat() {
         }
     }
 
-    override fun onGetRoot(clientPackageName: String, clientUid: Int, rootHints: Bundle?): BrowserRoot {
+    override fun onGetRoot(
+        clientPackageName: String,
+        clientUid: Int,
+        rootHints: Bundle?
+    ): BrowserRoot {
         Timber.d("onGetRoot: $clientPackageName, $clientUid, $rootHints")
         return BrowserRoot(MEDIA_BROWSER_ROOT_ID, null)
     }
 
-    override fun onLoadChildren(parentId: String, result: Result<MutableList<MediaBrowserCompat.MediaItem>>) {
+    override fun onLoadChildren(
+        parentId: String,
+        result: Result<MutableList<MediaBrowserCompat.MediaItem>>
+    ) {
         scope.launch {
             musicRepository.config.first()
             musicRepository.fetchSongs()
@@ -125,7 +126,8 @@ class MusicService : MediaBrowserServiceCompat() {
         result.detach()
     }
 
-    @OptIn(UnstableApi::class) override fun onCreate() {
+    @OptIn(UnstableApi::class)
+    override fun onCreate() {
         super.onCreate()
 
         mediaSession = MediaSessionCompat(this, "PodcastMediaSession3").apply {
@@ -181,15 +183,17 @@ class MusicService : MediaBrowserServiceCompat() {
         }
 
         val playbackState = PlaybackStateCompat.Builder()
-            .setActions(PlaybackStateCompat.ACTION_PREPARE
-                    or PlaybackStateCompat.ACTION_PLAY
-                    or PlaybackStateCompat.ACTION_PAUSE
-                    or PlaybackStateCompat.ACTION_SKIP_TO_NEXT
-                    or PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS
-                    or PlaybackStateCompat.ACTION_STOP
-                    or PlaybackStateCompat.ACTION_SEEK_TO
-                    or PlaybackStateCompat.ACTION_FAST_FORWARD
-                    or PlaybackStateCompat.ACTION_REWIND)
+            .setActions(
+                PlaybackStateCompat.ACTION_PREPARE
+                        or PlaybackStateCompat.ACTION_PLAY
+                        or PlaybackStateCompat.ACTION_PAUSE
+                        or PlaybackStateCompat.ACTION_SKIP_TO_NEXT
+                        or PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS
+                        or PlaybackStateCompat.ACTION_STOP
+                        or PlaybackStateCompat.ACTION_SEEK_TO
+                        or PlaybackStateCompat.ACTION_FAST_FORWARD
+                        or PlaybackStateCompat.ACTION_REWIND
+            )
             .setState(playerState, exoPlayer.currentPosition, 1f)
             .build()
 

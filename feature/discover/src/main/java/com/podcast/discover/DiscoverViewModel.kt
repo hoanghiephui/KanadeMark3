@@ -56,7 +56,7 @@ class DiscoverViewModel @Inject constructor(
             feedState.map(movieItemMapper::map),
             fetchNewFeedResultState,
             feedRepository.loadSubscribe()
-                .map { podcastModels -> podcastModels.map { it.podcastFeed.imId } }
+                .map { podcastModels -> podcastModels.map { it.podcastFeed.id } }
         ) { items, podcastResponseResult, subscribedFeeds ->
             createDiscoverUiState(
                 items = items,
@@ -79,11 +79,11 @@ class DiscoverViewModel @Inject constructor(
     private suspend fun createDiscoverUiState(
         items: ImmutableList<EntryItem>,
         podcastResponseResult: Result<ItunesTopPodcastResponse>?,
-        subscribedFeeds: List<String>
+        subscribedFeeds: List<Long>
     ): ScreenState<Discover> = when {
         items.isNotEmpty() -> withContext(ioDispatcher) {
             val suggestedPodcastsResult =
-                items.filterNot { subscribedFeeds.contains(it.id?.attributes?.imId) }
+                items.filterNot { subscribedFeeds.contains(it.id?.attributes?.imId?.toLong()) }
             ScreenState.Idle(
                 Discover(items = suggestedPodcastsResult.toImmutableList())
             )

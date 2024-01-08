@@ -1,9 +1,11 @@
 package caios.android.kanade.core.common.network.util
 
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 @Throws(NumberFormatException::class)
 fun inMillis(durationStr: String): Long {
+    Timber.d("TIME: $durationStr")
     val parts = durationStr.trim { it <= ' ' }.split(":".toRegex()).dropLastWhile { it.isEmpty() }
         .toTypedArray()
     return when (parts.size) {
@@ -17,7 +19,7 @@ fun inMillis(durationStr: String): Long {
             toMillis(parts[0], parts[1], parts[2])
         }
         else -> {
-            throw NumberFormatException()
+            0
         }
     }
 }

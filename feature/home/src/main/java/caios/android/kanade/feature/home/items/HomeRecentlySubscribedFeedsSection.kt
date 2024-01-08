@@ -81,13 +81,13 @@ internal fun HomeRecentlySubscribedFeedsSection(
         ) {
             items(
                 items = feeds,
-                key = { "added-${it.podcastFeed.idPodcast}" },
+                key = { "added-${it.podcastFeed.id}" },
             ) { feed ->
                 FeedPodcastHolder(
                     modifier = Modifier.width(120.dp),
                     feed = feed.toFeedModel(),
                     onClickHolder = {
-                        onClickFeed.invoke(feed.podcastFeed.imId)
+                        onClickFeed.invoke(feed.podcastFeed.id.toString())
                     },
                 )
             }

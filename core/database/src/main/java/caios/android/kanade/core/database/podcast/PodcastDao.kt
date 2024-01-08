@@ -49,7 +49,7 @@ interface PodcastDao {
     fun loadItem(podcastItemId: Long): PodcastFeedItemEntity?
 
     @Transaction
-    @Query("SELECT * FROM podcast_feed_item WHERE song_id = :songId")
+    @Query("SELECT * FROM podcast_feed_item WHERE id_podcast = :songId")
     suspend fun loadItemSong(songId: Long): PodcastFeedItemEntity?
 
     @Delete
@@ -58,4 +58,8 @@ interface PodcastDao {
     @Transaction
     @Query("SELECT * FROM podcast_download WHERE podcast_id = :podcastId")
     suspend fun getItemById(podcastId: Long): PodcastEntity?
+
+    @Transaction
+    @Query("SELECT * FROM podcast_feed_item WHERE id_podcast = :podcastId")
+    fun loadFeedItems(podcastId: Long): List<PodcastFeedItemEntity>
 }
