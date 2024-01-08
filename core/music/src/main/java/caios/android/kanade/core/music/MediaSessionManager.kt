@@ -73,17 +73,21 @@ class MediaSessionManager(
             build()
         }
     }
-    private val httpDataSourceFactory = DefaultHttpDataSource.Factory().also {
-        it.setUserAgent("Player")
-        it.setKeepPostFor302Redirects(true)
-        it.setAllowCrossProtocolRedirects(true)
-        it.setConnectTimeoutMs(DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS)
-        it.setReadTimeoutMs(DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS)
+    private val httpDataSourceFactory by lazy {
+        DefaultHttpDataSource.Factory().also {
+            it.setUserAgent("Player")
+            it.setKeepPostFor302Redirects(true)
+            it.setAllowCrossProtocolRedirects(true)
+            it.setConnectTimeoutMs(DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS)
+            it.setReadTimeoutMs(DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS)
+        }
     }
 
 
-    private val dataSourceFactory: DataSource.Factory =
+    private val dataSourceFactory: DataSource.Factory by lazy {
         DefaultDataSource.Factory(service.applicationContext, httpDataSourceFactory)
+    }
+
 
     private val audioFocusChangeListener = AudioManager.OnAudioFocusChangeListener { type ->
         Timber.d("onAudioFocusChange: type = $type")
