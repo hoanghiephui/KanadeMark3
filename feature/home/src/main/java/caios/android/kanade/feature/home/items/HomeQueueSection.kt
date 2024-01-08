@@ -40,7 +40,7 @@ internal fun HomeQueueSection(
     modifier: Modifier = Modifier,
 ) {
     val state = rememberLazyListState()
-
+    if (queue.items.isEmpty()) return
     LaunchedEffect(queue.index) {
         if (queue.index >= 0) state.animateScrollToItem(queue.index)
     }
