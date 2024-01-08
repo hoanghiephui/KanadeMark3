@@ -136,7 +136,7 @@ class OnlineFeedViewModel @Inject constructor(
                             title = it.title ?: "",
                             artistId = artistId,
                             artist = HtmlCompat.fromHtml(
-                                it.description.toString(),
+                                it.description ?: it.content.toString(),
                                 HtmlCompat.FROM_HTML_MODE_COMPACT
                             ).toString(),
                             album = "",
@@ -178,7 +178,8 @@ class OnlineFeedViewModel @Inject constructor(
                         item.title ?: "PO"
                     ),
                     description = HtmlCompat.fromHtml(
-                        item.description.toString(),
+                        if (item.description?.isNotEmpty() == true) item.description.toString()
+                        else item.itunesChannelData?.summary.toString(),
                         HtmlCompat.FROM_HTML_MODE_COMPACT
                     ).toString(),
                     author = item.itunesChannelData?.author,
