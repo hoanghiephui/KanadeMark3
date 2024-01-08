@@ -18,6 +18,7 @@
 
     <style name="Theme.Kanade.Splash" parent="NightAdjusted.Theme.Splash">
         <item name="postSplashScreenTheme">@style/Theme.Kanade</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
     </style>
 
 </resources>

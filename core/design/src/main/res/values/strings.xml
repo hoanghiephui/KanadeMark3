@@ -413,17 +413,17 @@
     <string name="billing_plus_item_feature">Add new features</string>
     <string name="billing_plus_item_feature_description">Be the first to try new features as they are added. </string>
     <string name="billing_plus_item_support">Priority support</string>
-    <string name="billing_plus_item_support_description">Kanade+ users receive priority support. </string>
+    <string name="billing_plus_item_support_description">Podcast+ users receive priority support. </string>
 
     <!-- Welcome -->
     <string name="welcome_title">Welcome</string>
-    <string name="welcome_description">Enjoy an exciting music experience with Kanade! \nEnjoy listening to music with sophisticated design and functionality! </string>
+    <string name="welcome_description">Enjoy an exciting music experience with Podcast! \nEnjoy listening to music with sophisticated design and functionality! </string>
     <string name="welcome_privacy_policy">Privacy policy</string>
     <string name="welcome_team_of_service">Terms of Service</string>
     <string name="welcome_agree">agree</string>
     <string name="welcome_button_next">Get started</string>
-    <string name="welcome_top_old_users_title">For those who have been using Kanade</string>
-    <string name="welcome_top_old_users_description">Thank you for using Kanade. \n\nRecently, Kanade has renewed her UI and functions, and modified the app so that you can listen to music better. In line with this, we have deleted information such as playback history and playback counts. Please note. We have restored essential data such as playlists and playlists, so you can continue to use the service. \n\nIn addition, if you have purchased the previous premium version (currently Kanade+), your purchase information may not be maintained due to the service name change. In that case, please press the "Restore Purchase" button on the next screen to restore your purchase information. \n\nThank you for your continued support of Kanade. </string>
+    <string name="welcome_top_old_users_title">For those who have been using Podcast</string>
+    <string name="welcome_top_old_users_description">Thank you for using Podcast. \n\nRecently, Podcast has renewed her UI and functions, and modified the app so that you can listen to music better. In line with this, we have deleted information such as playback history and playback counts. Please note. We have restored essential data such as playlists and playlists, so you can continue to use the service. \n\nIn addition, if you have purchased the previous premium version (currently Podcast+), your purchase information may not be maintained due to the service name change. In that case, please press the "Restore Purchase" button on the next screen to restore your purchase information. \n\nThank you for your continued support of Podcast. </string>
     <string name="welcome_permission_title">Permissions</string>
     <string name="welcome_permission_message">The following permissions are required to use the app\nPlease click the button below to grant permission</string>
     <string name="welcome_permission_ready_title">Ready</string>
@@ -437,14 +437,14 @@
     <string name="welcome_permission_optional">OPTIONAL</string>
     <string name="welcome_permission_allow_button">Allow</string>
     <string name="welcome_permission_complete_button">Complete</string>
-    <string name="welcome_plus_title">Kanade+</string>
-    <string name="welcome_plus_description">Have you purchased Kanade+? \nYou can restore your purchase using the button below</string>
-    <string name="welcome_plus_purchase">What is Kanade+? </string>
+    <string name="welcome_plus_title">Podcast+</string>
+    <string name="welcome_plus_description">Have you purchased Podcast+? \nYou can restore your purchase using the button below</string>
+    <string name="welcome_plus_purchase">What is Podcast+? </string>
     <string name="welcome_plus_restore">Restore purchases</string>
     <string name="welcome_plus_complete_button">Next</string>
 
     <!-- Widget -->
-    <string name="widget_error_require_plus">To use the widget\nYou must subscribe to Kanade+</string>
+    <string name="widget_error_require_plus">To use the widget\nYou must subscribe to Podcast+</string>
 
     <!-- Add podcast fragment -->
     <string name="search_podcast_hint">Search podcast…</string>

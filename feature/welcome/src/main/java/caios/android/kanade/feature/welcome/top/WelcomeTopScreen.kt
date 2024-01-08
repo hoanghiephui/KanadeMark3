@@ -82,10 +82,10 @@ internal fun WelcomeTopScreen(
 
         Image(
             modifier = Modifier
-                .padding(64.dp, 24.dp)
+                .padding(100.dp, 24.dp)
                 .aspectRatio(1f)
                 .fillMaxWidth(),
-            painter = painterResource(R.drawable.vec_app_icon_no_background),
+            painter = painterResource(R.drawable.logo),
             contentDescription = null,
         )
 

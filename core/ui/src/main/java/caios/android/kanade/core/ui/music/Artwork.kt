@@ -117,7 +117,7 @@ private fun ArtworkFromUnknown(
 ) {
     Image(
         modifier = modifier,
-        painter = painterResource(R.drawable.im_default_artwork),
+        painter = painterResource(R.drawable.logo_bg),
         contentDescription = null,
         contentScale = ContentScale.Crop,
     )
