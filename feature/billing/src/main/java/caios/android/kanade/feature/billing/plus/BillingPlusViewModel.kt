@@ -52,7 +52,7 @@ class BillingPlusViewModel @Inject constructor(
                 BillingPlusUiState(
                     isPlusMode = userData?.isPlusMode ?: false,
                     isDeveloperMode = userData?.isDeveloperMode ?: false,
-                    productDetails = billingClient.queryProductDetails(ProductItem.plus, ProductType.INAPP),
+                    productDetails = billingClient.queryProductDetails(ProductItem.plus, ProductType.SUBS),
                     purchase = runCatching { verifyPlusUseCase.execute() }.getOrNull(),
                 )
             }.fold(

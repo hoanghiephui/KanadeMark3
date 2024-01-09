@@ -10,7 +10,7 @@ data class ProductId(val value: String) : Parcelable {
 
 object ProductItem {
     // premium mode
-    val plus = ProductId("premium_mode")
+    val plus = ProductId("podcast.music.player.premium_mode")
 
     // donation
     val love = ProductId("donate_love")
