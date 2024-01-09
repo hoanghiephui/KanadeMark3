@@ -380,7 +380,7 @@ private fun NavigationDrawerPlusItem(
     if (isPlusMode) {
         title = buildAnnotatedString {
             withStyle(titleStyle.copy(color = MaterialTheme.colorScheme.primary).toSpanStyle()) {
-                append("Kanade+")
+                append("Podcast+")
             }
         }
         description = stringResource(R.string.navigation_kanade_plus_purchased_description)
@@ -388,7 +388,7 @@ private fun NavigationDrawerPlusItem(
         title = buildAnnotatedString {
             append("Buy ")
             withStyle(titleStyle.copy(color = MaterialTheme.colorScheme.primary).toSpanStyle()) {
-                append("Kanade+")
+                append("Podcast+")
             }
         }
         description = stringResource(R.string.navigation_kanade_plus_description)

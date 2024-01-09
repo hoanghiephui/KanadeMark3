@@ -1,9 +1,6 @@
 package com.podcast.discover
 
-import android.content.res.Resources
 import androidx.annotation.AnyThread
-import androidx.compose.ui.text.intl.Locale
-import androidx.compose.ui.text.toUpperCase
 import androidx.lifecycle.viewModelScope
 import caios.android.kanade.core.common.network.BaseViewModel
 import caios.android.kanade.core.common.network.Dispatcher
@@ -20,6 +17,7 @@ import caios.android.kanade.core.model.ScreenState
 import caios.android.kanade.core.model.podcast.Advanced
 import caios.android.kanade.core.model.podcast.EntryItem
 import caios.android.kanade.core.model.podcast.ItunesTopPodcastResponse
+import caios.android.kanade.core.repository.UserDataRepository
 import caios.android.kanade.core.repository.podcast.FeedDiscoveryRepository
 import caios.android.kanade.core.ui.error.ErrorsDispatcher
 import com.podcast.core.usecase.ItunesFeedUseCase
@@ -29,13 +27,17 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.getAndUpdate
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.Locale
+import java.util.Locale.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -48,6 +50,7 @@ class DiscoverViewModel @Inject constructor(
     private val movieItemMapper: DiscoverFeedItemMapper,
     private val feedDiscoveryUseCase: ItunesFeedUseCase,
     private val feedRepository: FeedDiscoveryRepository,
+    private val userDataRepository: UserDataRepository
 ) : BaseViewModel<NoneAction>(defaultDispatcher) {
     private val feedState = MutableStateFlow(emptyList<EntryItem>())
     private val fetchNewFeedResultState = MutableStateFlow<Result<ItunesTopPodcastResponse>?>(null)
@@ -75,6 +78,31 @@ class DiscoverViewModel @Inject constructor(
         Advanced(3, R.drawable.baseline_search_24, "Search Podcast Index")
     )
 
+    val countryCode = userDataRepository.userData.map {
+        ScreenState.Idle(it)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = ScreenState.Loading,
+    )
+
+    var selectCountryCode = getDefault().country
+        set(value) {
+            field = value
+        }
+
+    init {
+        viewModelScope.launch(defaultDispatcher) {
+            countryCode.collect {
+                if (it is ScreenState.Idle) {
+                    val countryCode = it.data.countryCode.ifBlank { getDefault().country }
+                    fetchNewDiscoverPodcast(countryCode)
+                    selectCountryCode = countryCode
+                }
+            }
+        }
+    }
+
     @AnyThread
     private suspend fun createDiscoverUiState(
         items: ImmutableList<EntryItem>,
@@ -96,30 +124,30 @@ class DiscoverViewModel @Inject constructor(
         )
     }
 
-    init {
-        fetchNewDiscoverPodcast()
-    }
-
     @AnyThread
-    private fun fetchNewDiscoverPodcast() {
-        val country: String = Resources.getSystem().configuration.locales[0].country.toUpperCase(
-            Locale.current
-        )
+    fun fetchNewDiscoverPodcast(countryCode: String) {
         viewModelScope.launch(defaultDispatcher) {
+
             val currentState = fetchNewFeedResultState.getAndUpdate { Result.Loading() }
             if (currentState !is Result.Loading) {
                 asFlowResult {
-                    feedDiscoveryUseCase.getTopPodcast(country, 25)
+                    feedDiscoveryUseCase.getTopPodcast(countryCode, 25)
                 }.onResultError(errorsDispatcher::dispatch)
                     .safeCollect(
                         onEach = { result ->
                             val suggestedPodcasts = result.data?.feed?.entry
-                            feedState.update { it + suggestedPodcasts.orEmpty() }
+                            feedState.update { suggestedPodcasts.orEmpty() }
                             fetchNewFeedResultState.emit(result)
                         },
                         onError = errorsDispatcher::dispatch,
                     )
             }
+        }
+    }
+
+    fun saveCountryCode(countryCode: String) {
+        viewModelScope.launch(defaultDispatcher) {
+            userDataRepository.setCountryCode(countryCode)
         }
     }
 }

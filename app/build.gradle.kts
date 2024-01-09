@@ -92,6 +92,9 @@ android {
         // Error: MusicService must extend android.app.Service [Instantiatable]
         disable.add("Instantiatable")
     }
+    buildFeatures {
+        buildConfig = true
+    }
 }
 
 kapt {

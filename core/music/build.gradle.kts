@@ -8,6 +8,9 @@ plugins {
 
 android {
     namespace = "caios.android.kanade.core.music"
+    buildFeatures {
+        buildConfig = true
+    }
 }
 
 chaquopy {

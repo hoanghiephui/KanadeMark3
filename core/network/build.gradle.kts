@@ -6,6 +6,9 @@ plugins {
 
 android {
     namespace = "com.podcast.core.network"
+    buildFeatures {
+        buildConfig = true
+    }
 }
 
 dependencies {

@@ -53,6 +53,7 @@ class KanadePreferencesDataStore @Inject constructor(
                 isAgreedPrivacyPolicy = if (it.hasIsAgreedPrivacyPolicy()) it.isAgreedPrivacyPolicy else false,
                 isAgreedTermsOfService = if (it.hasIsAgreedTermsOfService()) it.isAgreedTermsOfService else false,
                 isEnableYTMusic = if (it.hasIsEnableYtmusic()) it.isEnableYtmusic else false,
+                countryCode = it.countryCode
             )
         }
 
@@ -392,6 +393,14 @@ class KanadePreferencesDataStore @Inject constructor(
         queuePreference.updateData {
             it.copy {
                 this.progress = progress
+            }
+        }
+    }
+
+    suspend fun setCountryCode(countryCode: String) = withContext(ioDispatcher) {
+        userPreference.updateData {
+            it.copy {
+                this.countryCode = countryCode
             }
         }
     }

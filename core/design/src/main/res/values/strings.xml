@@ -74,7 +74,7 @@
     <string name="navigation_support">Support apps</string>
     <string name="navigation_top_bar_title">Search library</string>
     <string name="navigation_kanade_plus_description">Get access to all features for the price of a cup of coffee! </string>
-    <string name="navigation_kanade_plus_purchased_description">You are a Kanade+ user. Enjoy comfortable music listening! </string>
+    <string name="navigation_kanade_plus_purchased_description">You are a Podcast+ user. Enjoy comfortable music listening! </string>
     <string name="navigation_podcast" translatable="false">Podcast</string>
 
     <!-- Permission Request-->
@@ -100,7 +100,7 @@
     <string name="search_not_found">No media matched</string>
     <string name="search_not_result">No results were found</string>
     <string name="type_to_search">Type a query to search</string>
-    <string name="search_empty_text_ytmusic">Youtube Music と連携中です\nインクリメンタルサーチは利用できません</string>
+    <string name="search_empty_text_ytmusic">I am currently in collaboration with YouTube Music. Incremental search is not available.</string>
     <string name="search_keyword_suggestion_description">Inferred from the keywords you entered, we are also searching for media containing the following keywords. \n\n[%1$s]</string>
 
     <!-- Home -->
@@ -214,11 +214,11 @@
     <string name="playlist_name">Playlist name</string>
     <string name="playlist_rename_title">Rename playlist</string>
     <string name="playlist_export_title">Export</string>
-    <string name="playlist_export_description">Export a playlist. Playlists are shared across the Android system and can be retrieved by other music apps and more. Also, even if you uninstall Kanade, the exported playlists will not be deleted. \n\nThe exported playlist is no longer managed by Kanade, and even if you edit the playlist on Kanade, it will not be reflected in the exported playlist. If you export again, the changes will be reflected. </string>
+    <string name="playlist_export_description">Export a playlist. Playlists are shared across the Android system and can be retrieved by other music apps and more. Also, even if you uninstall Podcast, the exported playlists will not be deleted. \n\nThe exported playlist is no longer managed by Podcast, and even if you edit the playlist on Podcast, it will not be reflected in the exported playlist. If you export again, the changes will be reflected. </string>
     <string name="playlist_export_action">Export</string>
     <string name="playlist_export_toast">Playlist exported</string>
     <string name="playlist_import_title">Import</string>
-    <string name="playlist_import_description">Perform playlist import. Imported playlists are no longer managed by the Android system, and even if you add songs using another app, they will not be reflected on Kanade. It will be reflected when you import it again. </string>
+    <string name="playlist_import_description">Perform playlist import. Imported playlists are no longer managed by the Android system, and even if you add songs using another app, they will not be reflected on Podcast. It will be reflected when you import it again. </string>
     <string name="playlist_import_toast">Playlist imported</string>
     <string name="playlist_import_toast_error">Cannot import because a playlist with the same name already exists</string>
     <string name="playlist_import_error_no_data">External playlist not found</string>
@@ -243,7 +243,7 @@
     <string name="lyrics_download_dialog_musixmatch_error">It\'s either not a valid API key or it\'s on cooldown. Please try again later. </string>
     <!-- About -->
     <string name="about_title">About the app</string>
-    <string name="about_name">Kanade</string>
+    <string name="about_name">Podcast</string>
     <string name="about_developer_name">CAIOS</string>
     <string name="about_developer_prefix">Developed and designed by</string>
     <string name="about_special_thanks">SPECIAL THANKS</string>
@@ -362,7 +362,7 @@
 
     <!-- Report -->
     <string name="report_crush_title">Oops! Something went wrong</string>
-    <string name="report_crush_description">Sorry…\nDue to technical factors, Kanade has crashed. \nPlease send the following report to the developer. </string>
+    <string name="report_crush_description">Sorry…\nDue to technical factors, Podcast has crashed. \nPlease send the following report to the developer. </string>
     <string name="report_crush_copy">Copy</string>
     <string name="report_crush_toast_copy">Copied</string>
 
@@ -380,12 +380,12 @@
     <string name="equalizer_preset_custom">Custom</string>
 
     <!-- Billing -->
-    <string name="billing_plus_title">Kanade+</string>
-    <string name="billing_plus_description">Kanade+ is a paid service that gives you access to all features for the price of a cup of coffee. </string>
+    <string name="billing_plus_title">Podcast+</string>
+    <string name="billing_plus_description">Podcast+ is a paid service that gives you access to all features for the price of a cup of coffee. </string>
     <string name="billing_plus_purchase_button">Buy for %1$s</string>
     <string name="billing_plus_verify_button">Restore purchase</string>
     <string name="billing_plus_consume_button">Consume Purchase</string>
-    <string name="billing_plus_toast_require_plus">This feature is only available with Kanade+</string>
+    <string name="billing_plus_toast_require_plus">This feature is only available with Podcast+</string>
     <string name="billing_plus_toast_purchased">Purchased</string>
     <string name="billing_plus_toast_purchased_error">Purchase failed</string>
     <string name="billing_plus_toast_consumed">Consumed</string>

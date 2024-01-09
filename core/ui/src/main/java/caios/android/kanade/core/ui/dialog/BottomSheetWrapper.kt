@@ -3,6 +3,7 @@ package caios.android.kanade.core.ui.dialog
 import android.app.Activity
 import android.graphics.Rect
 import android.view.ViewGroup
+import android.view.WindowInsets.*
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -147,7 +148,8 @@ fun Activity.showAsButtonSheet(
 
 fun Activity.systemBarsInsets(): Pair<Int, Int> {
     return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
-        val insets = windowManager.currentWindowMetrics.windowInsets.getInsetsIgnoringVisibility(android.view.WindowInsets.Type.systemBars())
+        val insets = windowManager.currentWindowMetrics.windowInsets.getInsetsIgnoringVisibility(
+            Type.systemBars())
         insets.top to insets.bottom
     } else {
         val rect = Rect()

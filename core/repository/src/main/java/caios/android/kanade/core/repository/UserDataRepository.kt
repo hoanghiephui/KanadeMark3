@@ -26,6 +26,8 @@ interface UserDataRepository {
     suspend fun setAgreedPrivacyPolicy(isAgreedPrivacyPolicy: Boolean)
     suspend fun setAgreedTermsOfService(isAgreedTermsOfService: Boolean)
     suspend fun setEnableYTMusic(isEnableYTMusic: Boolean)
+
+    suspend fun setCountryCode(countryCode: String)
 }
 
 class UserDataRepositoryImpl @Inject constructor(
@@ -92,5 +94,9 @@ class UserDataRepositoryImpl @Inject constructor(
 
     override suspend fun setEnableYTMusic(isEnableYTMusic: Boolean) {
         kanadePreferencesDataStore.setEnableYTMusic(isEnableYTMusic)
+    }
+
+    override suspend fun setCountryCode(countryCode: String) {
+        kanadePreferencesDataStore.setCountryCode(countryCode)
     }
 }

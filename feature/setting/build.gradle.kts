@@ -7,6 +7,9 @@ plugins {
 
 android {
     namespace = "caios.android.kanade.feature.setting"
+    buildFeatures {
+        buildConfig = true
+    }
 }
 
 dependencies {

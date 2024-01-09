@@ -73,4 +73,8 @@ class FakeUserDataRepository @Inject constructor(
     override suspend fun setEnableYTMusic(isEnableYTMusic: Boolean) {
         kanadePreferencesDataStore.setEnableYTMusic(isEnableYTMusic)
     }
+
+    override suspend fun setCountryCode(countryCode: String) {
+        kanadePreferencesDataStore.setCountryCode(countryCode)
+    }
 }

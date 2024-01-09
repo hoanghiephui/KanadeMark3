@@ -1,6 +1,7 @@
 package caios.android.kanade.core.model
 
 import androidx.compose.runtime.Stable
+import java.util.Locale
 
 @Stable
 data class UserData(
@@ -19,6 +20,7 @@ data class UserData(
     val isIgnoreShortMusic: Boolean,
     val isIgnoreNotMusic: Boolean,
     val isEnableYTMusic: Boolean,
+    val countryCode: String
 ) {
     val hasPrivilege get() = isPlusMode || isDeveloperMode
 
@@ -40,6 +42,7 @@ data class UserData(
                 isIgnoreShortMusic = true,
                 isIgnoreNotMusic = true,
                 isEnableYTMusic = false,
+                countryCode = Locale.getDefault().country
             )
         }
     }
