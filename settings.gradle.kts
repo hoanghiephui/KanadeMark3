@@ -1,5 +1,8 @@
 @file:Suppress("UnstableApiUsage")
 
+include(":core:analytic")
+
+
 include(":feature:discover")
 
 

@@ -82,10 +82,10 @@ internal fun WelcomeTopScreen(
 
         Image(
             modifier = Modifier
-                .padding(100.dp, 24.dp)
+                .padding(64.dp, 24.dp)
                 .aspectRatio(1f)
                 .fillMaxWidth(),
-            painter = painterResource(R.drawable.logo),
+            painter = painterResource(R.drawable.ic_launcher_foreground),
             contentDescription = null,
         )
 

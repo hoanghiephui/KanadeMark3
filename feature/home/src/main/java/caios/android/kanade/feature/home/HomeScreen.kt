@@ -31,6 +31,7 @@ import caios.android.kanade.core.model.music.Album
 import caios.android.kanade.core.model.music.Queue
 import caios.android.kanade.core.model.music.Song
 import caios.android.kanade.core.ui.AsyncLoadContents
+import caios.android.kanade.core.ui.TrackScreenViewEvent
 import caios.android.kanade.feature.home.items.HomeHeaderSection
 import caios.android.kanade.feature.home.items.HomeQueueSection
 import caios.android.kanade.feature.home.items.HomeRecentlyAddedAlbumsSection
@@ -65,7 +66,6 @@ internal fun HomeRoute(
         modifier = modifier,
         screenState = screenState,
     ) { homeUiState ->
-        Timber.d("HOME: ${homeUiState.recentlyAddedAlbums.size} - ${homeUiState.recentlyPlayedSongs.size} - ${homeUiState.mostPlayedSongs.size}")
         if ((homeUiState.recentlyPlayedSongs.isEmpty() || homeUiState.mostPlayedSongs.isEmpty()) && homeUiState.subscribedFeeds.isEmpty()) {
             HomeEmptyScreen(
                 modifier = Modifier.fillMaxSize(),
@@ -119,6 +119,7 @@ internal fun HomeRoute(
             )
         }
     }
+    TrackScreenViewEvent("HomeScreen")
 }
 
 @OptIn(ExperimentalFoundationApi::class)

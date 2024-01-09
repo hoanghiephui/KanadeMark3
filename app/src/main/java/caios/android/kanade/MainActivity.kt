@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,6 +33,8 @@ import caios.android.kanade.core.ui.AsyncLoadContents
 import caios.android.kanade.ui.KanadeApp
 import caios.android.kanade.ui.rememberKanadeAppState
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.podcast.analytic.AnalyticsHelper
+import com.podcast.analytic.LocalAnalyticsHelper
 import com.podcast.core.network.util.NetworkMonitor
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -51,6 +54,8 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var networkMonitor: NetworkMonitor
+    @Inject
+    lateinit var analyticsHelper: AnalyticsHelper
 
     override fun onCreate(savedInstanceState: android.os.Bundle?) {
         val splashScreen = installSplashScreen()
@@ -82,28 +87,29 @@ class MainActivity : ComponentActivity() {
                 systemUiController.systemBarsDarkContentEnabled = !shouldUseDarkTheme
                 onDispose {}
             }
+            CompositionLocalProvider(LocalAnalyticsHelper provides analyticsHelper) {
+                AsyncLoadContents(
+                    modifier = Modifier.fillMaxSize(),
+                    screenState = screenState,
+                ) { userData ->
+                    val appState = rememberKanadeAppState(windowSize, musicViewModel, userData, networkMonitor)
+                    val isAgreedTeams = remember { userData.isAgreedPrivacyPolicy && userData.isAgreedTermsOfService }
+                    val isAllowedPermission = remember { !shouldAllowPermission() }
 
-            AsyncLoadContents(
-                modifier = Modifier.fillMaxSize(),
-                screenState = screenState,
-            ) { userData ->
-                val appState = rememberKanadeAppState(windowSize, musicViewModel, userData, networkMonitor)
-                val isAgreedTeams = remember { userData.isAgreedPrivacyPolicy && userData.isAgreedTermsOfService }
-                val isAllowedPermission = remember { !shouldAllowPermission() }
-
-                KanadeTheme(
-                    themeColorConfig = userData.themeColorConfig,
-                    shouldUseDarkTheme = shouldUseDarkTheme,
-                    enableDynamicTheme = shouldUseDynamicColor(screenState),
-                ) {
-                    KanadeApp(
-                        modifier = Modifier.fillMaxSize(),
-                        musicViewModel = musicViewModel,
-                        userData = userData,
-                        appState = appState,
-                        isAgreedTeams = isAgreedTeams,
-                        isAllowedPermission = isAllowedPermission,
-                    )
+                    KanadeTheme(
+                        themeColorConfig = userData.themeColorConfig,
+                        shouldUseDarkTheme = shouldUseDarkTheme,
+                        enableDynamicTheme = shouldUseDynamicColor(screenState),
+                    ) {
+                        KanadeApp(
+                            modifier = Modifier.fillMaxSize(),
+                            musicViewModel = musicViewModel,
+                            userData = userData,
+                            appState = appState,
+                            isAgreedTeams = isAgreedTeams,
+                            isAllowedPermission = isAllowedPermission,
+                        )
+                    }
                 }
             }
         }
