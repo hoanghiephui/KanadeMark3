@@ -67,7 +67,7 @@ protobufPlugin = "0.9.4"
 billing = "6.1.0"
 
 # Others
-dagger = "2.49"
+dagger = "2.50"
 ktor = "2.3.5"
 jsoup = "1.16.2"
 detekt = "1.23.3"

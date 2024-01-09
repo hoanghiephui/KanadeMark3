@@ -5,18 +5,18 @@ import androidx.compose.ui.Modifier
 import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavType
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
+import caios.android.kanade.core.common.network.extension.parcelableArrayList
 import caios.android.kanade.core.design.animation.NavigateAnimation
-import caios.android.kanade.core.model.music.Album
-import caios.android.kanade.core.model.music.Artist
 import caios.android.kanade.core.model.music.Song
 import caios.android.kanade.core.ui.navigate
+import kotlinx.collections.immutable.toImmutableList
 
 const val OnlineDetailId = "onlineDetailId"
 const val OnlineDetailUrl = "onlineDetailUrl"
 const val OnlineDetailRoute = "onlineDetail"
+const val FeedMoreRoute = "FeedMoreRoute"
+const val FeedMoreData = "FeedMoreData"
 
 fun NavController.navigateToOnlineDetail(
     feedId: String,
@@ -32,13 +32,9 @@ fun NavController.navigateToOnlineDetail(
 }
 
 fun NavGraphBuilder.feedDetailScreen(
-    navigateToSongDetail: (String, List<Long>) -> Unit,
-    navigateToAlbumDetail: (Long) -> Unit,
-    navigateToArtistMenu: (Artist) -> Unit,
-    navigateToSongMenu: (Song) -> Unit,
-    navigateToAlbumMenu: (Album) -> Unit,
     terminate: () -> Unit,
-    showSnackBar: (String) -> Unit
+    showSnackBar: (String) -> Unit,
+    onClickSeeAll: (List<Song>, String) -> Unit
 ) {
     composable(
         route = OnlineDetailRoute,
@@ -52,7 +48,45 @@ fun NavGraphBuilder.feedDetailScreen(
             feedId = it.arguments?.getString(OnlineDetailId) ?: "",
             terminate = terminate,
             showSnackBar = showSnackBar,
-            feedUrl = it.arguments?.getString(OnlineDetailUrl)
+            feedUrl = it.arguments?.getString(OnlineDetailUrl),
+            onClickSeeAll = onClickSeeAll
+        )
+    }
+}
+
+///********************************************************/////////////////
+fun NavController.navigateToFeedMore(
+    feed: List<Song>,
+    title: String
+) {
+    val bundle = bundleOf(
+        FeedMoreData to feed,
+        "Title" to title
+    )
+    this.navigate(route = FeedMoreRoute, args = bundle, builder = {
+        launchSingleTop = true
+    })
+}
+
+fun NavGraphBuilder.feedMoreScreen(
+    terminate: () -> Unit,
+    showSnackBar: (String) -> Unit
+) {
+    composable(
+        route = FeedMoreRoute,
+        enterTransition = { NavigateAnimation.Vertical.enter },
+        exitTransition = { NavigateAnimation.Vertical.exit },
+        popEnterTransition = { NavigateAnimation.Vertical.popEnter },
+        popExitTransition = { NavigateAnimation.Vertical.popExit },
+    ) {
+        val title = it.arguments?.getString("Title")
+        val items: List<Song> =
+            it.arguments?.parcelableArrayList(FeedMoreData) ?: return@composable
+        FeedMoreRouter(
+            onTerminate = terminate,
+            showSnackBar = showSnackBar,
+            feed = items.toImmutableList(),
+            title = title
         )
     }
 }

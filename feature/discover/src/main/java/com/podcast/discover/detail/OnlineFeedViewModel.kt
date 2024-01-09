@@ -160,7 +160,7 @@ class OnlineFeedViewModel @Inject constructor(
                             ),
                             isStream = true,
                             isDownloaded = localPodcast != null,
-                            publishDate = Instant.fromEpochMilliseconds(actual.time),
+                            publishDate = actual.time,
                             urlImage = it.itunesItemData?.image
                         )
                         Album(

@@ -78,6 +78,8 @@ import caios.android.kanade.feature.tag.navigateToTagEdit
 import caios.android.kanade.feature.tag.tagEditScreen
 import caios.android.kanade.ui.KanadeAppState
 import com.podcast.discover.detail.feedDetailScreen
+import com.podcast.discover.detail.feedMoreScreen
+import com.podcast.discover.detail.navigateToFeedMore
 import com.podcast.discover.detail.navigateToOnlineDetail
 import com.podcast.discover.discoverMoreScreen
 import com.podcast.discover.discoverScreen
@@ -256,15 +258,16 @@ fun PodcastNavHost(
         )
 
         feedDetailScreen(
-            navigateToSongDetail = { title, songIds ->
-                navController.navigateToSongDetail(title, songIds)
+            terminate = {
+                navController.popBackStack()
             },
-            navigateToAlbumDetail = {
-                navController.navigateToAlbumDetail(it)
-            },
-            navigateToSongMenu = ::showSongMenuDialog,
-            navigateToArtistMenu = ::showArtistMenuDialog,
-            navigateToAlbumMenu = ::showAlbumMenuDialog,
+            showSnackBar = showSnackBar,
+            onClickSeeAll = {songs, title ->
+                navController.navigateToFeedMore(songs, title)
+            }
+        )
+
+        feedMoreScreen(
             terminate = {
                 navController.popBackStack()
             },

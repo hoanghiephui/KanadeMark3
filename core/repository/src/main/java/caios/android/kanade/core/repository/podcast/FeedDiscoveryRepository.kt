@@ -17,6 +17,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import javax.inject.Inject
 
 interface FeedDiscoveryRepository {
@@ -152,7 +153,7 @@ class FeedDiscoveryRepositoryImpl @Inject constructor(
                     data = it.data,
                     dateModified = it.dateModified,
                     image = it.urlImage,
-                    publishDate = it.publishDate
+                    publishDate = Instant.fromEpochMilliseconds(it.publishDate)
                 )
             }
         }

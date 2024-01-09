@@ -120,7 +120,7 @@ fun PodcastFeedItemEntity.toSong(): Song {
             title
         ),
         isStream = true,
-        publishDate = publishDate,
+        publishDate = publishDate.toEpochMilliseconds(),
         urlImage = image
     )
 }

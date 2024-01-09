@@ -46,7 +46,8 @@ fun OnlineFeedRoute(
     terminate: () -> Unit,
     feedId: String,
     feedUrl: String?,
-    showSnackBar: (String) -> Unit
+    showSnackBar: (String) -> Unit,
+    onClickSeeAll: (List<Song>, String) -> Unit
 ) {
     val screenState by viewModel.screenState.collectAsStateWithLifecycle()
     if (feedUrl != null) {
@@ -114,7 +115,8 @@ fun OnlineFeedRoute(
                     viewModel.onUnSubscribePodcast(imId = artist.artistId)
                     showSnackBar.invoke("Unsubscribe")
                 }
-            }
+            },
+            onClickSeeAll = onClickSeeAll
         )
     }
 }
@@ -133,7 +135,8 @@ private fun OnlineFeedScreen(
     onClickCancelDownload: (Song) -> Unit,
     downloadStatus: SnapshotStateMap<Long, Int>,
     downloadProgress: SnapshotStateMap<Long, Float>,
-    clickSubscribe: (Boolean) -> Unit
+    clickSubscribe: (Boolean) -> Unit,
+    onClickSeeAll: (List<Song>, String) -> Unit
 ) {
     var expanded by remember {
         mutableStateOf(false)
@@ -170,10 +173,10 @@ private fun OnlineFeedScreen(
                 overflow = TextOverflow.Ellipsis,
                 style = MaterialTheme.typography.bodyMedium,
                 onTextLayout = {
-                    textLine = it.lineCount >=3
+                    textLine = it.lineCount >= 3
                 }
             )
-            if(textLine) {
+            if (textLine) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -190,7 +193,9 @@ private fun OnlineFeedScreen(
         item {
             EpisodeDetailHeader(
                 modifier = Modifier.fillMaxWidth(),
-                onClickSeeAll = { },
+                onClickSeeAll = {
+                    onClickSeeAll.invoke(artist.songs, artist.artist)
+                },
                 size = artist.songs.size
             )
         }

@@ -54,6 +54,7 @@ import caios.android.kanade.core.model.music.Song
 import caios.android.kanade.core.ui.view.dateFormatted
 import com.podcast.core.network.util.PodcastDownloader
 import kotlinx.coroutines.delay
+import kotlinx.datetime.Instant
 
 @OptIn(ExperimentalAnimationGraphicsApi::class)
 @Composable
@@ -133,7 +134,8 @@ fun PodcastItemHolder(
             .padding(all = 8.dp)
     ) {
         val (artwork, title, artist, add, menu, play, download, time) = createRefs()
-        val formattedDate = dateFormatted(song.publishDate)
+        val formattedDate = dateFormatted(
+            Instant.fromEpochMilliseconds(song.publishDate))
         Text(
             modifier = Modifier.constrainAs(time) {
                 top.linkTo(parent.top)

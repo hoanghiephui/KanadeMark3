@@ -73,7 +73,7 @@ internal fun SquareControllerWidgetScreen(
                 provider = ImageProvider(
                     songArtwork?.let {
                         Icon.createWithBitmap(it)
-                    } ?: Icon.createWithResource(context, R.drawable.im_default_artwork),
+                    } ?: Icon.createWithResource(context, R.drawable.ic_launcher_foreground),
                 ),
                 contentDescription = null,
             )

@@ -1,14 +1,16 @@
 package caios.android.kanade.core.model.music
 
 import android.net.Uri
+import android.os.Parcelable
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat
 import kotlinx.datetime.Clock
+import kotlinx.parcelize.Parcelize
 import java.time.Instant
 import java.time.LocalDateTime
 import java.util.Locale
 import java.util.TimeZone
-
+@Parcelize
 data class Song(
     val id: Long,
     val title: String,
@@ -27,9 +29,9 @@ data class Song(
     val artistArtwork: Artwork,
     val isStream: Boolean = false,
     val isDownloaded: Boolean = false,
-    val publishDate: kotlinx.datetime.Instant = Clock.System.now(),
+    val publishDate: Long = Clock.System.now().toEpochMilliseconds(),
     val urlImage: String? = null
-) {
+) : Parcelable {
     val durationString: String
         get() {
             val second = duration / 1000
@@ -64,7 +66,7 @@ data class Song(
                 uri = Uri.EMPTY,
                 albumArtwork = Artwork.Internal("Song"),
                 artistArtwork = Artwork.Internal("Artist"),
-                publishDate = Clock.System.now()
+                publishDate = Clock.System.now().toEpochMilliseconds()
             )
         }
 

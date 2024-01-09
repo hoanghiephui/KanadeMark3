@@ -419,7 +419,7 @@ private fun CoordinatorToolBar(
                 )
             },
             actions = {
-                Icon(
+                /*Icon(
                     modifier = Modifier
                         .size(40.dp)
                         .aspectRatio(1f)
@@ -428,7 +428,7 @@ private fun CoordinatorToolBar(
                         .padding(8.dp),
                     imageVector = Icons.Default.MoreVert,
                     contentDescription = null,
-                )
+                )*/
             }
         )
     }
