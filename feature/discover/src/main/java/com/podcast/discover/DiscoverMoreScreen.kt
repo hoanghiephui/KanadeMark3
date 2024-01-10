@@ -57,7 +57,6 @@ import java.util.Locale
 
 @Composable
 internal fun DiscoverMoreRouter(
-    feed: ImmutableList<EntryItem>,
     modifier: Modifier = Modifier,
     onClickPodcast: (String) -> Unit,
     onTerminate: () -> Unit,
@@ -65,14 +64,13 @@ internal fun DiscoverMoreRouter(
     viewModel: DiscoverViewModel = hiltViewModel(),
 ) {
     DiscoverMoreScreen(
-        feed, modifier, onClickPodcast, onTerminate, contentPadding, viewModel
+        modifier, onClickPodcast, onTerminate, contentPadding, viewModel
     )
 }
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun DiscoverMoreScreen(
-    feed: ImmutableList<EntryItem>,
     modifier: Modifier = Modifier,
     onClickPodcast: (String) -> Unit,
     onTerminate: () -> Unit,
@@ -83,7 +81,6 @@ private fun DiscoverMoreScreen(
     val behavior = TopAppBarDefaults.pinnedScrollBehavior(state)
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsStateLifecycleAware()
-    var selectCountry by remember { mutableStateOf(false) }
     Scaffold(
         modifier = modifier.nestedScroll(behavior.nestedScrollConnection),
         topBar = {
@@ -103,7 +100,6 @@ private fun DiscoverMoreScreen(
                                 SelectCountry(
                                     currentCountryCode = viewModel.selectCountryCode,
                                     selectCountry = {
-                                        selectCountry = true
                                         viewModel.saveCountryCode(it)
                                         onDismiss.invoke()
                                     },
@@ -118,42 +114,10 @@ private fun DiscoverMoreScreen(
             )
         },
     ) { paddingValues ->
-        if (selectCountry) {
-            AsyncLoadContents(
-                modifier = modifier,
-                screenState = uiState,
-            ) { discoverUiState ->
-                LazyVerticalGrid(
-                    modifier = Modifier.padding(top = paddingValues.calculateTopPadding()),
-                    contentPadding = contentPadding,
-                    columns = FixedWithEdgeSpace(
-                        count = 3,
-                        edgeSpace = 8.dp,
-                    ),
-                ) {
-                    itemsWithEdgeSpace(
-                        spanCount = 3,
-                        items = discoverUiState.items,
-                        key = { artist -> "added-${artist.id}" },
-                    ) { artist ->
-                        FeedPodcastHolder(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .animateItemPlacement(),
-                            feed = artist.toFeedModel(),
-                            onClickHolder = {
-                                artist.id?.attributes?.imId?.let {
-                                    onClickPodcast.invoke(
-                                        it
-                                    )
-                                }
-                            },
-                        )
-                    }
-                }
-            }
-
-        } else {
+        AsyncLoadContents(
+            modifier = modifier,
+            screenState = uiState,
+        ) { discoverUiState ->
             LazyVerticalGrid(
                 modifier = Modifier.padding(top = paddingValues.calculateTopPadding()),
                 contentPadding = contentPadding,
@@ -164,7 +128,7 @@ private fun DiscoverMoreScreen(
             ) {
                 itemsWithEdgeSpace(
                     spanCount = 3,
-                    items = feed,
+                    items = discoverUiState.items,
                     key = { artist -> "added-${artist.id}" },
                 ) { artist ->
                     FeedPodcastHolder(

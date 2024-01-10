@@ -64,7 +64,7 @@ fun BottomController(
 
                         width = Dimension.fillToConstraints
                     }
-                    .height(2.dp),
+                    .height(3.dp),
             )
         } else {
             // Determinate progress bar.
@@ -78,7 +78,7 @@ fun BottomController(
 
                         width = Dimension.fillToConstraints
                     }
-                    .height(2.dp),
+                    .height(3.dp),
             )
         }
 

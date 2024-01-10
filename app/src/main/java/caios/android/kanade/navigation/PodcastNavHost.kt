@@ -250,7 +250,7 @@ fun PodcastNavHost(
                 navController.navigateToOnlineDetail(it)
             },
             navigateToFeedMore = {
-                navController.navigateToDiscoverMore(it)
+                navController.navigateToDiscoverMore()
             },
             navSearchWith = {
                 openSearch(it)
