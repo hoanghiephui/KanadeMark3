@@ -7,12 +7,17 @@ import caios.android.kanade.core.common.network.Dispatcher
 import caios.android.kanade.core.common.network.KanadeConfig
 import caios.android.kanade.core.common.network.KanadeDebugTree
 import caios.android.kanade.core.common.network.KanadeDispatcher
+import caios.android.kanade.core.common.network.di.EVENT_RESTART_APP
 import caios.android.kanade.feature.report.CrushReportActivity
 import coil.ImageLoader
 import coil.ImageLoaderFactory
 import com.google.android.material.color.DynamicColors
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Provider
@@ -33,6 +38,9 @@ class KanadeApplication : Application(), ImageLoaderFactory {
     @Inject
     lateinit var imageLoader: Provider<ImageLoader>
 
+    @Inject
+    lateinit var evenBus: MutableSharedFlow<Int>
+
     override fun onCreate() {
         super.onCreate()
 
@@ -42,6 +50,14 @@ class KanadeApplication : Application(), ImageLoaderFactory {
 
         Thread.setDefaultUncaughtExceptionHandler { _, e ->
             startCrushReportActivity(e)
+        }
+
+        GlobalScope.launch {
+            evenBus.collectLatest {
+                if (it == EVENT_RESTART_APP) {
+                    restartApp()
+                }
+            }
         }
     }
 
@@ -59,8 +75,17 @@ class KanadeApplication : Application(), ImageLoaderFactory {
         )
     }
 
+    private fun restartApp() {
+        startActivity(
+            Intent(this, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            },
+        )
+    }
+
     private fun getVersionReport() = buildString {
-        val release = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) Build.VERSION.RELEASE_OR_CODENAME else Build.VERSION.RELEASE
+        val release =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) Build.VERSION.RELEASE_OR_CODENAME else Build.VERSION.RELEASE
 
         appendLine("Version: ${kanadeConfig.versionName} (${kanadeConfig.versionCode})")
         appendLine("Device Information: $release (${Build.VERSION.SDK_INT})")

@@ -10,6 +10,7 @@
     <string name="common_reload">Reload</string>
     <string name="common_back">Back</string>
     <string name="common_close">Close</string>
+    <string name="common_reopen">Reopen</string>
     <string name="common_next">Next</string>
     <string name="common_finish">Complete</string>
     <string name="common_skip">Skip</string>

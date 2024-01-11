@@ -92,6 +92,7 @@ import findActivity
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
 import se.warting.inappupdate.compose.rememberInAppUpdateState
+import timber.log.Timber
 
 @Composable
 fun KanadeApp(
@@ -485,27 +486,23 @@ private fun IdleScreen(
             }
         }
 
-        LaunchedEffect(key1 = updateState.appUpdateResult is AppUpdateResult.Available, block = {
+        LaunchedEffect(key1 = updateState.appUpdateResult is AppUpdateResult.Available && !showUpdate, block = {
             showUpdate = true
-        })
-        
-        if (showUpdate) {
             activity.showAsButtonSheet(
                 userData = null,
                 skipPartiallyExpanded = false
-            ) {dialog ->
+            ) { dialog ->
                 HeaderUpdate(
-                    updateState, activity, scope, sheetState = {
-                        showUpdate = it
-                        if (!it) {
+                    updateState, activity, scope, sheetState = { _, state ->
+                        if (state == 2) {
+                            dialog.invoke()
+                            showUpdate = false
+                        } else if (state == 0) {
                             dialog.invoke()
                         }
                     }
                 )
             }
-        }
-
-
-
+        })
     }
 }

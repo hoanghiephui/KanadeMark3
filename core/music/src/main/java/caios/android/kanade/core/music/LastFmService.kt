@@ -130,7 +130,7 @@ class LastFmService : Service(), CoroutineScope {
 
     private fun setForegroundService(isForeground: Boolean, title: String, progress: Int, max: Int) {
         if (isForeground) {
-            startForeground(notifyConfig.notifyId, createMusicNotification(baseContext, title, progress, max))
+            //startForeground(notifyConfig.notifyId, createMusicNotification(baseContext, title, progress, max))
         } else {
             stopForeground(STOP_FOREGROUND_REMOVE)
             stopSelf()

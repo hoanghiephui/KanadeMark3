@@ -13,6 +13,9 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import javax.inject.Singleton
 
 @Module
@@ -29,6 +32,10 @@ internal class CommonModule {
             .add(OffsetDateTimeAdapter)
             .add(InstantAdapter)
             .build()
+
+    @Provides
+    @Singleton
+    fun provideStateFlow(): MutableSharedFlow<Int> = MutableSharedFlow()
 }
 
 @Module
@@ -39,3 +46,4 @@ internal interface CommonModuleBinds {
     @Singleton
     fun provideTimeProvider(dateTimeProvider: DefaultDateTimeProvider): DateTimeProvider
 }
+ const val EVENT_RESTART_APP = 1

@@ -19,8 +19,6 @@ import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ElevatedButton
@@ -54,19 +52,19 @@ fun HeaderUpdate(
     updateState: InAppUpdateState,
     context: Context,
     rememberCoroutineScope: CoroutineScope,
-    sheetState: (isShow: Boolean) -> Unit
+    sheetState: (isShow: Boolean, Int) -> Unit
 ) {
     BottomSheetHeader(
         iconPainter = painterResource(R.drawable.ic_baseline_update_24),
         iconTint = ColorFilter.tint(MaterialTheme.colorScheme.onSurface),
         title = "Software update",
         onCloseClick = {
-            sheetState.invoke(false)
+            sheetState.invoke(false, 0)
         }
     ) {
         when (val result = updateState.appUpdateResult) {
             is AppUpdateResult.NotAvailable -> {
-                sheetState.invoke(false)
+                sheetState.invoke(false, 0)
             }
 
             is AppUpdateResult.Available -> {
@@ -87,8 +85,8 @@ fun HeaderUpdate(
                             result.startFlexibleUpdate(
                                 context.findActivity(), APP_UPDATE_REQUEST_CODE
                             )
-                            sheetState.invoke(false)
                         }
+                        sheetState.invoke(false, 1)
                     }
                 ) {
                     Text(text = stringResource(R.string.update_now))
@@ -132,14 +130,11 @@ fun HeaderUpdate(
                         .fillMaxWidth()
                         .padding(vertical = 12.dp, horizontal = 24.dp)
                 )
-                Spacer(modifier = Modifier.height(10.dp))
-                LaunchedEffect(key1 = Unit, block = {
-                    sheetState.invoke(true)
-                })
+                Spacer(modifier = Modifier.height(20.dp))
             }
 
             is AppUpdateResult.Downloaded -> {
-                Spacer(modifier = Modifier.height(30.dp))
+                Spacer(modifier = Modifier.height(10.dp))
                 Text(
                     text = stringResource(id = R.string.update_done),
                     modifier = Modifier
@@ -151,14 +146,15 @@ fun HeaderUpdate(
                         .fillMaxWidth()
                         .padding(horizontal = 24.dp),
                     onClick = {
+                        sheetState.invoke(false, 2)
                         rememberCoroutineScope.launch {
-                            sheetState.invoke(false)
                             result.completeUpdate()
                         }
                     }
                 ) {
                     Text(text = stringResource(R.string.install_now))
                 }
+                Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.safeDrawing))
             }
         }
     }
@@ -218,7 +214,7 @@ private fun BottomSheetHeader(
                 contentDescription = null
             )
             titleContent.invoke(this)
-            IconButton(
+            /*IconButton(
                 modifier = Modifier.size(24.dp),
                 onClick = onCloseClick
             ) {
@@ -227,7 +223,7 @@ private fun BottomSheetHeader(
                     tint = MaterialTheme.colorScheme.onSurface,
                     contentDescription = null,
                 )
-            }
+            }*/
         }
         Column(
             content = content

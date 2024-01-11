@@ -86,12 +86,16 @@ class CrushReportActivity : ComponentActivity() {
                             modifier = Modifier.fillMaxSize(),
                             report = report,
                             onClickCopy = {
-                                clipboardManager.setPrimaryClip(ClipData.newPlainText("Kanade Crush Report", it))
+                                clipboardManager.setPrimaryClip(ClipData.newPlainText("Crush Report", it))
 
                                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
                                     ToastUtil.show(this@CrushReportActivity, R.string.report_crush_toast_copy)
                                 }
                             },
+                            onClickOpenApp = {
+                                viewModel.onRestartApp()
+                                finishAffinity()
+                            }
                         )
                     }
                 }
