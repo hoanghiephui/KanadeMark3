@@ -95,7 +95,12 @@ private fun BillingPlusDialog(
                 .fillMaxWidth(),
             onClick = { onClickPurchase.invoke() },
         ) {
-            Text(stringResource(R.string.billing_plus_purchase_button, productDetails?.rawProductDetails?.oneTimePurchaseOfferDetails?.formattedPrice ?: "￥300"))
+            Text(stringResource(R.string.billing_plus_purchase_button,
+                productDetails?.rawProductDetails?.subscriptionOfferDetails?.first()
+                    ?.pricingPhases?.pricingPhaseList?.first()?.formattedPrice
+                    ?: "1,99 USD"
+                )
+            )
         }
 
         OutlinedButton(

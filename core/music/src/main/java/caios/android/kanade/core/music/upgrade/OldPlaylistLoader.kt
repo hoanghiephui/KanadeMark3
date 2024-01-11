@@ -58,7 +58,7 @@ class OldPlaylistLoader(
     )
 
     companion object {
-        const val PREFERENCE_NAME = "CAIOS-MusicPlaylist-2"
-        const val FAVORITE = "<CAIOS-SYSTEM-FAVORITE>"
+        const val PREFERENCE_NAME = "PODCAST-MusicPlaylist-2"
+        const val FAVORITE = "<PODCAST-SYSTEM-FAVORITE>"
     }
 }
