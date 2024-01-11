@@ -39,7 +39,6 @@ import caios.android.kanade.feature.menu.song.showSongMenuDialog
 import caios.android.kanade.feature.playlist.add.navigateToAddToPlaylist
 import caios.android.kanade.feature.playlist.export.navigateToExportPlaylist
 import caios.android.kanade.feature.playlist.rename.navigateToRenamePlaylist
-import caios.android.kanade.feature.playlist.top.PlaylistTopRoute
 import caios.android.kanade.feature.playlist.top.navigateToPlaylistTop
 import caios.android.kanade.feature.queue.showQueueDialog
 import caios.android.kanade.feature.share.ShareUtil

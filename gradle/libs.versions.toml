@@ -1,5 +1,6 @@
 [versions]
 # Application
+lottie = "6.1.0"
 versionName = "1.0.1"
 versionCode = "2"
 
@@ -41,7 +42,7 @@ androidxMedia = "1.7.0"
 androidxAnnotation = "1.7.1"
 androidxNavigation = "2.7.6"
 androidxCompose = "2023.10.01"
-androidxComposeMaterial3 = "1.2.0-beta01"
+androidxComposeMaterial3 = "1.2.0-beta02"
 androidxComposeConstraintLayout = "1.1.0-alpha13"
 androidxHiltNavigationCompose = "1.1.0"
 androidxGlance = "1.0.0"
@@ -110,6 +111,8 @@ kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-pl
 gms-services = { group = "com.google.gms", name = "google-services", version = "4.4.0" }
 gms-oss = { group = "com.google.android.gms", name = "oss-licenses-plugin", version = "0.10.6" }
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics-gradle", version = "2.9.9" }
+lottie = { module = "com.airbnb.android:lottie", version.ref = "lottie" }
+lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottie" }
 secret-gradlePlugin = { group = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", name = "secrets-gradle-plugin", version = "2.0.1" }
 detekt-gradlePlugin = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
 detekt-formatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detekt" }

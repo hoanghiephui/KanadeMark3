@@ -70,6 +70,7 @@ import caios.android.kanade.core.music.LastFmService
 import caios.android.kanade.core.music.MusicViewModel
 import caios.android.kanade.core.ui.controller.AppController
 import caios.android.kanade.core.ui.dialog.LoadingDialog
+import caios.android.kanade.core.ui.dialog.showAsButtonSheet
 import caios.android.kanade.feature.album.detail.navigateToAlbumDetail
 import caios.android.kanade.feature.artist.detail.navigateToArtistDetail
 import caios.android.kanade.feature.download.input.navigateToDownloadInput
@@ -83,9 +84,14 @@ import caios.android.kanade.feature.setting.top.navigateToSettingTop
 import caios.android.kanade.feature.welcome.WelcomeNavHost
 import caios.android.kanade.navigation.LibraryDestination
 import caios.android.kanade.navigation.PodcastNavHost
+import com.google.android.play.core.ktx.AppUpdateResult
+import com.google.android.play.core.review.ReviewManager
+import com.google.android.play.core.review.ReviewManagerFactory
 import com.podcast.discover.detail.navigateToOnlineDetail
+import findActivity
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
+import se.warting.inappupdate.compose.rememberInAppUpdateState
 
 @Composable
 fun KanadeApp(
@@ -96,12 +102,15 @@ fun KanadeApp(
     appState: KanadeAppState,
     modifier: Modifier = Modifier,
 ) {
-    val activity = (LocalContext.current as Activity)
+    val context = LocalContext.current
+    val activity = context.findActivity()
     var isShowWelcomeScreen by remember { mutableStateOf(!isAgreedTeams || !isAllowedPermission) }
     val isOffline by appState.isOffline.collectAsStateWithLifecycle()
     // If user is not connected to the internet show a snack bar to inform them.
     val notConnectedMessage = stringResource(R.string.not_connected)
     val snackBarHostState = remember { SnackbarHostState() }
+
+    val manager: ReviewManager = ReviewManagerFactory.create(context)
 
     LaunchedEffect(isOffline) {
         if (isOffline) {
@@ -128,7 +137,11 @@ fun KanadeApp(
                     modifier = Modifier.fillMaxSize(),
                     isAgreedTeams = isAgreedTeams,
                     isAllowedPermission = isAllowedPermission,
-                    navigateToBillingPlus = { appState.showBillingPlusDialog(activity) },
+                    navigateToBillingPlus = {
+                        if (activity != null) {
+                            appState.showBillingPlusDialog(activity)
+                        }
+                    },
                     onComplete = { isShowWelcomeScreen = false },
                 )
             } else {
@@ -139,6 +152,20 @@ fun KanadeApp(
                     appState = appState,
                     snackBarHostState = snackBarHostState
                 )
+                LaunchedEffect(key1 = musicViewModel.uiState.queueItems.isNotEmpty(), block = {
+                    val request = manager.requestReviewFlow()
+                    request.addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            val reviewInfo = task.result
+                            activity?.let {
+                                val flow = manager.launchReviewFlow(activity, reviewInfo)
+                                flow.addOnCompleteListener { _ ->
+
+                                }
+                            }
+                        }
+                    }
+                })
             }
         }
     }
@@ -157,12 +184,15 @@ private fun IdleScreen(
     val density = LocalDensity.current
     val activity = (LocalContext.current as Activity)
     val drawerState = rememberDrawerState(DrawerValue.Closed)
+    val updateState = rememberInAppUpdateState()
+    var showUpdate by remember { mutableStateOf(false) }
 
     val safLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenDocumentTree(),
         onResult = { uri ->
             uri?.let {
-                val flag = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                val flag =
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
 
                 activity.contentResolver.takePersistableUriPermission(it, flag)
                 appState.navController.navigateToScanMedia(it)
@@ -289,7 +319,6 @@ private fun IdleScreen(
                 activity.startService(Intent(activity, LastFmService::class.java))
             }
         }
-
 
         Scaffold(
             snackbarHost = { SnackbarHost(snackBarHostState) },
@@ -455,5 +484,28 @@ private fun IdleScreen(
                 }
             }
         }
+
+        LaunchedEffect(key1 = updateState.appUpdateResult is AppUpdateResult.Available, block = {
+            showUpdate = true
+        })
+        
+        if (showUpdate) {
+            activity.showAsButtonSheet(
+                userData = null,
+                skipPartiallyExpanded = false
+            ) {dialog ->
+                HeaderUpdate(
+                    updateState, activity, scope, sheetState = {
+                        showUpdate = it
+                        if (!it) {
+                            dialog.invoke()
+                        }
+                    }
+                )
+            }
+        }
+
+
+
     }
 }

@@ -134,6 +134,7 @@ dependencies {
     implementation(project(":feature:discover"))
     implementation(project(":feature:episodes"))
     implementation(project(":core:analytic"))
+    implementation(project(":in-app-update"))
 
     implementation(platform(libs.firebase.bom))
     implementation(platform(libs.androidx.compose.bom))

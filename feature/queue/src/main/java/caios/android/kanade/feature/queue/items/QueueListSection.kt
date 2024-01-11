@@ -13,8 +13,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SwipeToDismissBox
-import androidx.compose.material3.SwipeToDismissValue
-import androidx.compose.material3.rememberSwipeToDismissState
+import androidx.compose.material3.SwipeToDismissBoxValue
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -73,9 +73,9 @@ internal fun QueueListSection(
                     reorderableState = state,
                     key = "${item.index}",
                 ) { isDragging ->
-                    val dismissState = rememberSwipeToDismissState(
+                    val dismissState = rememberSwipeToDismissBoxState(
                         confirmValueChange = {
-                            if (it == SwipeToDismissValue.Settled) return@rememberSwipeToDismissState false
+                            if (it == SwipeToDismissBoxValue.Settled) return@rememberSwipeToDismissBoxState false
                             onDeleteItem(item)
                         },
                     )
@@ -84,7 +84,9 @@ internal fun QueueListSection(
                         label = "elevation",
                     )
                     val background = animateColorAsState(
-                        targetValue = if (index == getItemIndex(item)) MaterialTheme.colorScheme.primary.copy(alpha = 0.2f) else MaterialTheme.colorScheme.surface,
+                        targetValue = if (index == getItemIndex(item))
+                            MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
+                        else MaterialTheme.colorScheme.surface,
                         label = "background",
                     )
 

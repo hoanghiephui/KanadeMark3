@@ -13,6 +13,7 @@ dependencies {
 
     implementation(libs.bundles.ui.implementation)
     kapt(libs.bundles.ui.kapt)
-
+    api(libs.lottie)
+    api(libs.lottie.compose)
     implementation(libs.coil.compose)
 }

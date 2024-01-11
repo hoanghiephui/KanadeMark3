@@ -21,8 +21,8 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SwipeToDismissBox
-import androidx.compose.material3.SwipeToDismissValue
-import androidx.compose.material3.rememberSwipeToDismissState
+import androidx.compose.material3.SwipeToDismissBoxValue
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -151,9 +151,9 @@ private fun PlaylistDetailScreen(
                     reorderableState = state,
                     key = { item.id },
                 ) {
-                    val dismissState = rememberSwipeToDismissState(
+                    val dismissState = rememberSwipeToDismissBoxState(
                         confirmValueChange = {
-                            if (it == SwipeToDismissValue.Settled) return@rememberSwipeToDismissState false
+                            if (it == SwipeToDismissBoxValue.Settled) return@rememberSwipeToDismissBoxState false
 
                             onDeleteItem.invoke(playlist, getItemIndex(item))
                             data = data.apply { remove(item) }
