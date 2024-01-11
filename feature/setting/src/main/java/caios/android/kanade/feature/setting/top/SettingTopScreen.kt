@@ -163,12 +163,12 @@ private fun SettingTopScreen(
                     onClickAppTheme = onClickTheme,
                 )
 
-                SettingTopYTMusicSection(
+                /*SettingTopYTMusicSection(
                     modifier = Modifier.fillMaxWidth(),
                     userData = userData,
                     onClickEnableYTMusic = onClickEnableYTMusic,
                     onClickRemoveYTMusicToken = onClickRemoveYTMusicToken,
-                )
+                )*/
 
                 SettingTopPlayingSection(
                     modifier = Modifier.fillMaxWidth(),

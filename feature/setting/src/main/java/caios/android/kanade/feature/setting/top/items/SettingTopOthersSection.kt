@@ -58,14 +58,14 @@ internal fun SettingTopOthersSection(
             onClick = { /* do nothing */ },
         )
 
-        SettingTextItem(
-            modifier = Modifier.fillMaxWidth(),
-            title = stringResource(R.string.setting_top_others_open_source_license),
-            description = stringResource(R.string.setting_top_others_open_source_license_description),
-            onClick = { onClickOpenSourceLicense.invoke() },
-        )
-
         if (BuildConfig.DEBUG) {
+            SettingTextItem(
+                modifier = Modifier.fillMaxWidth(),
+                title = stringResource(R.string.setting_top_others_open_source_license),
+                description = stringResource(R.string.setting_top_others_open_source_license_description),
+                onClick = { onClickOpenSourceLicense.invoke() },
+            )
+
             SettingSwitchItem(
                 modifier = Modifier.fillMaxWidth(),
                 title = R.string.setting_top_others_developer_mode,
