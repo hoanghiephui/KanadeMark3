@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.HelpOutline
 import androidx.compose.material.icons.filled.Album
 import androidx.compose.material.icons.filled.ColorLens
 import androidx.compose.material.icons.filled.DesignServices
@@ -27,7 +28,6 @@ import androidx.compose.material.icons.filled.FolderOpen
 import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material.icons.filled.Scanner
 import androidx.compose.material.icons.filled.Widgets
-import androidx.compose.material.icons.outlined.HelpOutline
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -52,6 +52,7 @@ import caios.android.kanade.core.design.R
 import caios.android.kanade.core.design.theme.bold
 import caios.android.kanade.core.model.UserData
 import caios.android.kanade.core.ui.AsyncLoadContents
+import caios.android.kanade.core.ui.TrackScreenViewEvent
 import caios.android.kanade.core.ui.dialog.showAsButtonSheet
 import com.android.billingclient.api.Purchase
 import kotlinx.coroutines.launch
@@ -200,7 +201,7 @@ private fun BillingPlusDialog(
                     modifier = Modifier.fillMaxWidth(),
                     title = R.string.billing_plus_item_support,
                     description = R.string.billing_plus_item_support_description,
-                    icon = Icons.Outlined.HelpOutline,
+                    icon = Icons.AutoMirrored.Outlined.HelpOutline,
                 )
             }
 
@@ -332,5 +333,6 @@ fun Activity.showBillingPlusDialog(
                 },
             )
         }
+        TrackScreenViewEvent("BillingPlusDialog")
     }
 }

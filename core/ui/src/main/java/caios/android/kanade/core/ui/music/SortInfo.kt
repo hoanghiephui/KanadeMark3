@@ -40,7 +40,9 @@ fun SortInfo(
             trailingIcon =  {
                 Icon(
                     modifier = Modifier.size(16.dp),
-                    imageVector = if (sortOrder.order == Order.ASC) Icons.Default.ArrowUpward else Icons.Default.ArrowDownward,
+                    imageVector = if (sortOrder.order == Order.ASC)
+                        Icons.Default.ArrowUpward
+                    else Icons.Default.ArrowDownward,
                     contentDescription = "sortOrder",
                 )
             },

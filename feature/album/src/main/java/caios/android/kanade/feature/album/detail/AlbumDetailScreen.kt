@@ -32,6 +32,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import caios.android.kanade.core.model.music.Album
 import caios.android.kanade.core.model.music.Song
 import caios.android.kanade.core.ui.AsyncLoadContents
+import caios.android.kanade.core.ui.TrackScreenViewEvent
 import caios.android.kanade.core.ui.music.SongHolder
 import caios.android.kanade.core.ui.view.CoordinatorData
 import caios.android.kanade.core.ui.view.CoordinatorScaffold
@@ -66,6 +67,7 @@ internal fun AlbumDetailRoute(
             onTerminate = terminate,
         )
     }
+    TrackScreenViewEvent("AlbumDetailScreen")
 }
 
 @Composable

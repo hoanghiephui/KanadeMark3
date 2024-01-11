@@ -58,7 +58,8 @@ data class PodcastFeedItemEntity(
     val data: String,
     val dateModified: Long,
     val image: String? = null,
-    val publishDate: Instant
+    val publishDate: Instant,
+    val mimeType: String,
 ) {
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0

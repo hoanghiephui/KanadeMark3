@@ -33,6 +33,7 @@ import caios.android.kanade.core.model.music.Artist
 import caios.android.kanade.core.model.music.Song
 import caios.android.kanade.core.model.player.PlayerEvent
 import caios.android.kanade.core.ui.AsyncLoadContents
+import caios.android.kanade.core.ui.TrackScreenViewEvent
 import caios.android.kanade.core.ui.music.EpisodeDetailHeader
 import caios.android.kanade.core.ui.music.PodcastItemHolder
 import caios.android.kanade.core.ui.view.CoordinatorData
@@ -119,6 +120,8 @@ fun OnlineFeedRoute(
             onClickSeeAll = onClickSeeAll
         )
     }
+
+    TrackScreenViewEvent("OnlineFeedScreen")
 }
 
 @Composable

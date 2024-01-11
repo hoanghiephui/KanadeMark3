@@ -153,7 +153,8 @@ class FeedDiscoveryRepositoryImpl @Inject constructor(
                     data = it.data,
                     dateModified = it.dateModified,
                     image = it.urlImage,
-                    publishDate = Instant.fromEpochMilliseconds(it.publishDate)
+                    publishDate = Instant.fromEpochMilliseconds(it.publishDate),
+                    mimeType = it.mimeType
                 )
             }
         }

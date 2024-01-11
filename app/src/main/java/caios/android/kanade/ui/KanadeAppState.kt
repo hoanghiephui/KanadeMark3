@@ -50,6 +50,8 @@ import caios.android.kanade.navigation.LibraryDestination
 import com.podcast.core.network.util.NetworkMonitor
 import com.podcast.discover.DiscoverRoute
 import com.podcast.discover.navigateToDiscover
+import com.podcast.episodes.EpisodesRoute
+import com.podcast.episodes.navigateToEpisodes
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
@@ -109,12 +111,14 @@ class KanadeAppState(
             DiscoverRoute -> LibraryDestination.Discover
             //PlaylistTopRoute -> LibraryDestination.Playlist
             SongTopRoute -> LibraryDestination.Song
+            EpisodesRoute -> LibraryDestination.Episodes
             ArtistTopRoute -> LibraryDestination.Artist
             AlbumTopRoute -> LibraryDestination.Album
             else -> null
         }
 
-    val libraryDestinations = LibraryDestination.entries.filter { it != LibraryDestination.Playlist}
+    val libraryDestinations = LibraryDestination.entries.filter { it != LibraryDestination.Playlist
+            && it != LibraryDestination.Artist}
 
     fun navigateToLibrary(libraryDestination: LibraryDestination) {
         val navOption = navOptions {
@@ -132,6 +136,7 @@ class KanadeAppState(
             LibraryDestination.Artist -> navController.navigateToArtistTop(navOption)
             LibraryDestination.Album -> navController.navigateToAlbumTop(navOption)
             LibraryDestination.Playlist -> navController.navigateToPlaylistTop(navOption)
+            LibraryDestination.Episodes -> navController.navigateToEpisodes(navOption)
         }
     }
 

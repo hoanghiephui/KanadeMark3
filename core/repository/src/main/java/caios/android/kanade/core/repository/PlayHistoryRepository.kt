@@ -109,7 +109,7 @@ fun PodcastFeedItemEntity.toSong(): Song {
         duration = duration,
         year = year,
         track = 1,
-        mimeType = "audio/mpeg",
+        mimeType = mimeType,
         data = data,
         dateModified = dateModified,
         uri = Uri.parse(data),

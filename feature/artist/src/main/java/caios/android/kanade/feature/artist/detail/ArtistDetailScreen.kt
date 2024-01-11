@@ -40,6 +40,7 @@ import caios.android.kanade.core.model.music.Artist
 import caios.android.kanade.core.model.music.ArtistDetail
 import caios.android.kanade.core.model.music.Song
 import caios.android.kanade.core.ui.AsyncLoadContents
+import caios.android.kanade.core.ui.TrackScreenViewEvent
 import caios.android.kanade.core.ui.music.AlbumDetailHeader
 import caios.android.kanade.core.ui.music.AlbumHolder
 import caios.android.kanade.core.ui.music.SongDetailHeader
@@ -85,6 +86,8 @@ internal fun ArtistDetailRoute(
             onTerminate = terminate,
         )
     }
+
+    TrackScreenViewEvent("ArtistDetailScreen")
 }
 
 @Composable

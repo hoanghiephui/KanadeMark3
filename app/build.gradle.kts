@@ -132,6 +132,7 @@ dependencies {
     implementation(project(":feature:welcome"))
     implementation(project(":feature:widget"))
     implementation(project(":feature:discover"))
+    implementation(project(":feature:episodes"))
     implementation(project(":core:analytic"))
 
     implementation(platform(libs.firebase.bom))

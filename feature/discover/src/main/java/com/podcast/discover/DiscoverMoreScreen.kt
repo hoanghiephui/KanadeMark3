@@ -43,6 +43,7 @@ import caios.android.kanade.core.design.R
 import caios.android.kanade.core.model.podcast.EntryItem
 import caios.android.kanade.core.model.podcast.toFeedModel
 import caios.android.kanade.core.ui.AsyncLoadContents
+import caios.android.kanade.core.ui.TrackScreenViewEvent
 import caios.android.kanade.core.ui.collectAsStateLifecycleAware
 import caios.android.kanade.core.ui.dialog.showAsButtonSheet
 import caios.android.kanade.core.ui.music.FeedPodcastHolder
@@ -66,6 +67,8 @@ internal fun DiscoverMoreRouter(
     DiscoverMoreScreen(
         modifier, onClickPodcast, onTerminate, contentPadding, viewModel
     )
+
+    TrackScreenViewEvent("DiscoverMoreScreen")
 }
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)

@@ -28,6 +28,7 @@ import caios.android.kanade.core.design.theme.bold
 import caios.android.kanade.core.model.podcast.Advanced
 import caios.android.kanade.core.model.podcast.EntryItem
 import caios.android.kanade.core.ui.AsyncLoadContents
+import caios.android.kanade.core.ui.TrackScreenViewEvent
 import caios.android.kanade.core.ui.collectAsStateLifecycleAware
 import com.podcast.discover.items.DiscoverFeedSection
 
@@ -57,6 +58,8 @@ internal fun DiscoverRouter(
             navSearchWith = navSearchWith
         )
     }
+
+    TrackScreenViewEvent("DiscoverScreen")
 }
 
 @Composable

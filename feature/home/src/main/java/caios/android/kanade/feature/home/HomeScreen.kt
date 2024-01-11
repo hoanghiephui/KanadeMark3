@@ -41,7 +41,6 @@ import caios.android.kanade.feature.home.items.homeRecentlyPlayedSongsSection
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @Composable
 internal fun HomeRoute(
@@ -66,7 +65,10 @@ internal fun HomeRoute(
         modifier = modifier,
         screenState = screenState,
     ) { homeUiState ->
-        if ((homeUiState.recentlyPlayedSongs.isEmpty() || homeUiState.mostPlayedSongs.isEmpty()) && homeUiState.subscribedFeeds.isEmpty()) {
+        if ((homeUiState.recentlyPlayedSongs.isEmpty()
+                    || homeUiState.mostPlayedSongs.isEmpty())
+            && homeUiState.subscribedFeeds.isEmpty()
+        ) {
             HomeEmptyScreen(
                 modifier = Modifier.fillMaxSize(),
             )

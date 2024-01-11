@@ -56,6 +56,7 @@ import caios.android.kanade.core.common.network.util.ToastUtil
 import caios.android.kanade.core.design.R
 import caios.android.kanade.core.model.download.VideoInfo
 import caios.android.kanade.core.ui.AsyncLoadContents
+import caios.android.kanade.core.ui.TrackScreenViewEvent
 import caios.android.kanade.core.ui.dialog.SimpleAlertDialog
 import caios.android.kanade.core.ui.view.KanadeTopAppBar
 import caios.android.kanade.feature.download.format.items.DownloadCautionItem
@@ -99,6 +100,8 @@ internal fun DownloadFormatRoute(
             onTerminate = terminate,
         )
     }
+
+    TrackScreenViewEvent("DownloadFormatScreen")
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

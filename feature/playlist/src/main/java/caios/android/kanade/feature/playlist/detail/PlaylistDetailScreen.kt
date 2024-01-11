@@ -41,6 +41,7 @@ import caios.android.kanade.core.model.music.Playlist
 import caios.android.kanade.core.model.music.PlaylistItem
 import caios.android.kanade.core.model.music.Song
 import caios.android.kanade.core.ui.AsyncLoadContents
+import caios.android.kanade.core.ui.TrackScreenViewEvent
 import caios.android.kanade.core.ui.music.IndexedSongHolder
 import caios.android.kanade.core.ui.view.CoordinatorData
 import caios.android.kanade.core.ui.view.CoordinatorScaffold
@@ -80,6 +81,8 @@ fun PlaylistDetailRoute(
             onTerminate = terminate,
         )
     }
+
+    TrackScreenViewEvent("PlaylistDetailScreen")
 }
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)

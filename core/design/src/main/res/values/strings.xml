@@ -49,7 +49,8 @@
     <string name="error_developing_feature">Feature under development</string>
     <string name="error_billing">Failed to retrieve purchase information</string>
     <string name="download_error_not_found">The podcast host\'s server does not know where to find the file. It may have been deleted.</string>
-
+    <string name="no_episodes">No episodes</string>
+    <string name="no_episodes_content">When you add a podcast, the episodes will be show here.</string>
 
     <!-- Music -->
     <string name="music_title">Title</string>
@@ -76,6 +77,7 @@
     <string name="navigation_kanade_plus_description">Get access to all features for the price of a cup of coffee! </string>
     <string name="navigation_kanade_plus_purchased_description">You are a Podcast+ user. Enjoy comfortable music listening! </string>
     <string name="navigation_podcast" translatable="false">Podcast</string>
+    <string name="navigation_episodes">Episodes</string>
 
     <!-- Permission Request-->
     <string name="permission_request_title">Permission</string>

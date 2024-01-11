@@ -33,7 +33,8 @@ class SongTopViewModel @Inject constructor(
     @Dispatcher(KanadeDispatcher.IO) private val ioDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
-    var screenState = combine(musicRepository.config, musicRepository.updateFlag, lastFmRepository.albumDetails, ::Triple).map { (config, _, _) ->
+    var screenState = combine(musicRepository.config, musicRepository.updateFlag, lastFmRepository.albumDetails,
+        ::Triple).map { (config, _, _) ->
         withContext(ioDispatcher) {
             musicRepository.fetchSongs(config)
             musicRepository.fetchAlbumArtwork()
@@ -41,7 +42,7 @@ class SongTopViewModel @Inject constructor(
 
         ScreenState.Idle(
             SongTopUiState(
-                songs = musicRepository.sortedSongs(config),
+                songs = musicRepository.sortedSongs(config).filter { !it.isStream },
                 sortOrder = config.songOrder,
             ),
         )

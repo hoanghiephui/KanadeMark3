@@ -18,6 +18,7 @@ import caios.android.kanade.core.model.music.Album
 import caios.android.kanade.core.model.player.MusicOrder
 import caios.android.kanade.core.model.player.MusicOrderOption
 import caios.android.kanade.core.ui.AsyncLoadContents
+import caios.android.kanade.core.ui.TrackScreenViewEvent
 import caios.android.kanade.core.ui.music.AlbumHolder
 import caios.android.kanade.core.ui.music.SortInfo
 import caios.android.kanade.core.ui.view.FixedWithEdgeSpace
@@ -52,6 +53,8 @@ internal fun AlbumTopRoute(
             contentPadding = PaddingValues(top = topMargin + 8.dp, bottom = 8.dp),
         )
     }
+
+    TrackScreenViewEvent("AlbumTopScreen")
 }
 
 @OptIn(ExperimentalFoundationApi::class)

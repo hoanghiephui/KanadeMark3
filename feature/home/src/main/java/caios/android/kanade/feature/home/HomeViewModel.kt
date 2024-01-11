@@ -25,6 +25,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -37,10 +38,11 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val musicController: MusicController,
     private val musicRepository: MusicRepository,
-    private val playlistRepository: PlaylistRepository,
-    private val lastFmRepository: LastFmRepository,
-    private val feedDiscoveryRepository: FeedDiscoveryRepository,
-    @Dispatcher(KanadeDispatcher.IO) private val ioDispatcher: CoroutineDispatcher,
+    playlistRepository: PlaylistRepository,
+    lastFmRepository: LastFmRepository,
+    feedDiscoveryRepository: FeedDiscoveryRepository,
+    @Dispatcher(KanadeDispatcher.IO)
+    private val ioDispatcher: CoroutineDispatcher,
     @Dispatcher(KanadeDispatcher.Default)
     defaultDispatcher: CoroutineDispatcher,
 ) : BaseViewModel<NoneAction>(defaultDispatcher) {
@@ -52,8 +54,10 @@ class HomeViewModel @Inject constructor(
         playlistRepository.data,
         lastFmRepository.albumDetails,
         musicRepository.updateFlag,
-        feedDiscoveryRepository.loadLatestAdd(),
-        feedDiscoveryRepository.loadAddItem().map { podcastFeedItemEntities -> podcastFeedItemEntities.map { it.toSong() } }
+        feedDiscoveryRepository.loadLatestAdd().flowOn(ioDispatcher),
+        feedDiscoveryRepository.loadAddItem().flowOn(ioDispatcher).map {
+            podcastFeedItemEntities -> podcastFeedItemEntities.map { it.toSong() }
+        }
     ) { data ->
         val config = data[0] as MusicConfig
         val queue = data[1] as Queue

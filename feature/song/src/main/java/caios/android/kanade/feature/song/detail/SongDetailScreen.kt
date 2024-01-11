@@ -38,6 +38,7 @@ import caios.android.kanade.core.design.R
 import caios.android.kanade.core.model.music.Queue
 import caios.android.kanade.core.model.music.Song
 import caios.android.kanade.core.ui.AsyncLoadContents
+import caios.android.kanade.core.ui.TrackScreenViewEvent
 import caios.android.kanade.core.ui.music.SongHolder
 import caios.android.kanade.core.ui.view.DropDownMenuItemData
 import caios.android.kanade.core.ui.view.KanadeTopAppBar
@@ -79,6 +80,8 @@ internal fun SongDetailRoute(
             onTerminate = terminate,
         )
     }
+
+    TrackScreenViewEvent("SongDetailScreen")
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

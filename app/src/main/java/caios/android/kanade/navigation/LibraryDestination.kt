@@ -23,6 +23,10 @@ enum class LibraryDestination(
         icon = DrawableResourceIcon(KanadeIcon.asPlaylist),
         textId = R.string.navigation_playlist,
     ),
+    Episodes(
+        icon = DrawableResourceIcon(KanadeIcon.asEpisodes),
+        textId = R.string.navigation_episodes,
+    ),
     Song(
         icon = DrawableResourceIcon(KanadeIcon.asSong),
         textId = R.string.navigation_song,

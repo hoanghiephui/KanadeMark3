@@ -42,6 +42,7 @@ import caios.android.kanade.core.model.music.Playlist
 import caios.android.kanade.core.model.player.MusicOrder
 import caios.android.kanade.core.model.player.MusicOrderOption
 import caios.android.kanade.core.ui.AsyncLoadContents
+import caios.android.kanade.core.ui.TrackScreenViewEvent
 import caios.android.kanade.core.ui.music.PlaylistHolder
 import caios.android.kanade.core.ui.music.SortInfo
 import caios.android.kanade.core.ui.view.FixedWithEdgeSpace
@@ -94,7 +95,7 @@ internal fun PlaylistTopRoute(
             )
         }
     }
-
+    TrackScreenViewEvent("PlaylistTopScreen")
 }
 
 @OptIn(ExperimentalFoundationApi::class)

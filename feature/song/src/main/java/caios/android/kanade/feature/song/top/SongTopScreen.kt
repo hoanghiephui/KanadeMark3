@@ -19,6 +19,7 @@ import caios.android.kanade.core.model.music.Song
 import caios.android.kanade.core.model.player.MusicOrder
 import caios.android.kanade.core.model.player.MusicOrderOption
 import caios.android.kanade.core.ui.AsyncLoadContents
+import caios.android.kanade.core.ui.TrackScreenViewEvent
 import caios.android.kanade.core.ui.music.SongHolder
 import caios.android.kanade.core.ui.music.SortInfo
 import kotlinx.collections.immutable.ImmutableList
@@ -49,6 +50,8 @@ internal fun SongTopRoute(
             onClickMenu = navigateToSongMenu,
         )
     }
+
+    TrackScreenViewEvent("SongTopScreen")
 }
 
 @Composable

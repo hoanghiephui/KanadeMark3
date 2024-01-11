@@ -85,6 +85,7 @@ import com.podcast.discover.discoverMoreScreen
 import com.podcast.discover.discoverScreen
 import com.podcast.discover.navigateToDiscover
 import com.podcast.discover.navigateToDiscoverMore
+import com.podcast.episodes.episodesScreen
 import kotlinx.collections.immutable.ImmutableList
 import kotlin.reflect.KClass
 
@@ -234,7 +235,7 @@ fun PodcastNavHost(
                 navController.navigateToAlbumDetail(it)
             },
             navigateToAddedFeed = {
-
+                navController.navigateToDiscoverMore()
             },
             navigateToFeed =  {
                 navController.navigateToOnlineDetail(it)
@@ -293,6 +294,13 @@ fun PodcastNavHost(
             topMargin = libraryTopBarHeight,
             navigateToSongMenu = ::showSongMenuDialog,
             navigateToSort = ::showSortDialog,
+        )
+
+        episodesScreen(
+            topMargin = libraryTopBarHeight,
+            navigateToSongMenu = ::showSongMenuDialog,
+            navigateToSort = ::showSortDialog,
+            showSnackBar = showSnackBar
         )
 
         artistTopScreen(
