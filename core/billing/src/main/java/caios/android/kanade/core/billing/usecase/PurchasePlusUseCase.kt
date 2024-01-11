@@ -19,7 +19,7 @@ class PurchasePlusUseCase @Inject constructor(
     @Dispatcher(KanadeDispatcher.Main) private val mainDispatcher: CoroutineDispatcher,
 ) {
     suspend fun execute(activity: Activity): PurchaseConsumableResult {
-        val productDetails = billingClient.queryProductDetails(ProductItem.plus, ProductType.INAPP)
+        val productDetails = billingClient.queryProductDetails(ProductItem.plus, ProductType.SUBS)
         val purchaseResult = purchase(activity, productDetails)
 
         acknowledge(purchaseResult.purchase)
