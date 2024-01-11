@@ -129,7 +129,9 @@ class MusicViewModel @Inject constructor(
 
             uiState = uiState.copy(isReadyToFmService = musicRepository.songs.isNotEmpty())
 
-            Timber.d("Fetch library. Songs: ${musicRepository.songs.size}, Artists: ${musicRepository.artists.size}, Albums: ${musicRepository.albums.size}")
+            Timber.d("Fetch library. Songs: ${musicRepository.songs.size}, " +
+                    "Artists: ${musicRepository.artists.size}, " +
+                    "Albums: ${musicRepository.albums.size}")
         }
     }
 
