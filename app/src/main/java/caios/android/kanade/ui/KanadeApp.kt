@@ -153,15 +153,17 @@ fun KanadeApp(
                     appState = appState,
                     snackBarHostState = snackBarHostState
                 )
-                LaunchedEffect(key1 = musicViewModel.uiState.queueItems.isNotEmpty(), block = {
-                    val request = manager.requestReviewFlow()
-                    request.addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            val reviewInfo = task.result
-                            activity?.let {
-                                val flow = manager.launchReviewFlow(activity, reviewInfo)
-                                flow.addOnCompleteListener { _ ->
+                LaunchedEffect(key1 = Unit, block = {
+                    if (musicViewModel.uiState.queueItems.isNotEmpty()) {
+                        val request = manager.requestReviewFlow()
+                        request.addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                val reviewInfo = task.result
+                                activity?.let {
+                                    val flow = manager.launchReviewFlow(activity, reviewInfo)
+                                    flow.addOnCompleteListener { _ ->
 
+                                    }
                                 }
                             }
                         }
