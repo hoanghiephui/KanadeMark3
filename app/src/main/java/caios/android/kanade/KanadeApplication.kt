@@ -14,7 +14,8 @@ import coil.ImageLoaderFactory
 import com.google.android.material.color.DynamicColors
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -41,6 +42,13 @@ class KanadeApplication : Application(), ImageLoaderFactory {
     @Inject
     lateinit var evenBus: MutableSharedFlow<Int>
 
+    @Inject
+    @Dispatcher(KanadeDispatcher.Default)
+    lateinit var default: CoroutineDispatcher
+
+    private val scope by lazy {
+        CoroutineScope(default)
+    }
     override fun onCreate() {
         super.onCreate()
 
@@ -52,13 +60,18 @@ class KanadeApplication : Application(), ImageLoaderFactory {
             startCrushReportActivity(e)
         }
 
-        GlobalScope.launch {
+        scope.launch {
             evenBus.collectLatest {
                 if (it == EVENT_RESTART_APP) {
                     restartApp()
                 }
             }
         }
+    }
+
+    override fun onTerminate() {
+        super.onTerminate()
+        scope.cancel()
     }
 
     override fun newImageLoader(): ImageLoader =
