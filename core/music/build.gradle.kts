@@ -41,7 +41,7 @@ dependencies {
 
     api(libs.google.exoplayer)
     implementation(libs.google.exoplayer.dash)
-    implementation(libs.google.exoplayer.hls)
+    //implementation(libs.google.exoplayer.hls)
     implementation(libs.google.exoplayer.okhttp)
     implementation(libs.coil.compose)
     implementation(libs.ffmpeg)
