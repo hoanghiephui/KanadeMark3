@@ -17,6 +17,8 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.compose.ui.graphics.toArgb
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationCompat.PRIORITY_HIGH
+import androidx.core.app.NotificationCompat.PRIORITY_MAX
 import androidx.core.app.NotificationManagerCompat
 import caios.android.kanade.core.design.R
 import caios.android.kanade.core.design.databinding.LayoutDefaultArtworkBinding
@@ -102,6 +104,7 @@ class NotificationManager(
             .setContentText(song?.artist)
             .setAutoCancel(false)
             .setColorized(true)
+            .setPriority(PRIORITY_HIGH)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setContentIntent(mainPendingIntent)
 
@@ -137,7 +140,7 @@ class NotificationManager(
         val channel = NotificationChannel(
             notifyConfig.channelId,
             channelName,
-            NotificationManager.IMPORTANCE_LOW,
+            NotificationManager.IMPORTANCE_HIGH,
         ).apply {
             description = channelDescription
         }

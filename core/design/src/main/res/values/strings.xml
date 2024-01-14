@@ -434,7 +434,7 @@
     <string name="welcome_permission_storage">Storage</string>
     <string name="welcome_permission_storage_message">To access song files</string>
     <string name="welcome_permission_notification">Notification</string>
-    <string name="welcome_permission_notification_message">To display controller</string>
+    <string name="welcome_permission_notification_message">To display controller for Media Play</string>
     <string name="welcome_permission_allowed">ALLOWED</string>
     <string name="welcome_permission_denied">DENIED</string>
     <string name="welcome_permission_optional">OPTIONAL</string>

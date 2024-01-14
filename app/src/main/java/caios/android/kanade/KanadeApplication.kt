@@ -15,6 +15,7 @@ import com.google.android.material.color.DynamicColors
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -42,13 +43,11 @@ class KanadeApplication : Application(), ImageLoaderFactory {
     @Inject
     lateinit var evenBus: MutableSharedFlow<Int>
 
-    @Inject
-    @Dispatcher(KanadeDispatcher.Default)
-    lateinit var default: CoroutineDispatcher
 
     private val scope by lazy {
-        CoroutineScope(default)
+        CoroutineScope(Dispatchers.Default)
     }
+
     override fun onCreate() {
         super.onCreate()
 

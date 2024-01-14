@@ -149,6 +149,7 @@ class LastFmService : Service(), CoroutineScope {
             .setContentText(songTitle)
             .setSubText("%.1f%%".format((progress / max.toDouble()) * 100))
             .setAutoCancel(false)
+            .setPriority(NotificationCompat.PRIORITY_MAX)
             .setColorized(true)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setCategory(Notification.CATEGORY_SERVICE)
@@ -165,7 +166,7 @@ class LastFmService : Service(), CoroutineScope {
         val channel = NotificationChannel(
             notifyConfig.channelId,
             channelName,
-            NotificationManager.IMPORTANCE_LOW,
+            NotificationManager.IMPORTANCE_HIGH,
         ).apply {
             description = channelDescription
         }

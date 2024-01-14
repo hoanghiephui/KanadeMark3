@@ -1,8 +1,8 @@
 [versions]
 # Application
 lottie = "6.1.0"
-versionName = "1.0.2"
-versionCode = "4"
+versionName = "1.0.3"
+versionCode = "5"
 
 # SDK
 minSdk = "26"

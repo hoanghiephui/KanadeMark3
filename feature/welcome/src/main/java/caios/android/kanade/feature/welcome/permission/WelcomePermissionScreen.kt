@@ -55,9 +55,11 @@ internal fun WelcomePermissionScreen(
     var isPermissionRequested by remember { mutableStateOf(false) }
 
     val notifyPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) android.Manifest.permission.POST_NOTIFICATIONS else null
+    val foregroundPermissionPlayBack = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) android.Manifest.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK else null
+    val foregroundPermissionDataSync = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) android.Manifest.permission.FOREGROUND_SERVICE else null
     val storagePermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) android.Manifest.permission.READ_MEDIA_AUDIO else android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 
-    val permissionList = listOfNotNull(storagePermission, notifyPermission)
+    val permissionList = listOfNotNull(storagePermission, notifyPermission, foregroundPermissionPlayBack, foregroundPermissionDataSync)
     val permissionsState = rememberMultiplePermissionsState(permissionList) {
         isPermissionRequested = true
     }
