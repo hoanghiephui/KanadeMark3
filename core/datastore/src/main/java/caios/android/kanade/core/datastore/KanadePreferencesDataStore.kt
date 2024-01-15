@@ -16,6 +16,7 @@ import caios.android.kanade.core.model.player.ShuffleMode
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
+import java.util.Locale
 import javax.inject.Inject
 
 class KanadePreferencesDataStore @Inject constructor(
@@ -53,7 +54,7 @@ class KanadePreferencesDataStore @Inject constructor(
                 isAgreedPrivacyPolicy = if (it.hasIsAgreedPrivacyPolicy()) it.isAgreedPrivacyPolicy else false,
                 isAgreedTermsOfService = if (it.hasIsAgreedTermsOfService()) it.isAgreedTermsOfService else false,
                 isEnableYTMusic = if (it.hasIsEnableYtmusic()) it.isEnableYtmusic else false,
-                countryCode = it.countryCode
+                countryCode = it.countryCode.ifBlank { Locale.getDefault().country }
             )
         }
 

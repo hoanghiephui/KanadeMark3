@@ -77,6 +77,7 @@ import caios.android.kanade.feature.sort.showSortDialog
 import caios.android.kanade.feature.tag.navigateToTagEdit
 import caios.android.kanade.feature.tag.tagEditScreen
 import caios.android.kanade.ui.KanadeAppState
+import com.podcast.core.network.api.Genres
 import com.podcast.discover.detail.feedDetailScreen
 import com.podcast.discover.detail.feedMoreScreen
 import com.podcast.discover.detail.navigateToFeedMore
@@ -235,12 +236,15 @@ fun PodcastNavHost(
                 navController.navigateToAlbumDetail(it)
             },
             navigateToAddedFeed = {
-                navController.navigateToDiscoverMore()
+                navController.navigateToDiscoverMore(Genres.TOP, R.string.discover)
             },
             navigateToFeed =  {
                 navController.navigateToOnlineDetail(it)
             },
             navigateToAddPodcast = {
+                appState.navigateToLibrary(LibraryDestination.Discover)
+            },
+            openPodcastScreen = {
                 appState.navigateToLibrary(LibraryDestination.Discover)
             }
         )
@@ -250,8 +254,8 @@ fun PodcastNavHost(
             navigateToFeedDetail = {
                 navController.navigateToOnlineDetail(it)
             },
-            navigateToFeedMore = {
-                navController.navigateToDiscoverMore()
+            navigateToFeedMore = {_, genres, title ->
+                navController.navigateToDiscoverMore(genres, title)
             },
             navSearchWith = {
                 openSearch(it)

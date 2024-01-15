@@ -1,6 +1,6 @@
 package com.podcast.discover
 
-import androidx.annotation.AnyThread
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import caios.android.kanade.core.common.network.BaseViewModel
 import caios.android.kanade.core.common.network.Dispatcher
@@ -10,7 +10,6 @@ import caios.android.kanade.core.common.network.Result
 import caios.android.kanade.core.common.network.asFlowResult
 import caios.android.kanade.core.common.network.data
 import caios.android.kanade.core.common.network.extension.safeCollect
-import caios.android.kanade.core.common.network.isLoading
 import caios.android.kanade.core.common.network.onResultError
 import caios.android.kanade.core.design.R
 import caios.android.kanade.core.model.ScreenState
@@ -20,24 +19,20 @@ import caios.android.kanade.core.model.podcast.ItunesTopPodcastResponse
 import caios.android.kanade.core.repository.UserDataRepository
 import caios.android.kanade.core.repository.podcast.FeedDiscoveryRepository
 import caios.android.kanade.core.ui.error.ErrorsDispatcher
+import com.podcast.core.network.api.Genres
 import com.podcast.core.usecase.ItunesFeedUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.getAndUpdate
+import kotlinx.coroutines.flow.combineTransform
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.Locale
-import java.util.Locale.*
+import java.util.Locale.getDefault
 import javax.inject.Inject
 
 @HiltViewModel
@@ -47,24 +42,41 @@ class DiscoverViewModel @Inject constructor(
     @Dispatcher(KanadeDispatcher.Default)
     defaultDispatcher: CoroutineDispatcher,
     private val errorsDispatcher: ErrorsDispatcher,
-    private val movieItemMapper: DiscoverFeedItemMapper,
     private val feedDiscoveryUseCase: ItunesFeedUseCase,
     private val feedRepository: FeedDiscoveryRepository,
-    private val userDataRepository: UserDataRepository
+    private val userDataRepository: UserDataRepository,
+    private val savedStateHandle: SavedStateHandle,
 ) : BaseViewModel<NoneAction>(defaultDispatcher) {
-    private val feedState = MutableStateFlow(emptyList<EntryItem>())
-    private val fetchNewFeedResultState = MutableStateFlow<Result<ItunesTopPodcastResponse>?>(null)
-    val uiState =
-        combine(
-            feedState.map(movieItemMapper::map),
-            fetchNewFeedResultState,
+    private val genres: Genres
+        get() = Genres.fromInt(
+            savedStateHandle[DiscoverMoreData_Genres] ?: Genres.TOP.id
+        )
+
+    private val itemsAdvanced = mutableListOf(
+        Advanced(1, R.drawable.baseline_search_24, "Search Apple Podcasts"),
+        Advanced(2, R.drawable.baseline_search_24, "Search fyyd"),
+        Advanced(3, R.drawable.baseline_search_24, "Search Podcast Index")
+    )
+
+    val uiMoreState =
+        combineTransform(
+            userDataRepository.userData,
             feedRepository.loadSubscribe()
                 .map { podcastModels -> podcastModels.map { it.podcastFeed.id } }
-        ) { items, podcastResponseResult, subscribedFeeds ->
-            createDiscoverUiState(
-                items = items,
-                podcastResponseResult = podcastResponseResult,
-                subscribedFeeds = subscribedFeeds
+        ) { userData, subscribedFeeds ->
+            val countryCode = userData.countryCode.ifBlank { getDefault().country }
+            selectCountryCode = countryCode
+            countryCode.getTopPodcastByGenres(genres).map {
+                withContext(ioDispatcher) {
+                    val topFeedResult =
+                        it.data?.feed?.entry?.toMap(subscribedFeeds) ?: emptyList()
+                    ScreenState.Idle(topFeedResult.toImmutableList())
+                }
+            }.safeCollect(
+                onEach = {
+                    emit(it)
+                },
+                onError = errorsDispatcher::dispatch
             )
         }.stateIn(
             scope = viewModelScope,
@@ -72,82 +84,79 @@ class DiscoverViewModel @Inject constructor(
             initialValue = ScreenState.Loading,
         )
 
-    val itemsAdvanced = mutableListOf(
-        Advanced(1, R.drawable.baseline_search_24, "Search Apple Podcasts"),
-        Advanced(2, R.drawable.baseline_search_24, "Search fyyd"),
-        Advanced(3, R.drawable.baseline_search_24, "Search Podcast Index")
-    )
+    val uiState =
+        combineTransform(
+            userDataRepository.userData,
+            feedRepository.loadSubscribe()
+                .map { podcastModels -> podcastModels.map { it.podcastFeed.id } }
+        ) { userData, subscribedFeeds ->
+            val countryCode = userData.countryCode.ifBlank { getDefault().country }
+            selectCountryCode = countryCode
+            val genres =
+                listOf(Genres.TOP, Genres.HEALTH, Genres.EDUCATION, Genres.MUSIC, Genres.SOCIETY)
+            combine(
+                genres.map {
+                    countryCode.getTopPodcastByGenres(it).map { result ->
+                        result.data?.feed?.entry
+                    }
+                }
+            ) { results ->
+                withContext(ioDispatcher) {
+                    val topFeedResult =
+                        results[0].toMap(subscribedFeeds)
+                    val healthFeedResult =
+                        results[1].toMap(subscribedFeeds)
+                    val educationResult =
+                        results[2].toMap(subscribedFeeds)
+                    val musicResult =
+                        results[3].toMap(subscribedFeeds)
+                    val societyResult =
+                        results[4].toMap(subscribedFeeds)
+                    ScreenState.Idle(
+                        Discover(
+                            topFeedResult.toImmutableList(),
+                            healthFeedResult.toImmutableList(),
+                            educationResult.toImmutableList(),
+                            musicResult.toImmutableList(),
+                            societyResult.toImmutableList(),
+                            itemsAdvanced.toImmutableList()
+                        )
+                    )
+                }
 
-    val countryCode = userDataRepository.userData.map {
-        ScreenState.Idle(it)
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = ScreenState.Loading,
-    )
+            }.collect {
+                emit(it)
+            }
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = ScreenState.Loading,
+        )
 
-    var selectCountryCode = getDefault().country
+    var selectCountryCode: String = getDefault().country
         set(value) {
             field = value
         }
 
-    init {
-        viewModelScope.launch(defaultDispatcher) {
-            countryCode.collect {
-                if (it is ScreenState.Idle) {
-                    val countryCode = it.data.countryCode.ifBlank { getDefault().country }
-                    fetchNewDiscoverPodcast(countryCode)
-                    selectCountryCode = countryCode
-                }
-            }
-        }
-    }
-
-    @AnyThread
-    private suspend fun createDiscoverUiState(
-        items: ImmutableList<EntryItem>,
-        podcastResponseResult: Result<ItunesTopPodcastResponse>?,
-        subscribedFeeds: List<Long>
-    ): ScreenState<Discover> = when {
-        items.isNotEmpty() -> withContext(ioDispatcher) {
-            val suggestedPodcastsResult =
-                items.filterNot { subscribedFeeds.contains(it.id?.attributes?.imId?.toLong()) }
-            ScreenState.Idle(
-                Discover(items = suggestedPodcastsResult.toImmutableList())
+    private fun String.getTopPodcastByGenres(
+        genres: Genres
+    ): Flow<Result<ItunesTopPodcastResponse>> =
+        asFlowResult {
+            feedDiscoveryUseCase.getTopPodcastByGenres(
+                this,
+                25,
+                genres = genres
             )
-        }
+        }.onResultError(errorsDispatcher::dispatch)
 
-        podcastResponseResult.isLoading -> ScreenState.Loading
-        else -> ScreenState.Error(
-            message = R.string.error_no_data,
-            retryTitle = R.string.common_close
-        )
-    }
-
-    @AnyThread
-    fun fetchNewDiscoverPodcast(countryCode: String) {
-        viewModelScope.launch(defaultDispatcher) {
-
-            val currentState = fetchNewFeedResultState.getAndUpdate { Result.Loading() }
-            if (currentState !is Result.Loading) {
-                asFlowResult {
-                    feedDiscoveryUseCase.getTopPodcast(countryCode, 25)
-                }.onResultError(errorsDispatcher::dispatch)
-                    .safeCollect(
-                        onEach = { result ->
-                            val suggestedPodcasts = result.data?.feed?.entry
-                            feedState.update { suggestedPodcasts.orEmpty() }
-                            fetchNewFeedResultState.emit(result)
-                        },
-                        onError = errorsDispatcher::dispatch,
-                    )
-            }
-        }
-    }
 
     fun saveCountryCode(countryCode: String) {
         viewModelScope.launch(defaultDispatcher) {
             userDataRepository.setCountryCode(countryCode)
         }
     }
+
+    private fun List<EntryItem>?.toMap(subscribedFeeds: List<Long>) =
+        this?.filterNot { subscribedFeeds.contains(it.id?.attributes?.imId?.toLong()) }
+            ?: emptyList()
 }

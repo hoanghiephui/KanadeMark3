@@ -12,6 +12,7 @@ import caios.android.kanade.core.model.music.Song
 import caios.android.kanade.core.model.podcast.ItunesTopPodcastResponse
 import caios.android.kanade.core.model.podcast.LookFeedResponse
 import caios.android.kanade.core.model.podcast.PodcastDownload
+import com.podcast.core.network.api.Genres
 import com.podcast.core.network.datasource.ItunesDataSource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
@@ -24,6 +25,12 @@ interface FeedDiscoveryRepository {
     suspend fun getTopPodcast(
         country: String,
         limit: Int
+    ): ItunesTopPodcastResponse
+
+    suspend fun getTopPodcastByGenres(
+        country: String,
+        limit: Int,
+        genres: Genres
     ): ItunesTopPodcastResponse
 
     suspend fun getLookFeed(
@@ -64,6 +71,15 @@ class FeedDiscoveryRepositoryImpl @Inject constructor(
     override suspend fun getTopPodcast(country: String, limit: Int): ItunesTopPodcastResponse =
         withContext(dispatcher) {
             networkDataSource.getTopPodcast(country, limit)
+        }
+
+    override suspend fun getTopPodcastByGenres(
+        country: String,
+        limit: Int,
+        genres: Genres
+    ): ItunesTopPodcastResponse =
+        withContext(dispatcher) {
+            networkDataSource.getTopPodcastByGenres(country, limit, genres)
         }
 
     override suspend fun getLookFeed(id: String): LookFeedResponse =

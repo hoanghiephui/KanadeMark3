@@ -5,6 +5,7 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -18,6 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import caios.android.kanade.core.design.component.KanadeBackground
+import caios.android.kanade.core.design.theme.bold
 
 @Composable
 internal fun SettingTextItem(
@@ -70,6 +72,74 @@ internal fun SettingTextItem(
                 color = descriptionColor,
             )
         }
+    }
+}
+
+@Composable
+internal fun SettingTextItem(
+    @StringRes title: Int,
+    @StringRes description: Int?,
+    value: String,
+    onValueChanged: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    isEnabled: Boolean = true,
+) {
+    val titleColor: Color
+    val descriptionColor: Color
+
+    if (isEnabled) {
+        titleColor = MaterialTheme.colorScheme.onSurface
+        descriptionColor = MaterialTheme.colorScheme.onSurfaceVariant
+    } else {
+        MaterialTheme.colorScheme.onSurface
+            .copy(alpha = 0.38f)
+            .compositeOver(MaterialTheme.colorScheme.surface)
+            .also {
+                titleColor = it
+                descriptionColor = it
+            }
+    }
+
+    Row(
+        modifier = modifier
+            .clickable(
+                enabled = isEnabled,
+                onClick = { onValueChanged.invoke(value) },
+            )
+            .padding(horizontal = 24.dp, vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+        Column(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(
+                space = 4.dp,
+                alignment = Alignment.CenterVertically,
+            ),
+        ) {
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = stringResource(title),
+                style = MaterialTheme.typography.bodyLarge,
+                color = titleColor,
+            )
+
+            if (description != null) {
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = stringResource(description),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = descriptionColor,
+                )
+            }
+        }
+
+        Text(
+            text = value,
+            style = MaterialTheme.typography.bodyMedium.bold(),
+            color = MaterialTheme.colorScheme.primary
+        )
+
     }
 }
 

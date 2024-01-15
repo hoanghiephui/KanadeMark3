@@ -36,10 +36,12 @@ import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 internal fun DiscoverFeedSection(
+    modifier: Modifier = Modifier,
+    title: Int = R.string.discover,
     feed: ImmutableList<EntryItem>,
     onClickMore: (ImmutableList<EntryItem>) -> Unit,
     onClickPodcast: (String) -> Unit,
-    modifier: Modifier = Modifier,
+    showSource: Boolean = false
 ) {
     Column(
         modifier = modifier.padding(vertical = 16.dp),
@@ -54,7 +56,7 @@ internal fun DiscoverFeedSection(
         ) {
             Text(
                 modifier = Modifier.weight(1f),
-                text = stringResource(R.string.discover),
+                text = stringResource(title),
                 style = MaterialTheme.typography.titleMedium.bold(),
                 color = MaterialTheme.colorScheme.onSurface,
             )
@@ -80,7 +82,7 @@ internal fun DiscoverFeedSection(
                 key = { "added-${it.id}" },
             ) { feed ->
                 FeedPodcastHolder(
-                    modifier = Modifier.width(150.dp),
+                    modifier = Modifier.width(120.dp),
                     feed = feed.toFeedModel(),
                     onClickHolder = {
                         feed.id?.attributes?.imId?.let { onClickPodcast.invoke(it) }
@@ -88,17 +90,19 @@ internal fun DiscoverFeedSection(
                 )
             }
         }
-        Text(
-            modifier = Modifier
-                .padding(horizontal = 8.dp)
-                .align(Alignment.End)
-                .fillMaxWidth(),
-            text = stringResource(id = R.string.discover_powered_by_itunes),
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            maxLines = 1,
-            textAlign = TextAlign.End,
-            overflow = TextOverflow.Ellipsis,
-        )
+        if (showSource) {
+            Text(
+                modifier = Modifier
+                    .padding(horizontal = 8.dp)
+                    .align(Alignment.End)
+                    .fillMaxWidth(),
+                text = stringResource(id = R.string.discover_powered_by_itunes),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 1,
+                textAlign = TextAlign.End,
+                overflow = TextOverflow.Ellipsis,
+            )
+        }
     }
 }

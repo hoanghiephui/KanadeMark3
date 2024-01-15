@@ -4,6 +4,7 @@ import androidx.annotation.AnyThread
 import caios.android.kanade.core.model.podcast.ItunesTopPodcastResponse
 import caios.android.kanade.core.model.podcast.LookFeedResponse
 import com.podcast.core.network.ApiServiceExecutor
+import com.podcast.core.network.api.Genres
 import javax.inject.Inject
 
 interface ItunesDataSource {
@@ -11,6 +12,13 @@ interface ItunesDataSource {
     suspend fun getTopPodcast(
         country: String,
         limit: Int
+    ): ItunesTopPodcastResponse
+
+    @AnyThread
+    suspend fun getTopPodcastByGenres(
+        country: String,
+        limit: Int,
+        genres: Genres
     ): ItunesTopPodcastResponse
 
     @AnyThread
@@ -41,5 +49,16 @@ class DefaultItunesDataSource @Inject constructor(
     override suspend fun searchPodcast(query: String): LookFeedResponse =
         executor.execute {
             it.searchPodcast(query = query)
+        }
+
+    override suspend fun getTopPodcastByGenres(
+        country: String,
+        limit: Int,
+        genres: Genres
+    ): ItunesTopPodcastResponse =
+        executor.execute {
+            it.getTopPodcastByGenres(
+                country, limit, genres.id
+            )
         }
 }

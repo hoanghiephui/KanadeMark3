@@ -13,6 +13,13 @@ interface ItunesApi {
         @Path("limit") limit: Int
     ): ItunesTopPodcastResponse
 
+    @GET("{country}/rss/toppodcasts/limit={limit}/genre={genre}/explicit=true/json")
+    suspend fun getTopPodcastByGenres(
+        @Path("country") country: String,
+        @Path("limit") limit: Int,
+        @Path("genre") genre: Int
+    ): ItunesTopPodcastResponse
+
     @GET("lookup")
     suspend fun getLookFeed(
         @Query("id") id: String
@@ -23,4 +30,16 @@ interface ItunesApi {
         @Query("media") media: String = "podcast",
         @Query("term") query: String
     ): LookFeedResponse
+}
+
+
+enum class Genres(val id: Int) {
+    TOP(0),
+    HEALTH(1512),
+    EDUCATION(1304),
+    MUSIC(1310),
+    SOCIETY(1324);//Society & Culture
+    companion object {
+        fun fromInt(value: Int) = entries.first { it.id == value }
+    }
 }

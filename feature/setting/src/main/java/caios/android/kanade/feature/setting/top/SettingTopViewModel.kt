@@ -122,6 +122,12 @@ class SettingTopViewModel @Inject constructor(
             version(context)
         }
     }
+
+    fun saveCountryCode(countryCode: String) {
+        viewModelScope.launch {
+            userDataRepository.setCountryCode(countryCode)
+        }
+    }
 }
 
 @Stable

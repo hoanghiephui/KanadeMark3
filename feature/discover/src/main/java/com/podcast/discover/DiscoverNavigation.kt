@@ -9,6 +9,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import caios.android.kanade.core.design.animation.NavigateAnimation
 import caios.android.kanade.core.model.podcast.EntryItem
+import com.podcast.core.network.api.Genres
 
 const val DiscoverRoute = "discoverTop"
 
@@ -19,7 +20,7 @@ fun NavController.navigateToDiscover(navOptions: NavOptions? = null) {
 fun NavGraphBuilder.discoverScreen(
     topMargin: Dp,
     navigateToFeedDetail: (String) -> Unit,
-    navigateToFeedMore: (List<EntryItem>) -> Unit,
+    navigateToFeedMore: (List<EntryItem>, genres: Genres, title: Int) -> Unit,
     navSearchWith: (id: Int) -> Unit
 ) {
     composable(

@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeTopAppBar
@@ -34,12 +34,15 @@ import caios.android.kanade.core.common.network.util.ToastUtil
 import caios.android.kanade.core.design.R
 import caios.android.kanade.core.model.UserData
 import caios.android.kanade.core.ui.AsyncLoadContents
+import caios.android.kanade.core.ui.dialog.showAsButtonSheet
+import caios.android.kanade.core.ui.view.SelectCountry
 import caios.android.kanade.feature.setting.SettingTheme
 import caios.android.kanade.feature.setting.top.items.SettingTopLibrarySection
 import caios.android.kanade.feature.setting.top.items.SettingTopOthersSection
 import caios.android.kanade.feature.setting.top.items.SettingTopPlayingSection
+import caios.android.kanade.feature.setting.top.items.SettingTopPodcastSection
 import caios.android.kanade.feature.setting.top.items.SettingTopThemeSection
-import caios.android.kanade.feature.setting.top.items.SettingTopYTMusicSection
+import findActivity
 
 @Composable
 internal fun SettingTopRoute(
@@ -97,6 +100,9 @@ internal fun SettingTopRoute(
             },
             onClickRemoveYTMusicToken = viewModel::removeYTMusicToken,
             onTerminate = terminate,
+            onSaveCountryCode = {
+                viewModel.saveCountryCode(it)
+            }
         )
     }
 }
@@ -120,11 +126,12 @@ private fun SettingTopScreen(
     onClickOpenSourceLicense: () -> Unit,
     onClickDeveloperMode: (Boolean) -> Unit,
     onTerminate: () -> Unit,
+    onSaveCountryCode: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val state = rememberTopAppBarState()
     val behavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(state)
-
+    val context = LocalContext.current
     Scaffold(
         modifier = modifier.nestedScroll(behavior.nestedScrollConnection),
         topBar = {
@@ -143,7 +150,7 @@ private fun SettingTopScreen(
                                 .clip(RoundedCornerShape(50))
                                 .padding(6.dp)
                                 .clickable { onTerminate.invoke() },
-                            imageVector = Icons.Outlined.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
@@ -169,6 +176,27 @@ private fun SettingTopScreen(
                     onClickEnableYTMusic = onClickEnableYTMusic,
                     onClickRemoveYTMusicToken = onClickRemoveYTMusicToken,
                 )*/
+                SettingTopPodcastSection(
+                    modifier = Modifier.fillMaxWidth(),
+                    userData = userData,
+                    onClickLang = {
+                        context.findActivity()?.showAsButtonSheet(
+                            userData = null,
+                            skipPartiallyExpanded = false
+                        ) { onDismiss ->
+                            SelectCountry(
+                                currentCountryCode = it,
+                                selectCountry = {
+                                    onSaveCountryCode(it)
+                                    onDismiss.invoke()
+                                },
+                                dismissDialog = {
+                                    onDismiss.invoke()
+                                }
+                            )
+                        }
+                    }
+                )
 
                 SettingTopPlayingSection(
                     modifier = Modifier.fillMaxWidth(),

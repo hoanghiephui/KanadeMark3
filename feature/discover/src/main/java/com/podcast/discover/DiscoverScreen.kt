@@ -30,7 +30,9 @@ import caios.android.kanade.core.model.podcast.EntryItem
 import caios.android.kanade.core.ui.AsyncLoadContents
 import caios.android.kanade.core.ui.TrackScreenViewEvent
 import caios.android.kanade.core.ui.collectAsStateLifecycleAware
+import com.podcast.core.network.api.Genres
 import com.podcast.discover.items.DiscoverFeedSection
+import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 internal fun DiscoverRouter(
@@ -38,7 +40,7 @@ internal fun DiscoverRouter(
     modifier: Modifier = Modifier,
     viewModel: DiscoverViewModel = hiltViewModel(),
     navigateToFeedDetail: (String) -> Unit,
-    navigateToFeedMore: (List<EntryItem>) -> Unit,
+    navigateToFeedMore: (List<EntryItem>, genres: Genres, title: Int) -> Unit,
     navSearchWith: (id: Int) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateLifecycleAware()
@@ -54,7 +56,7 @@ internal fun DiscoverRouter(
                 .background(MaterialTheme.colorScheme.surface),
             navigateToFeedDetail = navigateToFeedDetail,
             navigateToFeedMore = navigateToFeedMore,
-            itemsAdvance = viewModel.itemsAdvanced,
+            itemsAdvance = discoverUiState.itemsAdvanced,
             navSearchWith = navSearchWith
         )
     }
@@ -67,9 +69,9 @@ internal fun DiscoverScreen(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
     uiState: Discover,
-    itemsAdvance: List<Advanced>,
+    itemsAdvance: ImmutableList<Advanced>,
     navigateToFeedDetail: (String) -> Unit,
-    navigateToFeedMore: (List<EntryItem>) -> Unit,
+    navigateToFeedMore: (List<EntryItem>, genres: Genres, title: Int) -> Unit,
     navSearchWith: (id: Int) -> Unit
 ) {
 
@@ -77,16 +79,74 @@ internal fun DiscoverScreen(
         modifier = modifier,
         contentPadding = contentPadding,
     ) {
-        item {
-            DiscoverFeedSection(
-                modifier = Modifier.fillMaxWidth(),
-                feed = uiState.items,
-                onClickMore = {
-                    navigateToFeedMore(it.toList())
-                },
-                onClickPodcast = navigateToFeedDetail,
-            )
+        if (uiState.topFeed.isNotEmpty()) {
+            item {
+                DiscoverFeedSection(
+                    modifier = Modifier.fillMaxWidth(),
+                    feed = uiState.topFeed,
+                    onClickMore = {
+                        navigateToFeedMore(it.toList(), Genres.TOP, R.string.discover)
+                    },
+                    onClickPodcast = navigateToFeedDetail,
+                )
+            }
         }
+        if (uiState.healthFeed.isNotEmpty()) {
+            item {
+                DiscoverFeedSection(
+                    modifier = Modifier.fillMaxWidth(),
+                    feed = uiState.healthFeed,
+                    onClickMore = {
+                        navigateToFeedMore(it.toList(), Genres.HEALTH, R.string.health)
+                    },
+                    onClickPodcast = navigateToFeedDetail,
+                    title = R.string.health
+                )
+            }
+        }
+        if (uiState.educationFeed.isNotEmpty()) {
+            item {
+                DiscoverFeedSection(
+                    modifier = Modifier.fillMaxWidth(),
+                    feed = uiState.educationFeed,
+                    onClickMore = {
+                        navigateToFeedMore(it.toList(), Genres.EDUCATION, R.string.education)
+                    },
+                    onClickPodcast = navigateToFeedDetail,
+                    title = R.string.education
+                )
+            }
+        }
+
+        if (uiState.musicFeed.isNotEmpty()) {
+            item {
+                DiscoverFeedSection(
+                    modifier = Modifier.fillMaxWidth(),
+                    feed = uiState.musicFeed,
+                    onClickMore = {
+                        navigateToFeedMore(it.toList(), Genres.MUSIC, R.string.music)
+                    },
+                    onClickPodcast = navigateToFeedDetail,
+                    title = R.string.music
+                )
+            }
+        }
+        if (uiState.societyFeed.isNotEmpty()) {
+            item {
+                DiscoverFeedSection(
+                    modifier = Modifier.fillMaxWidth(),
+                    feed = uiState.societyFeed,
+                    onClickMore = {
+                        navigateToFeedMore(it.toList(), Genres.SOCIETY, R.string.society)
+                    },
+                    onClickPodcast = navigateToFeedDetail,
+                    title = R.string.society,
+                    showSource = true
+                )
+            }
+        }
+
+
         item {
             Text(
                 modifier = Modifier.padding(horizontal = 16.dp),

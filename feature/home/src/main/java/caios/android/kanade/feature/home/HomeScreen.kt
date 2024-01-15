@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -53,6 +54,7 @@ internal fun HomeRoute(
     onClickRecentlyAddedFeed: () -> Unit,
     onClickFeed: (imId: String) -> Unit,
     navToAddPodcast: () -> Unit,
+    openPodcastScreen: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
@@ -71,6 +73,7 @@ internal fun HomeRoute(
         ) {
             HomeEmptyScreen(
                 modifier = Modifier.fillMaxSize(),
+                openPodcastScreen
             )
         } else {
             HomeScreen(
@@ -219,6 +222,7 @@ internal fun HomeScreen(
 @Composable
 private fun HomeEmptyScreen(
     modifier: Modifier = Modifier,
+    openPodcastScreen: () -> Unit
 ) {
     Column(
         modifier = modifier,
@@ -260,5 +264,9 @@ private fun HomeEmptyScreen(
             style = MaterialTheme.typography.bodyMedium.center(),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
+
+        ElevatedButton(onClick = openPodcastScreen) {
+            Text(text = stringResource(id = R.string.navigation_podcast))
+        }
     }
 }
