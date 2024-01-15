@@ -26,7 +26,6 @@ import caios.android.kanade.core.model.music.Song
 import caios.android.kanade.core.model.player.PlayerEvent
 import caios.android.kanade.core.music.MusicController
 import caios.android.kanade.core.repository.MusicRepository
-import caios.android.kanade.core.repository.SongRepository
 import caios.android.kanade.core.repository.podcast.FeedDiscoveryRepository
 import caios.android.kanade.core.repository.podcast.ParseRssRepository
 import caios.android.kanade.core.ui.error.ErrorsDispatcher

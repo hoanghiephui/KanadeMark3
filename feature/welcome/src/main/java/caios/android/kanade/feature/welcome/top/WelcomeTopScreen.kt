@@ -56,10 +56,8 @@ internal fun WelcomeTopScreen(
     val context = LocalContext.current
     var isDisplayedOldUserDialog by remember { mutableStateOf(false) }
     var isAgreedPrivacyPolicy by remember { mutableStateOf(false) }
-    var isAgreedTermsOfService by remember { mutableStateOf(false) }
 
-    val teamOfServiceUri = "https://www.matsumo.me/application/kanade/team_of_service".toUri()
-    val privacyPolicyUri = "https://www.matsumo.me/application/kanade/privacy_policy".toUri()
+    val privacyPolicyUri = "https://sites.google.com/view/podcast68".toUri()
 
     if (isDisplayedOldUserDialog) {
         SimpleAlertDialog(
@@ -113,14 +111,6 @@ internal fun WelcomeTopScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             CheckBoxLinkButton(
-                isChecked = isAgreedTermsOfService,
-                link = stringResource(R.string.welcome_team_of_service),
-                body = stringResource(R.string.welcome_agree),
-                onChecked = { isAgreedTermsOfService = it },
-                onLinkClick = { context.startActivity(Intent(Intent.ACTION_VIEW, teamOfServiceUri)) },
-            )
-
-            CheckBoxLinkButton(
                 isChecked = isAgreedPrivacyPolicy,
                 link = stringResource(R.string.welcome_privacy_policy),
                 body = stringResource(R.string.welcome_agree),
@@ -142,7 +132,7 @@ internal fun WelcomeTopScreen(
                 .padding(bottom = 24.dp)
                 .fillMaxWidth(),
             shape = RoundedCornerShape(50),
-            enabled = isAgreedPrivacyPolicy && isAgreedTermsOfService,
+            enabled = isAgreedPrivacyPolicy,
             onClick = {
                 navigateToWelcomePlus.invoke()
                 viewModel.setAgreedPrivacyPolicy()
@@ -152,7 +142,7 @@ internal fun WelcomeTopScreen(
             Text(
                 modifier = Modifier.padding(8.dp),
                 text = stringResource(R.string.welcome_button_next),
-                color = if (isAgreedPrivacyPolicy && isAgreedTermsOfService) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
+                color = if (isAgreedPrivacyPolicy) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
             )
         }
     }

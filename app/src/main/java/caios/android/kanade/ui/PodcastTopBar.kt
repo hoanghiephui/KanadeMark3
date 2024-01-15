@@ -162,7 +162,7 @@ fun PodcastTopBar(
                         modifier = Modifier
                             .padding(6.dp),
                         painter = rememberAnimatedVectorPainter(image, atEnd),
-                        contentDescription = null,
+                        contentDescription = "Menu",
                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
