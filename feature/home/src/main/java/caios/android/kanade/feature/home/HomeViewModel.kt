@@ -21,6 +21,7 @@ import caios.android.kanade.core.repository.MusicRepository
 import caios.android.kanade.core.repository.PlaylistRepository
 import caios.android.kanade.core.repository.podcast.FeedDiscoveryRepository
 import caios.android.kanade.core.repository.toSong
+import com.applovin.sdk.AppLovinSdk
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.SharingStarted
@@ -45,7 +46,8 @@ class HomeViewModel @Inject constructor(
     private val ioDispatcher: CoroutineDispatcher,
     @Dispatcher(KanadeDispatcher.Default)
     defaultDispatcher: CoroutineDispatcher,
-) : BaseViewModel<NoneAction>(defaultDispatcher) {
+    appLoVinSdk: AppLovinSdk
+) : BaseViewModel<NoneAction>(defaultDispatcher, appLoVinSdk) {
 
 
     val screenState = combine(
@@ -55,8 +57,8 @@ class HomeViewModel @Inject constructor(
         lastFmRepository.albumDetails,
         musicRepository.updateFlag,
         feedDiscoveryRepository.loadLatestAdd().flowOn(ioDispatcher),
-        feedDiscoveryRepository.loadAddItem().flowOn(ioDispatcher).map {
-            podcastFeedItemEntities -> podcastFeedItemEntities.map { it.toSong() }
+        feedDiscoveryRepository.loadAddItem().flowOn(ioDispatcher).map { podcastFeedItemEntities ->
+            podcastFeedItemEntities.map { it.toSong() }
         }
     ) { data ->
         val config = data[0] as MusicConfig

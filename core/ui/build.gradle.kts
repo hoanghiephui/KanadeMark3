@@ -1,3 +1,7 @@
+import com.android.build.api.variant.BuildConfigField
+import org.jetbrains.kotlin.konan.properties.Properties
+import java.io.Serializable
+
 plugins {
     id("kanade.library")
     id("kanade.library.compose")
@@ -7,6 +11,16 @@ plugins {
 
 android {
     namespace = "caios.android.kanade.core.ui"
+    val localProperties = Properties().apply {
+        load(project.rootDir.resolve("local.properties").inputStream())
+    }
+    androidComponents {
+        onVariants {
+            it.buildConfigFields.apply {
+                putBuildConfig(localProperties, "HOME_NATIVE")
+            }
+        }
+    }
 }
 
 dependencies {
@@ -22,4 +36,14 @@ dependencies {
     kapt(libs.bundles.ui.kapt)
     implementation(libs.androidx.palette)
     implementation(libs.reorderble.compose)
+}
+
+fun MapProperty<String, BuildConfigField<out Serializable>>.putBuildConfig(
+    localProperties: Properties,
+    key: String,
+    value: String? = null,
+    type: String = "String",
+    comment: String? = null
+) {
+    put(key, BuildConfigField(type, value ?: localProperties.getProperty(key) ?: System.getenv(key) ?: "\"\"", comment))
 }

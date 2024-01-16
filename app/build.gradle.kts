@@ -81,6 +81,7 @@ android {
                 putBuildConfig(localProperties, "YTMUSIC_CLIENT_ID")
                 putBuildConfig(localProperties, "YTMUSIC_CLIENT_SECRET")
             }
+            it.resValues.put(it.makeResValueKey("string", "APPLOVIN_SDK_KEY"), ResValue(localProperties.getProperty("KEY_APPLOVIN"), null))
 
             if (it.buildType == "release") {
                 it.packaging.resources.excludes.add("META-INF/**")
@@ -150,6 +151,7 @@ dependencies {
 
     implementation(libs.play.service.oss)
     implementation(libs.google.material)
+    implementation(libs.play.services.ads.identifier)
 
     debugImplementation(libs.facebook.flipper)
     debugImplementation(libs.facebook.flipper.network)

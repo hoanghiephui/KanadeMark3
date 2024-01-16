@@ -21,7 +21,7 @@ class AndroidApplicationComposeConventionPlugin : Plugin<Project> {
 
             dependencies {
                 val bom = libs.library("androidx-compose-bom")
-
+                implementation(libs.library("applovin-sdk"))
                 implementation(platform(bom))
                 implementation(libs.library("androidx-compose-ui-tooling-preview"))
                 debugImplementation(libs.library("androidx-compose-ui-tooling"))
