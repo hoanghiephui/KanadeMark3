@@ -480,4 +480,5 @@
     <string name="downloading">Downloading update…</string>
     <string name="update_done">Update downloaded successfully</string>
     <string name="install_now">Install now</string>
+    <string name="add_podcast">Add a Podcast</string>
 </resources>

@@ -5,10 +5,10 @@ import android.net.Uri
 import androidx.core.text.HtmlCompat
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MimeTypes
-import caios.android.kanade.core.common.network.BaseViewModel
+import caios.android.kanade.core.design.BaseViewModel
 import caios.android.kanade.core.common.network.Dispatcher
 import caios.android.kanade.core.common.network.KanadeDispatcher
-import caios.android.kanade.core.common.network.NoneAction
+import caios.android.kanade.core.design.NoneAction
 import caios.android.kanade.core.common.network.Result
 import caios.android.kanade.core.common.network.asFlowResult
 import caios.android.kanade.core.common.network.data
@@ -29,6 +29,7 @@ import caios.android.kanade.core.repository.MusicRepository
 import caios.android.kanade.core.repository.podcast.FeedDiscoveryRepository
 import caios.android.kanade.core.repository.podcast.ParseRssRepository
 import caios.android.kanade.core.ui.error.ErrorsDispatcher
+import com.applovin.sdk.AppLovinSdk
 import com.podcast.core.network.util.PodcastDownloader
 import com.prof18.rssparser.model.RssChannel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -60,8 +61,9 @@ class OnlineFeedViewModel @Inject constructor(
     private val errorsDispatcher: ErrorsDispatcher,
     private val musicController: MusicController,
     private val musicRepository: MusicRepository,
-    val download: PodcastDownloader
-) : BaseViewModel<NoneAction>(defaultDispatcher) {
+    val download: PodcastDownloader,
+    adsSdk: AppLovinSdk
+) : BaseViewModel<NoneAction>(defaultDispatcher, adsSdk) {
     private var imId: String? = null
     private val feedState = MutableStateFlow<RssChannel?>(null)
     private val fetchNewFeedResultState = MutableStateFlow<Result<RssChannel>?>(null)

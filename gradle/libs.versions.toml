@@ -2,8 +2,8 @@
 # Application
 lottie = "6.1.0"
 playServicesAdsIdentifier = "18.0.1"
-versionName = "1.0.6"
-versionCode = "7"
+versionName = "1.0.8"
+versionCode = "8"
 
 # SDK
 minSdk = "26"

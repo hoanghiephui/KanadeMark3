@@ -166,7 +166,7 @@ class LastFmService : Service(), CoroutineScope {
         val channel = NotificationChannel(
             notifyConfig.channelId,
             channelName,
-            NotificationManager.IMPORTANCE_HIGH,
+            NotificationManager.IMPORTANCE_LOW,
         ).apply {
             description = channelDescription
         }

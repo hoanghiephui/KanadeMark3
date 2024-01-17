@@ -15,9 +15,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
@@ -25,14 +27,16 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import caios.android.kanade.core.design.R
 import caios.android.kanade.core.design.theme.bold
-import caios.android.kanade.core.model.podcast.Advanced
 import caios.android.kanade.core.model.podcast.EntryItem
+import caios.android.kanade.core.design.component.AdType
+import caios.android.kanade.core.design.component.AdViewState
 import caios.android.kanade.core.ui.AsyncLoadContents
+import caios.android.kanade.core.ui.BuildConfig
+import caios.android.kanade.core.design.component.MaxTemplateNativeAdViewComposable
 import caios.android.kanade.core.ui.TrackScreenViewEvent
 import caios.android.kanade.core.ui.collectAsStateLifecycleAware
 import com.podcast.core.network.api.Genres
 import com.podcast.discover.items.DiscoverFeedSection
-import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 internal fun DiscoverRouter(
@@ -44,6 +48,11 @@ internal fun DiscoverRouter(
     navSearchWith: (id: Int) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateLifecycleAware()
+    val adState by viewModel.adState
+    val context = LocalContext.current
+    LaunchedEffect(key1 = BuildConfig.HOME_NATIVE, block = {
+        viewModel.loadAds(context, BuildConfig.HOME_NATIVE)
+    })
     AsyncLoadContents(
         modifier = modifier,
         screenState = uiState,
@@ -56,8 +65,11 @@ internal fun DiscoverRouter(
                 .background(MaterialTheme.colorScheme.surface),
             navigateToFeedDetail = navigateToFeedDetail,
             navigateToFeedMore = navigateToFeedMore,
-            itemsAdvance = discoverUiState.itemsAdvanced,
-            navSearchWith = navSearchWith
+            navSearchWith = navSearchWith,
+            openBilling = {
+
+            },
+            adViewState = adState
         )
     }
 
@@ -69,10 +81,11 @@ internal fun DiscoverScreen(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
     uiState: Discover,
-    itemsAdvance: ImmutableList<Advanced>,
     navigateToFeedDetail: (String) -> Unit,
     navigateToFeedMore: (List<EntryItem>, genres: Genres, title: Int) -> Unit,
-    navSearchWith: (id: Int) -> Unit
+    navSearchWith: (id: Int) -> Unit,
+    adViewState: AdViewState,
+    openBilling: () -> Unit
 ) {
 
     LazyColumn(
@@ -93,6 +106,11 @@ internal fun DiscoverScreen(
         }
         if (uiState.healthFeed.isNotEmpty()) {
             item {
+                MaxTemplateNativeAdViewComposable(
+                    adViewState = adViewState,
+                    adType = AdType.SMALL,
+                    showBilling = openBilling,
+                )
                 DiscoverFeedSection(
                     modifier = Modifier.fillMaxWidth(),
                     feed = uiState.healthFeed,
@@ -157,7 +175,7 @@ internal fun DiscoverScreen(
             Spacer(modifier = Modifier.height(8.dp))
         }
 
-        items(itemsAdvance) {
+        items(uiState.itemsAdvanced) {
             Row(
                 modifier = Modifier
                     .height(50.dp)

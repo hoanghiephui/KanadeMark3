@@ -68,6 +68,7 @@ import caios.android.kanade.core.design.component.rememberLibraryTopBarScrollSta
 import caios.android.kanade.core.model.UserData
 import caios.android.kanade.core.music.LastFmService
 import caios.android.kanade.core.music.MusicViewModel
+import caios.android.kanade.core.ui.BuildConfig
 import caios.android.kanade.core.ui.controller.AppController
 import caios.android.kanade.core.ui.dialog.LoadingDialog
 import caios.android.kanade.core.ui.dialog.showAsButtonSheet
@@ -92,7 +93,6 @@ import findActivity
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
 import se.warting.inappupdate.compose.rememberInAppUpdateState
-import timber.log.Timber
 
 @Composable
 fun KanadeApp(
@@ -185,10 +185,12 @@ private fun IdleScreen(
     snackBarHostState: SnackbarHostState,
 ) {
     val density = LocalDensity.current
-    val activity = (LocalContext.current as Activity)
+    val context = LocalContext.current
+    val activity = (context as Activity)
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val updateState = rememberInAppUpdateState()
     var showUpdate by remember { mutableStateOf(false) }
+    val adState by musicViewModel.adState
 
     val safLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenDocumentTree(),
@@ -231,7 +233,8 @@ private fun IdleScreen(
     ) {
         var isSearchActive by remember { mutableStateOf(false) }
         var idSearchBy by remember { mutableIntStateOf(1) }
-        val isShouldHideBottomController = isSearchActive || appState.currentLibraryDestination == null
+        val isShouldHideBottomController =
+            isSearchActive || appState.currentLibraryDestination == null
 
         var topBarHeight by remember { mutableFloatStateOf(0f) }
         var bottomBarHeight by remember { mutableFloatStateOf(0f) }
@@ -278,11 +281,16 @@ private fun IdleScreen(
             ),
         )
 
-        val toolbarOffset = with(density) { if (!isSearchActive) scrollBehavior.state.yOffset.toDp() else 0.dp }
+        val toolbarOffset =
+            with(density) { if (!isSearchActive) scrollBehavior.state.yOffset.toDp() else 0.dp }
 
-        bottomSheetOffset = runCatching { scaffoldState.bottomSheetState.requireOffset() }.getOrDefault(0f)
+        bottomSheetOffset =
+            runCatching { scaffoldState.bottomSheetState.requireOffset() }.getOrDefault(0f)
         bottomSheetOffsetRate = density.run {
-            (bottomSheetOffset / (bottomSheetHeight - bottomBarHeight - 72.dp.toPx())).coerceIn(0f, 1f)
+            (bottomSheetOffset / (bottomSheetHeight - bottomBarHeight - 72.dp.toPx())).coerceIn(
+                0f,
+                1f
+            )
         }
 
         LaunchedEffect(appState.currentLibraryDestination) {
@@ -374,6 +382,10 @@ private fun IdleScreen(
                             scope.launch {
                                 scaffoldState.bottomSheetState.expand()
                             }
+                            musicViewModel.loadAds(
+                                context = context,
+                                adUnitIdentifier = BuildConfig.PLAYER_NATIVE
+                            )
                         },
                         onClickCloseExpanded = {
                             scope.launch {
@@ -410,10 +422,17 @@ private fun IdleScreen(
                                 Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL).apply {
                                     putExtra(AudioEffect.EXTRA_PACKAGE_NAME, activity.packageName)
                                     putExtra(AudioEffect.EXTRA_AUDIO_SESSION, 0)
-                                    putExtra(AudioEffect.EXTRA_CONTENT_TYPE, AudioEffect.CONTENT_TYPE_MUSIC)
+                                    putExtra(
+                                        AudioEffect.EXTRA_CONTENT_TYPE,
+                                        AudioEffect.CONTENT_TYPE_MUSIC
+                                    )
                                 },
                             )
                         },
+                        adViewState = adState,
+                        openBilling = {
+
+                        }
                     )
                 },
             ) {
@@ -488,23 +507,25 @@ private fun IdleScreen(
             }
         }
 
-        LaunchedEffect(key1 = updateState.appUpdateResult is AppUpdateResult.Available && !showUpdate, block = {
-            showUpdate = true
-            activity.showAsButtonSheet(
-                userData = null,
-                skipPartiallyExpanded = false
-            ) { dialog ->
-                HeaderUpdate(
-                    updateState, activity, scope, sheetState = { _, state ->
-                        if (state == 2) {
-                            dialog.invoke()
-                            showUpdate = false
-                        } else if (state == 0) {
-                            dialog.invoke()
+        LaunchedEffect(
+            key1 = updateState.appUpdateResult is AppUpdateResult.Available && !showUpdate,
+            block = {
+                showUpdate = true
+                activity.showAsButtonSheet(
+                    userData = null,
+                    skipPartiallyExpanded = false
+                ) { dialog ->
+                    HeaderUpdate(
+                        updateState, activity, scope, sheetState = { _, state ->
+                            if (state == 2) {
+                                dialog.invoke()
+                                showUpdate = false
+                            } else if (state == 0) {
+                                dialog.invoke()
+                            }
                         }
-                    }
-                )
-            }
-        })
+                    )
+                }
+            })
     }
 }

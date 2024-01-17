@@ -2,10 +2,10 @@ package com.podcast.discover
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import caios.android.kanade.core.common.network.BaseViewModel
+import caios.android.kanade.core.design.BaseViewModel
 import caios.android.kanade.core.common.network.Dispatcher
 import caios.android.kanade.core.common.network.KanadeDispatcher
-import caios.android.kanade.core.common.network.NoneAction
+import caios.android.kanade.core.design.NoneAction
 import caios.android.kanade.core.common.network.Result
 import caios.android.kanade.core.common.network.asFlowResult
 import caios.android.kanade.core.common.network.data
@@ -19,6 +19,7 @@ import caios.android.kanade.core.model.podcast.ItunesTopPodcastResponse
 import caios.android.kanade.core.repository.UserDataRepository
 import caios.android.kanade.core.repository.podcast.FeedDiscoveryRepository
 import caios.android.kanade.core.ui.error.ErrorsDispatcher
+import com.applovin.sdk.AppLovinSdk
 import com.podcast.core.network.api.Genres
 import com.podcast.core.usecase.ItunesFeedUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -46,7 +47,8 @@ class DiscoverViewModel @Inject constructor(
     private val feedRepository: FeedDiscoveryRepository,
     private val userDataRepository: UserDataRepository,
     private val savedStateHandle: SavedStateHandle,
-) : BaseViewModel<NoneAction>(defaultDispatcher) {
+    appLoVinSdk: AppLovinSdk
+) : BaseViewModel<NoneAction>(defaultDispatcher, appLoVinSdk) {
     private val genres: Genres
         get() = Genres.fromInt(
             savedStateHandle[DiscoverMoreData_Genres] ?: Genres.TOP.id

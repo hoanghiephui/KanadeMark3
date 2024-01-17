@@ -59,4 +59,4 @@ internal interface CommonModuleBinds {
 }
 
 const val EVENT_RESTART_APP = 1
-const val SHOW_ADS = true
+

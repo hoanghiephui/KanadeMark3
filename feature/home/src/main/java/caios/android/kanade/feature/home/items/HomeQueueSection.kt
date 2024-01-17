@@ -14,7 +14,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -46,7 +46,7 @@ internal fun HomeQueueSection(
     }
 
     Column(
-        modifier = modifier.padding(vertical = 16.dp),
+        modifier = modifier.padding(vertical = 10.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         Row(
@@ -75,7 +75,7 @@ internal fun HomeQueueSection(
                     .clip(RoundedCornerShape(50))
                     .clickable { onClickQueue.invoke() }
                     .padding(4.dp),
-                imageVector = Icons.Default.ArrowForward,
+                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.primary,
             )

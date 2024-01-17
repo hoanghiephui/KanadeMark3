@@ -10,10 +10,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -31,7 +32,11 @@ import caios.android.kanade.core.design.theme.center
 import caios.android.kanade.core.model.music.Album
 import caios.android.kanade.core.model.music.Queue
 import caios.android.kanade.core.model.music.Song
+import caios.android.kanade.core.design.component.AdType
+import caios.android.kanade.core.design.component.AdViewState
 import caios.android.kanade.core.ui.AsyncLoadContents
+import caios.android.kanade.core.ui.BuildConfig
+import caios.android.kanade.core.design.component.MaxTemplateNativeAdViewComposable
 import caios.android.kanade.core.ui.TrackScreenViewEvent
 import caios.android.kanade.feature.home.items.HomeHeaderSection
 import caios.android.kanade.feature.home.items.HomeQueueSection
@@ -61,7 +66,10 @@ internal fun HomeRoute(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val screenState by viewModel.screenState.collectAsStateWithLifecycle()
-
+    val adState by viewModel.adState
+    LaunchedEffect(key1 = BuildConfig.HOME_NATIVE, block = {
+        viewModel.loadAds(context, BuildConfig.HOME_NATIVE)
+    })
 
     AsyncLoadContents(
         modifier = modifier,
@@ -73,7 +81,11 @@ internal fun HomeRoute(
         ) {
             HomeEmptyScreen(
                 modifier = Modifier.fillMaxSize(),
-                openPodcastScreen
+                openPodcastScreen,
+                openBilling = {
+
+                },
+                adViewState = adState
             )
         } else {
             HomeScreen(
@@ -120,7 +132,11 @@ internal fun HomeRoute(
                 recentlySubscribedFeeds = homeUiState.subscribedFeeds.toImmutableList(),
                 onClickRecentlyAddedFeed = onClickRecentlyAddedFeed,
                 onClickFeed = onClickFeed,
-                onClickAddPodcast = navToAddPodcast
+                onClickAddPodcast = navToAddPodcast,
+                openBilling = {
+
+                },
+                adViewState = adState
             )
         }
     }
@@ -150,7 +166,9 @@ internal fun HomeScreen(
     onClickQueue: () -> Unit,
     onClickQueueItem: (Int) -> Unit,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp)
+    contentPadding: PaddingValues = PaddingValues(0.dp),
+    adViewState: AdViewState,
+    openBilling: () -> Unit
 ) {
     LazyColumn(
         modifier = modifier,
@@ -165,6 +183,12 @@ internal fun HomeScreen(
                 onClickRecentlyAdded = onClickRecentlyAdded,
                 onClickMostPlayed = onClickMostPlayed,
                 onClickShuffle = { onClickShuffle.invoke(songs) },
+            )
+            MaxTemplateNativeAdViewComposable(
+                adViewState = adViewState,
+                adType = AdType.SMALL,
+                showBilling = openBilling,
+                modifier = Modifier.padding(vertical = 8.dp)
             )
         }
         if (recentlySubscribedFeeds.isNotEmpty()) {
@@ -222,7 +246,9 @@ internal fun HomeScreen(
 @Composable
 private fun HomeEmptyScreen(
     modifier: Modifier = Modifier,
-    openPodcastScreen: () -> Unit
+    openPodcastScreen: () -> Unit,
+    adViewState: AdViewState,
+    openBilling: () -> Unit
 ) {
     Column(
         modifier = modifier,
@@ -265,8 +291,15 @@ private fun HomeEmptyScreen(
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
 
-        ElevatedButton(onClick = openPodcastScreen) {
-            Text(text = stringResource(id = R.string.navigation_podcast))
+        MaxTemplateNativeAdViewComposable(
+            adViewState = adViewState,
+            adType = AdType.SMALL,
+            showBilling = openBilling,
+            modifier = Modifier.padding(vertical = 8.dp)
+        )
+
+        OutlinedButton(onClick = openPodcastScreen) {
+            Text(text = stringResource(id = R.string.add_podcast))
         }
     }
 }

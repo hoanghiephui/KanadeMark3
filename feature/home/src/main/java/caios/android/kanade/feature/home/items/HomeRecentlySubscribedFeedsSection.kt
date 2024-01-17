@@ -45,7 +45,7 @@ internal fun HomeRecentlySubscribedFeedsSection(
     onClickAddPodcast: () -> Unit
 ) {
     Column(
-        modifier = modifier.padding(vertical = 16.dp),
+        modifier = modifier.padding(vertical = 10.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         Row(

@@ -18,8 +18,13 @@ android {
         onVariants {
             it.buildConfigFields.apply {
                 putBuildConfig(localProperties, "HOME_NATIVE")
+                putBuildConfig(localProperties, "FEED_PODCAST_NATIVE")
+                putBuildConfig(localProperties, "PLAYER_NATIVE")
             }
         }
+    }
+    buildFeatures {
+        buildConfig = true
     }
 }
 

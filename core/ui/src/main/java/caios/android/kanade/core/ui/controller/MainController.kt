@@ -16,6 +16,8 @@ import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -30,7 +32,10 @@ import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.constraintlayout.compose.atLeast
+import caios.android.kanade.core.design.component.AdType
+import caios.android.kanade.core.design.component.AdViewState
 import caios.android.kanade.core.design.component.KanadeBackground
+import caios.android.kanade.core.design.component.MaxTemplateNativeAdViewComposable
 import caios.android.kanade.core.design.theme.DarkDefaultColorScheme
 import caios.android.kanade.core.model.music.Song
 import caios.android.kanade.core.model.player.RepeatMode
@@ -81,11 +86,18 @@ fun MainController(
     onClickFavorite: () -> Unit,
     onClickQueue: () -> Unit,
     modifier: Modifier = Modifier,
+    adViewState: AdViewState,
+    openBilling: () -> Unit
 ) {
     val configuration = LocalConfiguration.current
     val scope = rememberCoroutineScope()
     val isDarkMode = uiState.userData?.isDarkMode()
     val isLargeDevice = windowSize.heightSizeClass == WindowHeightSizeClass.Expanded
+    var count = 0
+    val isShowAd = remember {
+        adViewState is AdViewState.LoadAd
+    }
+
 
     val state = rememberLyricsViewState(
         uiState.lyrics,
@@ -118,6 +130,7 @@ fun MainController(
                 control,
                 button,
                 lyrics,
+                adsView
             ) = createRefs()
 
             createVerticalChain(
@@ -160,11 +173,17 @@ fun MainController(
                     },
                     onClickMenuEqualizer = onClickMenuEqualizer,
                     onClickMenuEdit = onClickMenuEdit,
-                    onClickMenuDetailInfo = { uiState.song?.id?.let { onClickMenuDetailInfo.invoke(it) } },
+                    onClickMenuDetailInfo = {
+                        uiState.song?.id?.let {
+                            onClickMenuDetailInfo.invoke(
+                                it
+                            )
+                        }
+                    },
                 )
             }
 
-            MainControllerArtworkSection(
+            AnimatedVisibility(
                 modifier = Modifier
                     .alpha(1f - lyricsAlpha)
                     .constrainAs(artwork) {
@@ -176,10 +195,41 @@ fun MainController(
                         width = Dimension.fillToConstraints
                     }
                     .padding(top = if (isLargeDevice) 32.dp else 0.dp),
-                songs = uiState.queueItems.toImmutableList(),
-                index = uiState.queueIndex,
-                onSwipeArtwork = onClickSkipToQueue,
-            )
+                visible = !isShowAd,
+                enter = fadeIn(),
+                exit = fadeOut(),
+            ) {
+                MainControllerArtworkSection(
+                    songs = uiState.queueItems.toImmutableList(),
+                    index = uiState.queueIndex,
+                    onSwipeArtwork = onClickSkipToQueue,
+                )
+            }
+
+
+            AnimatedVisibility(
+                modifier = Modifier
+                    .alpha(1f - lyricsAlpha)
+                    .constrainAs(adsView) {
+                        top.linkTo(if (isLargeDevice) toolbar.bottom else parent.top)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                        bottom.linkTo(info.top)
+
+                        width = Dimension.fillToConstraints
+                    }
+                    .padding(top = if (isLargeDevice) 32.dp else 0.dp),
+                visible = isShowAd,
+                enter = fadeIn(),
+                exit = fadeOut(),
+            ) {
+
+                MaxTemplateNativeAdViewComposable(
+                    adViewState = adViewState,
+                    adType = AdType.MEDIUM,
+                    showBilling = openBilling,
+                )
+            }
 
             MainControllerTextSection(
                 modifier = Modifier
@@ -359,6 +409,8 @@ private fun Preview() {
             onClickLyricsEdit = { },
             onClickFavorite = { },
             onClickQueue = { },
+            adViewState = AdViewState.Default,
+            openBilling = {}
         )
     }
 }

@@ -104,7 +104,6 @@ class NotificationManager(
             .setContentText(song?.artist)
             .setAutoCancel(false)
             .setColorized(true)
-            .setPriority(PRIORITY_HIGH)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setContentIntent(mainPendingIntent)
 
@@ -140,7 +139,7 @@ class NotificationManager(
         val channel = NotificationChannel(
             notifyConfig.channelId,
             channelName,
-            NotificationManager.IMPORTANCE_HIGH,
+            NotificationManager.IMPORTANCE_LOW,
         ).apply {
             description = channelDescription
         }

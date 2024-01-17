@@ -7,8 +7,8 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import caios.android.kanade.core.design.BaseAdsViewModel
 import caios.android.kanade.core.model.ThemeConfig
 import caios.android.kanade.core.model.UserData
 import caios.android.kanade.core.model.music.Lyrics
@@ -27,6 +27,7 @@ import caios.android.kanade.core.repository.LyricsRepository
 import caios.android.kanade.core.repository.MusicRepository
 import caios.android.kanade.core.repository.UserDataRepository
 import caios.android.kanade.core.repository.di.LyricsMusixmatch
+import com.applovin.sdk.AppLovinSdk
 import com.yausername.aria2c.Aria2c
 import com.yausername.ffmpeg.FFmpeg
 import com.yausername.youtubedl_android.YoutubeDL
@@ -45,7 +46,8 @@ class MusicViewModel @Inject constructor(
     private val musicRepository: MusicRepository,
     private val userDataRepository: UserDataRepository,
     @LyricsMusixmatch private val lyricsRepository: LyricsRepository,
-) : ViewModel() {
+    adSdk: AppLovinSdk
+) : BaseAdsViewModel(adSdk) {
 
     var uiState by mutableStateOf(MusicUiState())
         private set
@@ -129,9 +131,11 @@ class MusicViewModel @Inject constructor(
 
             uiState = uiState.copy(isReadyToFmService = musicRepository.songs.isNotEmpty())
 
-            Timber.d("Fetch library. Songs: ${musicRepository.songs.size}, " +
-                    "Artists: ${musicRepository.artists.size}, " +
-                    "Albums: ${musicRepository.albums.size}")
+            Timber.d(
+                "Fetch library. Songs: ${musicRepository.songs.size}, " +
+                        "Artists: ${musicRepository.artists.size}, " +
+                        "Albums: ${musicRepository.albums.size}"
+            )
         }
     }
 

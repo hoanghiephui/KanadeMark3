@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import androidx.palette.graphics.Palette
+import caios.android.kanade.core.design.component.AdViewState
 import caios.android.kanade.core.design.theme.Blue40
 import caios.android.kanade.core.design.theme.Green40
 import caios.android.kanade.core.design.theme.Orange40
@@ -67,6 +68,8 @@ fun AppController(
     navigateToSongInfo: (Long) -> Unit,
     navigateToQueue: () -> Unit,
     modifier: Modifier = Modifier,
+    adViewState: AdViewState,
+    openBilling: () -> Unit
 ) {
     Box(modifier.fillMaxSize()) {
         BackHandler(offsetRate == 0f) {
@@ -158,6 +161,8 @@ fun AppController(
                     }
                 },
                 onClickQueue = navigateToQueue,
+                adViewState = adViewState,
+                openBilling = openBilling
             )
         }
     }
