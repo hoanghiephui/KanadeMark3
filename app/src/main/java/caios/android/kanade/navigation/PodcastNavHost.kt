@@ -246,7 +246,8 @@ fun PodcastNavHost(
             },
             openPodcastScreen = {
                 appState.navigateToLibrary(LibraryDestination.Discover)
-            }
+            },
+            windowSize = appState.windowSize
         )
 
         discoverScreen(
@@ -259,7 +260,8 @@ fun PodcastNavHost(
             },
             navSearchWith = {
                 openSearch(it)
-            }
+            },
+            windowSize = appState.windowSize
         )
 
         feedDetailScreen(

@@ -1,6 +1,7 @@
 package caios.android.kanade.feature.home
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.navigation.NavController
@@ -27,7 +28,8 @@ fun NavGraphBuilder.homeScreen(
     navigateToAddedFeed: () -> Unit,
     navigateToFeed: (imId: String) -> Unit,
     navigateToAddPodcast: () -> Unit,
-    openPodcastScreen: () -> Unit
+    openPodcastScreen: () -> Unit,
+    windowSize: WindowSizeClass
 ) {
     composable(
         route = HomeRoute,
@@ -55,7 +57,8 @@ fun NavGraphBuilder.homeScreen(
             onClickFeed = navigateToFeed,
             onClickRecentlyAddedFeed = navigateToAddedFeed,
             navToAddPodcast = navigateToAddPodcast,
-            openPodcastScreen = openPodcastScreen
+            openPodcastScreen = openPodcastScreen,
+            windowSize = windowSize
         )
     }
 }

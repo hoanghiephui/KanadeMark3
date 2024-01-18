@@ -1,8 +1,13 @@
 package caios.android.kanade.core.ui.controller
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -62,6 +67,7 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun MainController(
     uiState: MusicUiState,
@@ -103,7 +109,7 @@ fun MainController(
     }
 
     LaunchedEffect(key1 = adViewState, block = {
-        delay(500)
+        delay(800)
         isShowAd = true
         delay(15000)
         isShowAd = false
@@ -154,6 +160,8 @@ fun MainController(
 
             if (isLargeDevice) {
                 MainControllerToolBarSection(
+                    isShowMenu = uiState.song != null,
+                    isPodcast = uiState.song?.isStream == true,
                     modifier = Modifier.constrainAs(toolbar) {
                         top.linkTo(parent.top)
                         start.linkTo(parent.start)
@@ -206,20 +214,37 @@ fun MainController(
                     width = Dimension.fillToConstraints
                 }
                 .padding(top = if (isLargeDevice) 32.dp else 0.dp)) {
-                if (!isShowAd) {
+
+                AnimatedVisibility(
+                    visible = !isShowAd,
+                    enter = fadeIn(),
+                    exit = fadeOut()
+                ) {
                     MainControllerArtworkSection(
                         songs = uiState.queueItems.toImmutableList(),
                         index = uiState.queueIndex,
                         onSwipeArtwork = onClickSkipToQueue,
+                        modifier = Modifier.animateEnterExit(
+                            enter = scaleIn(),
+                            exit = scaleOut()
+                        )
                     )
                 }
-
-                if (isShowAd) {
+                AnimatedVisibility(
+                    visible = isShowAd,
+                    enter = fadeIn(),
+                    exit = fadeOut()
+                ) {
                     MaxTemplateNativeAdViewComposable(
                         adViewState = adViewState,
                         adType = AdType.MEDIUM,
                         showBilling = openBilling,
-                        modifier = Modifier.padding(top = 16.dp)
+                        modifier = Modifier
+                            .padding(top = 16.dp)
+                            .animateEnterExit(
+                                enter = scaleIn(),
+                                exit = scaleOut()
+                            )
                     )
                 }
 

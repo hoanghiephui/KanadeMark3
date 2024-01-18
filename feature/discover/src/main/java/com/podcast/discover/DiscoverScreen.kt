@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -45,7 +46,8 @@ internal fun DiscoverRouter(
     viewModel: DiscoverViewModel = hiltViewModel(),
     navigateToFeedDetail: (String) -> Unit,
     navigateToFeedMore: (List<EntryItem>, genres: Genres, title: Int) -> Unit,
-    navSearchWith: (id: Int) -> Unit
+    navSearchWith: (id: Int) -> Unit,
+    windowSize: WindowSizeClass
 ) {
     val uiState by viewModel.uiState.collectAsStateLifecycleAware()
     val adState by viewModel.adState
@@ -69,7 +71,8 @@ internal fun DiscoverRouter(
             openBilling = {
 
             },
-            adViewState = adState
+            adViewState = adState,
+            windowSize = windowSize
         )
     }
 
@@ -85,7 +88,8 @@ internal fun DiscoverScreen(
     navigateToFeedMore: (List<EntryItem>, genres: Genres, title: Int) -> Unit,
     navSearchWith: (id: Int) -> Unit,
     adViewState: AdViewState,
-    openBilling: () -> Unit
+    openBilling: () -> Unit,
+    windowSize: WindowSizeClass
 ) {
 
     LazyColumn(
@@ -101,6 +105,7 @@ internal fun DiscoverScreen(
                         navigateToFeedMore(it.toList(), Genres.TOP, R.string.discover)
                     },
                     onClickPodcast = navigateToFeedDetail,
+                    windowSize = windowSize
                 )
             }
         }
@@ -120,7 +125,8 @@ internal fun DiscoverScreen(
                         navigateToFeedMore(it.toList(), Genres.HEALTH, R.string.health)
                     },
                     onClickPodcast = navigateToFeedDetail,
-                    title = R.string.health
+                    title = R.string.health,
+                    windowSize = windowSize
                 )
             }
         }
@@ -133,7 +139,8 @@ internal fun DiscoverScreen(
                         navigateToFeedMore(it.toList(), Genres.EDUCATION, R.string.education)
                     },
                     onClickPodcast = navigateToFeedDetail,
-                    title = R.string.education
+                    title = R.string.education,
+                    windowSize = windowSize
                 )
             }
         }
@@ -147,7 +154,8 @@ internal fun DiscoverScreen(
                         navigateToFeedMore(it.toList(), Genres.MUSIC, R.string.music)
                     },
                     onClickPodcast = navigateToFeedDetail,
-                    title = R.string.music
+                    title = R.string.music,
+                    windowSize = windowSize
                 )
             }
         }
@@ -161,7 +169,8 @@ internal fun DiscoverScreen(
                     },
                     onClickPodcast = navigateToFeedDetail,
                     title = R.string.society,
-                    showSource = true
+                    showSource = true,
+                    windowSize = windowSize
                 )
             }
         }

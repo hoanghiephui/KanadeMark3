@@ -17,6 +17,8 @@ import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,8 +41,10 @@ internal fun DiscoverFeedSection(
     feed: ImmutableList<EntryItem>,
     onClickMore: (ImmutableList<EntryItem>) -> Unit,
     onClickPodcast: (String) -> Unit,
-    showSource: Boolean = false
+    showSource: Boolean = false,
+    windowSize: WindowSizeClass
 ) {
+    val size = if (windowSize.widthSizeClass == WindowWidthSizeClass.Medium) 10 else 5
     Column(
         modifier = modifier.padding(vertical = 16.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
@@ -76,7 +80,7 @@ internal fun DiscoverFeedSection(
             contentPadding = PaddingValues(horizontal = 10.dp),
         ) {
             items(
-                items = feed.take(5),
+                items = feed.take(size),
                 key = { "podcast-${it.id}" },
             ) { feed ->
                 FeedPodcastHolder(

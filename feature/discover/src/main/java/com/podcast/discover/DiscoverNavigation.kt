@@ -1,6 +1,7 @@
 package com.podcast.discover
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.navigation.NavController
@@ -21,7 +22,8 @@ fun NavGraphBuilder.discoverScreen(
     topMargin: Dp,
     navigateToFeedDetail: (String) -> Unit,
     navigateToFeedMore: (List<EntryItem>, genres: Genres, title: Int) -> Unit,
-    navSearchWith: (id: Int) -> Unit
+    navSearchWith: (id: Int) -> Unit,
+    windowSize: WindowSizeClass
 ) {
     composable(
         route = DiscoverRoute,
@@ -43,7 +45,8 @@ fun NavGraphBuilder.discoverScreen(
             topMargin = topMargin,
             navigateToFeedDetail = navigateToFeedDetail,
             navigateToFeedMore = navigateToFeedMore,
-            navSearchWith = navSearchWith
+            navSearchWith = navSearchWith,
+            windowSize = windowSize
         )
     }
 }

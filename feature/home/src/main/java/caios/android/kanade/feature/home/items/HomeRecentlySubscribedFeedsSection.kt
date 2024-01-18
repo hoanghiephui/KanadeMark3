@@ -21,6 +21,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,8 +44,10 @@ internal fun HomeRecentlySubscribedFeedsSection(
     onClickMore: () -> Unit,
     onClickFeed: (imId: String) -> Unit,
     modifier: Modifier = Modifier,
-    onClickAddPodcast: () -> Unit
+    onClickAddPodcast: () -> Unit,
+    windowSize: WindowSizeClass
 ) {
+    val size = if (windowSize.widthSizeClass == WindowWidthSizeClass.Medium) 6 else 2
     Column(
         modifier = modifier.padding(vertical = 10.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
@@ -61,7 +65,7 @@ internal fun HomeRecentlySubscribedFeedsSection(
                 style = MaterialTheme.typography.titleMedium.bold(),
                 color = MaterialTheme.colorScheme.onSurface,
             )
-            if (feeds.size >= 3) {
+            if (feeds.size >= size) {
                 Icon(
                     modifier = Modifier
                         .size(32.dp)
@@ -91,7 +95,7 @@ internal fun HomeRecentlySubscribedFeedsSection(
                     },
                 )
             }
-            if (feeds.size <= 2) {
+            if (feeds.size <= size) {
                 item {
                     Box(
                         Modifier

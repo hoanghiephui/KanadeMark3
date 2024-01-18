@@ -45,6 +45,8 @@ internal fun MainControllerToolBarSection(
     onClickMenuEdit: () -> Unit,
     onClickMenuDetailInfo: () -> Unit,
     modifier: Modifier = Modifier,
+    isPodcast: Boolean,
+    isShowMenu: Boolean
 ) {
     var isExpandedMenu by remember { mutableStateOf(false) }
 
@@ -74,63 +76,78 @@ internal fun MainControllerToolBarSection(
             imageVector = Icons.Default.Search,
             contentDescription = null,
         )
+        if (isShowMenu) {
+            Box {
+                Icon(
+                    modifier = Modifier
+                        .size(32.dp)
+                        .clip(RoundedCornerShape(16.dp))
+                        .clickable { isExpandedMenu = !isExpandedMenu }
+                        .padding(4.dp),
+                    imageVector = Icons.Default.MoreVert,
+                    contentDescription = "Menu",
+                )
 
-        Box {
-            Icon(
-                modifier = Modifier
-                    .size(32.dp)
-                    .clip(RoundedCornerShape(16.dp))
-                    .clickable { isExpandedMenu = !isExpandedMenu }
-                    .padding(4.dp),
-                imageVector = Icons.Default.MoreVert,
-                contentDescription = null,
-            )
-
-            DropdownMenu(
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .background(
-                        MaterialTheme.colorScheme.applyTonalElevation(
-                            backgroundColor = MaterialTheme.colorScheme.surface,
-                            elevation = 3.dp,
+                DropdownMenu(
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .background(
+                            MaterialTheme.colorScheme.applyTonalElevation(
+                                backgroundColor = MaterialTheme.colorScheme.surface,
+                                elevation = 3.dp,
+                            ),
                         ),
-                    ),
-                expanded = isExpandedMenu,
-                onDismissRequest = { isExpandedMenu = false },
-            ) {
-                listOf(
-                    DropDownMenuItemData(
-                        text = R.string.controller_menu_add_playlist,
-                        onClick = onClickMenuAddPlaylist,
-                    ),
-                    DropDownMenuItemData(
-                        text = R.string.controller_menu_artist,
-                        onClick = onClickMenuArtist,
-                    ),
-                    DropDownMenuItemData(
-                        text = R.string.controller_menu_album,
-                        onClick = onClickMenuAlbum,
-                    ),
-                    DropDownMenuItemData(
-                        text = R.string.controller_menu_equalizer,
-                        onClick = onClickMenuEqualizer,
-                    ),
-                    DropDownMenuItemData(
-                        text = R.string.controller_menu_edit,
-                        onClick = onClickMenuEdit,
-                    ),
-                    DropDownMenuItemData(
-                        text = R.string.controller_menu_detail_info,
-                        onClick = onClickMenuDetailInfo,
-                    ),
-                ).forEach {
-                    DropDownMenuItem(
-                        text = it.text,
-                        onClick = {
-                            isExpandedMenu = false
-                            it.onClick.invoke()
-                        },
+                    expanded = isExpandedMenu,
+                    onDismissRequest = { isExpandedMenu = false },
+                ) {
+                    val commonMenu = listOf(
+                        DropDownMenuItemData(
+                            text = R.string.controller_menu_add_playlist,
+                            onClick = onClickMenuAddPlaylist,
+                        ),
+                        DropDownMenuItemData(
+                            text = R.string.controller_menu_equalizer,
+                            onClick = onClickMenuEqualizer,
+                        ),
+                        DropDownMenuItemData(
+                            text = R.string.controller_menu_detail_info,
+                            onClick = onClickMenuDetailInfo,
+                        ),
                     )
+
+                    val artistAlbumMenu = listOf(
+                        DropDownMenuItemData(
+                            text = R.string.controller_menu_artist,
+                            onClick = onClickMenuArtist,
+                        ),
+                        DropDownMenuItemData(
+                            text = R.string.controller_menu_album,
+                            onClick = onClickMenuAlbum,
+                        ),
+                    )
+
+                    val additionalMenu = listOf(
+                        DropDownMenuItemData(
+                            text = R.string.controller_menu_edit,
+                            onClick = onClickMenuEdit,
+                        )
+                    )
+
+                    val menus = if (isPodcast) {
+                        commonMenu
+                    } else {
+                        commonMenu + artistAlbumMenu + additionalMenu
+                    }
+
+                    menus.map {
+                        DropDownMenuItem(
+                            text = it.text,
+                            onClick = {
+                                isExpandedMenu = false
+                                it.onClick.invoke()
+                            },
+                        )
+                    }
                 }
             }
         }
@@ -153,6 +170,8 @@ private fun Preview() {
             onClickMenuEqualizer = { },
             onClickMenuEdit = { },
             onClickMenuDetailInfo = { },
+            isPodcast = false,
+            isShowMenu = true
         )
     }
 }

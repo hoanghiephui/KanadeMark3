@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -62,6 +63,7 @@ internal fun HomeRoute(
     openPodcastScreen: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel(),
+    windowSize: WindowSizeClass
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -136,7 +138,8 @@ internal fun HomeRoute(
                 openBilling = {
 
                 },
-                adViewState = adState
+                adViewState = adState,
+                windowSize = windowSize
             )
         }
     }
@@ -168,7 +171,8 @@ internal fun HomeScreen(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
     adViewState: AdViewState,
-    openBilling: () -> Unit
+    openBilling: () -> Unit,
+    windowSize: WindowSizeClass
 ) {
     LazyColumn(
         modifier = modifier,
@@ -198,7 +202,8 @@ internal fun HomeScreen(
                     feeds = recentlySubscribedFeeds,
                     onClickMore = onClickRecentlyAddedFeed,
                     onClickFeed = onClickFeed,
-                    onClickAddPodcast = onClickAddPodcast
+                    onClickAddPodcast = onClickAddPodcast,
+                    windowSize = windowSize
                 )
             }
         }
