@@ -95,7 +95,8 @@ internal fun MainControllerArtworkSection(
                 .fillMaxWidth()
                 .aspectRatio(1f)
                 .graphicsLayer {
-                    val offset = ((pagerState.currentPage - dummyIndex) + pagerState.currentPageOffsetFraction).absoluteValue
+                    val offset = ((pagerState.currentPage - dummyIndex)
+                            + pagerState.currentPageOffsetFraction).absoluteValue
 
                     alpha = lerp(
                         start = 0.5f,

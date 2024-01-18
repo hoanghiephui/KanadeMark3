@@ -20,6 +20,8 @@ android {
                 putBuildConfig(localProperties, "HOME_NATIVE")
                 putBuildConfig(localProperties, "FEED_PODCAST_NATIVE")
                 putBuildConfig(localProperties, "PLAYER_NATIVE")
+                putBuildConfig(localProperties, "EPISODES_NATIVE")
+                putBuildConfig(localProperties, "PODCAST_DETAIL_NATIVE")
             }
         }
     }

@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -16,9 +17,12 @@ import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Brush
@@ -55,6 +59,7 @@ import caios.android.kanade.core.ui.controller.items.MainControllerPodcastConten
 import caios.android.kanade.core.ui.controller.items.MainControllerTextSection
 import caios.android.kanade.core.ui.controller.items.MainControllerToolBarSection
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
@@ -87,16 +92,22 @@ fun MainController(
     onClickQueue: () -> Unit,
     modifier: Modifier = Modifier,
     adViewState: AdViewState,
-    openBilling: () -> Unit
+    openBilling: () -> Unit,
 ) {
     val configuration = LocalConfiguration.current
     val scope = rememberCoroutineScope()
     val isDarkMode = uiState.userData?.isDarkMode()
     val isLargeDevice = windowSize.heightSizeClass == WindowHeightSizeClass.Expanded
-    var count = 0
-    val isShowAd = remember {
-        adViewState is AdViewState.LoadAd
+    var isShowAd by remember {
+        mutableStateOf(false)
     }
+
+    LaunchedEffect(key1 = adViewState, block = {
+        delay(500)
+        isShowAd = true
+        delay(15000)
+        isShowAd = false
+    })
 
 
     val state = rememberLyricsViewState(
@@ -130,7 +141,6 @@ fun MainController(
                 control,
                 button,
                 lyrics,
-                adsView
             ) = createRefs()
 
             createVerticalChain(
@@ -183,52 +193,36 @@ fun MainController(
                 )
             }
 
-            AnimatedVisibility(
-                modifier = Modifier
-                    .alpha(1f - lyricsAlpha)
-                    .constrainAs(artwork) {
-                        top.linkTo(if (isLargeDevice) toolbar.bottom else parent.top)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                        bottom.linkTo(info.top)
-
-                        width = Dimension.fillToConstraints
-                    }
-                    .padding(top = if (isLargeDevice) 32.dp else 0.dp),
-                visible = !isShowAd,
-                enter = fadeIn(),
-                exit = fadeOut(),
-            ) {
-                MainControllerArtworkSection(
-                    songs = uiState.queueItems.toImmutableList(),
-                    index = uiState.queueIndex,
-                    onSwipeArtwork = onClickSkipToQueue,
-                )
-            }
 
 
-            AnimatedVisibility(
-                modifier = Modifier
-                    .alpha(1f - lyricsAlpha)
-                    .constrainAs(adsView) {
-                        top.linkTo(if (isLargeDevice) toolbar.bottom else parent.top)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                        bottom.linkTo(info.top)
+            Box(modifier = Modifier
+                .alpha(1f - lyricsAlpha)
+                .constrainAs(artwork) {
+                    top.linkTo(if (isLargeDevice) toolbar.bottom else parent.top)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    bottom.linkTo(info.top)
 
-                        width = Dimension.fillToConstraints
-                    }
-                    .padding(top = if (isLargeDevice) 32.dp else 0.dp),
-                visible = isShowAd,
-                enter = fadeIn(),
-                exit = fadeOut(),
-            ) {
+                    width = Dimension.fillToConstraints
+                }
+                .padding(top = if (isLargeDevice) 32.dp else 0.dp)) {
+                if (!isShowAd) {
+                    MainControllerArtworkSection(
+                        songs = uiState.queueItems.toImmutableList(),
+                        index = uiState.queueIndex,
+                        onSwipeArtwork = onClickSkipToQueue,
+                    )
+                }
 
-                MaxTemplateNativeAdViewComposable(
-                    adViewState = adViewState,
-                    adType = AdType.MEDIUM,
-                    showBilling = openBilling,
-                )
+                if (isShowAd) {
+                    MaxTemplateNativeAdViewComposable(
+                        adViewState = adViewState,
+                        adType = AdType.MEDIUM,
+                        showBilling = openBilling,
+                        modifier = Modifier.padding(top = 16.dp)
+                    )
+                }
+
             }
 
             MainControllerTextSection(

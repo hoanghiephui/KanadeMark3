@@ -24,12 +24,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import caios.android.kanade.core.design.BaseAdsViewModel
+import caios.android.kanade.core.design.R
 import caios.android.kanade.core.design.SHOW_ADS
 import caios.android.kanade.core.design.theme.bold
 import com.applovin.mediation.MaxAd
@@ -123,7 +125,7 @@ fun MaxTemplateNativeAdViewComposable(
                     modifier = modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp),
-                    shape = RoundedCornerShape(12.dp)
+                    shape = RoundedCornerShape(6.dp)
                 ) {
                     if (adType == AdType.SMALL) {
                         Box(
@@ -173,7 +175,7 @@ fun MaxTemplateNativeAdViewComposable(
                                 modifier = Modifier
                                     .padding(top = 8.dp)
                                     .fillMaxWidth(),
-                                text = "Wallet+ is a paid service that gives you access to all features for the price of a cup of coffee.",
+                                text = stringResource(id = R.string.billing_plus_description),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurface,
                             )
@@ -186,7 +188,7 @@ fun MaxTemplateNativeAdViewComposable(
                                     showBilling()
                                 },
                             ) {
-                                Text("Buy Wallet+")
+                                Text("Buy Podcast+")
                             }
                         }
                     }
@@ -198,7 +200,7 @@ fun MaxTemplateNativeAdViewComposable(
                     modifier = modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp),
-                    shape = RoundedCornerShape(12.dp),
+                    shape = RoundedCornerShape(6.dp),
                     colors = CardDefaults.cardColors()
                 ) {
                     AndroidView(

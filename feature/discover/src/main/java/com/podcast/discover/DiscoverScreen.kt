@@ -104,13 +104,15 @@ internal fun DiscoverScreen(
                 )
             }
         }
+        item {
+            MaxTemplateNativeAdViewComposable(
+                adViewState = adViewState,
+                adType = AdType.SMALL,
+                showBilling = openBilling,
+            )
+        }
         if (uiState.healthFeed.isNotEmpty()) {
             item {
-                MaxTemplateNativeAdViewComposable(
-                    adViewState = adViewState,
-                    adType = AdType.SMALL,
-                    showBilling = openBilling,
-                )
                 DiscoverFeedSection(
                     modifier = Modifier.fillMaxWidth(),
                     feed = uiState.healthFeed,
@@ -192,6 +194,9 @@ internal fun DiscoverScreen(
                 )
                 Text(text = it.title, modifier = Modifier.padding(start = 4.dp, end = 16.dp))
             }
+        }
+        item { 
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 

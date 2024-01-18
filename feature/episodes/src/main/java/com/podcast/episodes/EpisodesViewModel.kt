@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import caios.android.kanade.core.common.network.Dispatcher
 import caios.android.kanade.core.common.network.KanadeDispatcher
+import caios.android.kanade.core.design.BaseAdsViewModel
 import caios.android.kanade.core.design.R
 import caios.android.kanade.core.model.ScreenState
 import caios.android.kanade.core.model.music.Song
@@ -12,6 +13,7 @@ import caios.android.kanade.core.model.player.PlayerEvent
 import caios.android.kanade.core.music.MusicController
 import caios.android.kanade.core.repository.podcast.FeedDiscoveryRepository
 import caios.android.kanade.core.repository.toSong
+import com.applovin.sdk.AppLovinSdk
 import com.podcast.core.network.util.PodcastDownloader
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -31,7 +33,8 @@ class EpisodesViewModel @Inject constructor(
     val download: PodcastDownloader,
     @Dispatcher(KanadeDispatcher.Default)
     private val defaultDispatcher: CoroutineDispatcher,
-) : ViewModel() {
+    adsSdk: AppLovinSdk
+) : BaseAdsViewModel(adsSdk) {
 
     var screenState = feedDiscoveryRepository.loadAddItem().flowOn(ioDispatcher)
         .map { podcastFeedItemEntities ->

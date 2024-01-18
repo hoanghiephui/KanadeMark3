@@ -30,7 +30,7 @@ fun EpisodeDetailHeader(
     modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier.padding(horizontal = 8.dp, vertical = 16.dp),
+        modifier = modifier.padding(horizontal = 0.dp, vertical = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(

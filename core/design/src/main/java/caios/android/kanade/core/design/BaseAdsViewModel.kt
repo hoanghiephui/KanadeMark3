@@ -62,7 +62,7 @@ abstract class BaseAdsViewModel(
             loadAdState.collectLatest {
                 if (it && SHOW_ADS) {
                     nativeAdLoader.loadAd(context, adUnitIdentifier)
-                    Timber.tag("Applovin").d("loadAds")
+                    Timber.tag("Applovin").d("Load Ads")
                 }
             }
         }

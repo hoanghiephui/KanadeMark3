@@ -143,7 +143,7 @@ private fun FeedMoreScreen(
                     downloadStatus = downloadStatus,
                     downloadProgress = downloadProgress
                 )
-                HorizontalDivider(modifier = Modifier.padding(bottom = 8.dp))
+                HorizontalDivider(modifier = Modifier.padding(bottom = 8.dp, start = 12.dp))
             }
         }
 

@@ -69,7 +69,8 @@ fun AppController(
     navigateToQueue: () -> Unit,
     modifier: Modifier = Modifier,
     adViewState: AdViewState,
-    openBilling: () -> Unit
+    openBilling: () -> Unit,
+    reloadAds: () -> Unit
 ) {
     Box(modifier.fillMaxSize()) {
         BackHandler(offsetRate == 0f) {
@@ -146,9 +147,18 @@ fun AppController(
                 onClickMenuDetailInfo = navigateToSongInfo,
                 onClickPlay = { onControllerEvent.invoke(PlayerEvent.Play) },
                 onClickPause = { onControllerEvent.invoke(PlayerEvent.Pause) },
-                onClickSkipToNext = { onControllerEvent.invoke(PlayerEvent.SkipToNext) },
-                onClickSkipToPrevious = { onControllerEvent.invoke(PlayerEvent.SkipToPrevious) },
-                onClickSkipToQueue = { onControllerEvent.invoke(PlayerEvent.SkipToQueue(it)) },
+                onClickSkipToNext = {
+                    onControllerEvent.invoke(PlayerEvent.SkipToNext)
+                    reloadAds.invoke()
+                },
+                onClickSkipToPrevious = {
+                    onControllerEvent.invoke(PlayerEvent.SkipToPrevious)
+                    reloadAds.invoke()
+                },
+                onClickSkipToQueue = {
+                    onControllerEvent.invoke(PlayerEvent.SkipToQueue(it))
+                    reloadAds.invoke()
+                },
                 onClickShuffle = { onControllerEvent.invoke(PlayerEvent.Shuffle(it)) },
                 onClickRepeat = { onControllerEvent.invoke(PlayerEvent.Repeat(it)) },
                 onClickSeek = { onControllerEvent.invoke(PlayerEvent.Seek(it)) },

@@ -74,6 +74,7 @@ import caios.android.kanade.core.ui.dialog.LoadingDialog
 import caios.android.kanade.core.ui.dialog.showAsButtonSheet
 import caios.android.kanade.feature.album.detail.navigateToAlbumDetail
 import caios.android.kanade.feature.artist.detail.navigateToArtistDetail
+import caios.android.kanade.feature.billing.plus.showBillingPlusDialog
 import caios.android.kanade.feature.download.input.navigateToDownloadInput
 import caios.android.kanade.feature.information.about.navigateToAbout
 import caios.android.kanade.feature.information.song.navigateToSongInformation
@@ -190,7 +191,7 @@ private fun IdleScreen(
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val updateState = rememberInAppUpdateState()
     var showUpdate by remember { mutableStateOf(false) }
-    val adState by musicViewModel.adState
+    val adState by remember { musicViewModel.adState }
 
     val safLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenDocumentTree(),
@@ -293,6 +294,15 @@ private fun IdleScreen(
             )
         }
 
+        LaunchedEffect(key1 = bottomSheetOffsetRate == 0f, block = {
+            if (bottomSheetOffsetRate == 0f) {
+                musicViewModel.loadAds(
+                    context = context,
+                    adUnitIdentifier = BuildConfig.PLAYER_NATIVE
+                )
+            }
+        })
+
         LaunchedEffect(appState.currentLibraryDestination) {
             animate(
                 initialValue = scrollBehavior.state.yOffset,
@@ -382,10 +392,6 @@ private fun IdleScreen(
                             scope.launch {
                                 scaffoldState.bottomSheetState.expand()
                             }
-                            musicViewModel.loadAds(
-                                context = context,
-                                adUnitIdentifier = BuildConfig.PLAYER_NATIVE
-                            )
                         },
                         onClickCloseExpanded = {
                             scope.launch {
@@ -431,7 +437,13 @@ private fun IdleScreen(
                         },
                         adViewState = adState,
                         openBilling = {
-
+                            activity.showBillingPlusDialog(userData)
+                        },
+                        reloadAds = {
+                            musicViewModel.loadAds(
+                                context = context,
+                                adUnitIdentifier = BuildConfig.PLAYER_NATIVE
+                            )
                         }
                     )
                 },

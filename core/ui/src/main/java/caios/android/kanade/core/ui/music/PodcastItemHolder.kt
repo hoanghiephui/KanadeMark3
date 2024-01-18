@@ -131,7 +131,7 @@ fun PodcastItemHolder(
     }
     ConstraintLayout(
         modifier
-            .padding(all = 8.dp)
+            .padding(all = 12.dp)
     ) {
         val (artwork, title, artist, add, menu, play, download, time) = createRefs()
         val formattedDate = dateFormatted(

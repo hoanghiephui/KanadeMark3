@@ -15,12 +15,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import caios.android.kanade.core.design.R
+import caios.android.kanade.core.design.component.AdType
+import caios.android.kanade.core.design.component.AdViewState
+import caios.android.kanade.core.design.component.MaxTemplateNativeAdViewComposable
 import caios.android.kanade.core.design.theme.center
 
 @Composable
 fun EmptyView(
     title: Int,
-    content: Int
+    content: Int,
+    adViewState: AdViewState? = null,
+    openBilling: () -> Unit = {}
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -59,5 +64,14 @@ fun EmptyView(
             style = MaterialTheme.typography.bodyMedium.center(),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
+        if (adViewState != null) {
+            MaxTemplateNativeAdViewComposable(
+                adViewState = adViewState,
+                adType = AdType.SMALL,
+                showBilling = openBilling,
+                modifier = Modifier.padding(top = 16.dp)
+            )
+        }
+
     }
 }

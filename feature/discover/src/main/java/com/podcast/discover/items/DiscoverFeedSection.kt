@@ -27,8 +27,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import caios.android.kanade.core.design.R
 import caios.android.kanade.core.design.theme.bold
-import caios.android.kanade.core.model.music.Album
-import caios.android.kanade.core.model.music.Song
 import caios.android.kanade.core.model.podcast.EntryItem
 import caios.android.kanade.core.model.podcast.toFeedModel
 import caios.android.kanade.core.ui.music.FeedPodcastHolder
@@ -79,7 +77,7 @@ internal fun DiscoverFeedSection(
         ) {
             items(
                 items = feed.take(5),
-                key = { "added-${it.id}" },
+                key = { "podcast-${it.id}" },
             ) { feed ->
                 FeedPodcastHolder(
                     modifier = Modifier.width(120.dp),

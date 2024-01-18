@@ -29,10 +29,14 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import caios.android.kanade.core.common.network.extension.shouldAllowPermission
+import caios.android.kanade.core.design.component.AdType
+import caios.android.kanade.core.design.component.AdViewState
+import caios.android.kanade.core.design.component.MaxTemplateNativeAdViewComposable
 import caios.android.kanade.core.model.music.Artist
 import caios.android.kanade.core.model.music.Song
 import caios.android.kanade.core.model.player.PlayerEvent
 import caios.android.kanade.core.ui.AsyncLoadContents
+import caios.android.kanade.core.ui.BuildConfig
 import caios.android.kanade.core.ui.TrackScreenViewEvent
 import caios.android.kanade.core.ui.music.EpisodeDetailHeader
 import caios.android.kanade.core.ui.music.PodcastItemHolder
@@ -68,6 +72,13 @@ fun OnlineFeedRoute(
     val mDownloadProgress: SnapshotStateMap<Long, Float> = remember {
         mutableStateMapOf()
     }
+
+    val adState by viewModel.adState
+    LaunchedEffect(key1 = BuildConfig.PODCAST_DETAIL_NATIVE, block = {
+        viewModel.loadAds(
+            context, BuildConfig.PODCAST_DETAIL_NATIVE
+        )
+    })
     AsyncLoadContents(
         modifier = modifier,
         screenState = screenState,
@@ -117,7 +128,11 @@ fun OnlineFeedRoute(
                     showSnackBar.invoke("Unsubscribe")
                 }
             },
-            onClickSeeAll = onClickSeeAll
+            onClickSeeAll = onClickSeeAll,
+            adViewState = adState,
+            openBilling = {
+
+            }
         )
     }
 
@@ -139,7 +154,9 @@ private fun OnlineFeedScreen(
     downloadStatus: SnapshotStateMap<Long, Int>,
     downloadProgress: SnapshotStateMap<Long, Float>,
     clickSubscribe: (Boolean) -> Unit,
-    onClickSeeAll: (List<Song>, String) -> Unit
+    onClickSeeAll: (List<Song>, String) -> Unit,
+    adViewState: AdViewState,
+    openBilling: () -> Unit
 ) {
     var expanded by remember {
         mutableStateOf(false)
@@ -193,6 +210,16 @@ private fun OnlineFeedScreen(
             }
 
         }
+
+        item {
+            MaxTemplateNativeAdViewComposable(
+                adViewState = adViewState,
+                adType = AdType.SMALL,
+                showBilling = openBilling,
+                modifier = Modifier.padding(top = 8.dp)
+            )
+        }
+
         item {
             EpisodeDetailHeader(
                 modifier = Modifier.fillMaxWidth(),
@@ -230,7 +257,7 @@ private fun OnlineFeedScreen(
                 downloadStatus = downloadStatus,
                 downloadProgress = downloadProgress
             )
-            HorizontalDivider(modifier = Modifier.padding(bottom = 8.dp))
+            HorizontalDivider(modifier = Modifier.padding(bottom = 8.dp, start = 12.dp))
         }
 
         item {

@@ -1,10 +1,7 @@
 package com.podcast.episodes
 
 import android.app.Activity
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,6 +13,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
@@ -25,7 +23,6 @@ import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -33,11 +30,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import caios.android.kanade.core.common.network.extension.shouldAllowPermission
 import caios.android.kanade.core.design.R
-import caios.android.kanade.core.design.theme.center
+import caios.android.kanade.core.design.component.AdType
+import caios.android.kanade.core.design.component.AdViewState
+import caios.android.kanade.core.design.component.MaxTemplateNativeAdViewComposable
 import caios.android.kanade.core.design.theme.end
 import caios.android.kanade.core.model.music.Song
 import caios.android.kanade.core.model.player.PlayerEvent
 import caios.android.kanade.core.ui.AsyncLoadContents
+import caios.android.kanade.core.ui.BuildConfig
 import caios.android.kanade.core.ui.TrackScreenViewEvent
 import caios.android.kanade.core.ui.music.PodcastItemHolder
 import caios.android.kanade.core.ui.view.EmptyView
@@ -64,6 +64,12 @@ fun EpisodesRouter(
     val mDownloadProgress: SnapshotStateMap<Long, Float> = remember {
         mutableStateMapOf()
     }
+    val adState by viewModel.adState
+    LaunchedEffect(key1 = BuildConfig.EPISODES_NATIVE, block = {
+        viewModel.loadAds(
+            context, BuildConfig.EPISODES_NATIVE
+        )
+    })
     AsyncLoadContents(
         modifier = modifier,
         screenState = screenState,
@@ -71,7 +77,9 @@ fun EpisodesRouter(
         if (uiState.isEmpty()) {
             EmptyView(
                 title = R.string.no_episodes,
-                content = R.string.no_episodes_content
+                content = R.string.no_episodes_content,
+                adViewState = adState,
+                openBilling = {}
             )
         } else {
             EpisodesScreen(
@@ -102,6 +110,10 @@ fun EpisodesRouter(
                 downloader = viewModel.download,
                 downloadStatus = mDownloadStatus,
                 downloadProgress = mDownloadProgress,
+                adViewState = adState,
+                openBilling = {
+
+                }
             )
         }
     }
@@ -123,12 +135,24 @@ private fun EpisodesScreen(
     onClickCancelDownload: (Song) -> Unit,
     downloadStatus: SnapshotStateMap<Long, Int>,
     downloadProgress: SnapshotStateMap<Long, Float>,
+    adViewState: AdViewState,
+    openBilling: () -> Unit
 ) {
     var playActiveId by remember { mutableStateOf<Long?>(null) }
     LazyColumn(
         modifier = modifier.fillMaxSize(),
         contentPadding = contentPadding,
     ) {
+        item {
+            MaxTemplateNativeAdViewComposable(
+                adViewState = adViewState,
+                adType = AdType.SMALL,
+                showBilling = openBilling,
+                modifier = Modifier.padding(
+                    vertical = 8.dp
+                )
+            )
+        }
         item {
             Row(
                 modifier = modifier.padding(8.dp),
@@ -172,7 +196,7 @@ private fun EpisodesScreen(
                 downloadStatus = downloadStatus,
                 downloadProgress = downloadProgress
             )
-            HorizontalDivider(modifier = Modifier.padding(bottom = 8.dp))
+            HorizontalDivider(modifier = Modifier.padding(bottom = 8.dp, start = 12.dp))
         }
     }
 }
