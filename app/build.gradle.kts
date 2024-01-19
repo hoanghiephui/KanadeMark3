@@ -156,6 +156,7 @@ dependencies {
     implementation(libs.androidx.work.ktx)
     implementation(libs.hilt.ext.work)
     implementation(libs.kotlinx.coroutines.android)
+    ksp(libs.hilt.ext.compiler)
 
     debugImplementation(libs.facebook.flipper)
     debugImplementation(libs.facebook.flipper.network)

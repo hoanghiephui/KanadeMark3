@@ -87,7 +87,7 @@ class SyncWorker @AssistedInject constructor(
                             year = Instant.fromEpochMilliseconds(actual.time)
                                 .toLocalDateTime(ZoneId.systemDefault().toKotlinTimeZone()).year,
                             dateModified = actual.time,
-                            data =  it.audio ?: "",
+                            data = it.audio ?: "",
                             image = it.itunesItemData?.image,
                             publishDate = Instant.fromEpochMilliseconds(actual.time),
                             mimeType = MimeTypes.AUDIO_DTS_HD
@@ -95,7 +95,9 @@ class SyncWorker @AssistedInject constructor(
                     }
                     updatePodcastRepository.insertPodcastFeedItem(episodes)
 
+                    Timber.d("Sync Feed: ${rssChannel.title}")
                 }
+                analyticsHelper.logSyncFinished(true)
             }
         }.onFailure {
             Timber.e(it)
@@ -107,6 +109,8 @@ class SyncWorker @AssistedInject constructor(
     }
 
     companion object {
+        const val WORK_TAG_FEED_UPDATE = "feedUpdate"
+
         /**
          * Expedited one time work to sync data on app startup
          */
@@ -114,6 +118,7 @@ class SyncWorker @AssistedInject constructor(
             .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
             .setConstraints(SyncConstraints)
             .setInputData(SyncWorker::class.delegatedData())
+            .addTag(WORK_TAG_FEED_UPDATE)
             .build()
     }
 

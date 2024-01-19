@@ -9,6 +9,7 @@ import caios.android.kanade.core.common.network.KanadeDebugTree
 import caios.android.kanade.core.common.network.KanadeDispatcher
 import caios.android.kanade.core.common.network.di.EVENT_RESTART_APP
 import caios.android.kanade.feature.report.CrushReportActivity
+import caios.android.kanade.workers.Sync
 import coil.ImageLoader
 import coil.ImageLoaderFactory
 import com.google.android.material.color.DynamicColors
@@ -66,6 +67,7 @@ class KanadeApplication : Application(), ImageLoaderFactory {
                 }
             }
         }
+        Sync.initialize(this)
     }
 
     override fun onTerminate() {

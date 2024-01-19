@@ -41,10 +41,7 @@ import caios.android.kanade.core.database.podcast.PodcastFeedItemEntity
         PodcastFeedEntity::class
     ],
     version = 3,
-    autoMigrations = [
-        AutoMigration(1, 2),
-        AutoMigration(2, 3)
-    ],
+    autoMigrations = [],
     exportSchema = true,
 )
 @TypeConverters(

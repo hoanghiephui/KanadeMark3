@@ -16,7 +16,9 @@ object RoomModule {
     @Provides
     fun provideKanadeDatabase(
         @ApplicationContext context: Context,
-    ) = Room.databaseBuilder(context, KanadeDataBase::class.java, "podcast.db").build()
+    ) = Room.databaseBuilder(context, KanadeDataBase::class.java, "podcast.db")
+        .fallbackToDestructiveMigration()
+        .build()
 
     @Singleton
     @Provides
