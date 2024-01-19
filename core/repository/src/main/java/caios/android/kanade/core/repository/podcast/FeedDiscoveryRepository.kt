@@ -46,7 +46,8 @@ interface FeedDiscoveryRepository {
 
     suspend fun subscribePodcast(
         imId: Long,
-        artist: Artist
+        artist: Artist,
+        podcastSource: String
     )
 
     suspend fun updatePodcastItemsSub(imId: Long)
@@ -101,9 +102,9 @@ class FeedDiscoveryRepositoryImpl @Inject constructor(
         podcastDao.getItemById(podcastId)?.toPodcast()
     }
 
-    override suspend fun subscribePodcast(imId: Long, artist: Artist): Unit =
+    override suspend fun subscribePodcast(imId: Long, artist: Artist, podcastSource: String): Unit =
         withContext(dispatcher) {
-            val model = artist.toModel(imId)
+            val model = artist.toModel(imId, podcastSource)
             val idPodcast = podcastDao.insertPodcastFeed(model.podcastFeed)
 
             podcastDao.insertPodcastFeedItem(model.items.map { it.copy(idPodcast = idPodcast) })
@@ -148,7 +149,10 @@ class FeedDiscoveryRepositoryImpl @Inject constructor(
         )
     }
 
-    private fun Artist.toModel(imId: Long): PodcastModel {
+    private fun Artist.toModel(
+        imId: Long,
+        podcastSource: String
+    ): PodcastModel {
         return PodcastModel().apply {
             podcastFeed = PodcastFeedEntity(
                 id = imId,
@@ -156,10 +160,12 @@ class FeedDiscoveryRepositoryImpl @Inject constructor(
                 description = description,
                 author = author,
                 urlAvatar = urlAvatar,
-                timeStamp = Clock.System.now().toEpochMilliseconds()
+                timeStamp = Clock.System.now().toEpochMilliseconds(),
+                podcastSource = podcastSource
             )
             items = this@toModel.songs.map {
                 PodcastFeedItemEntity(
+                    id = it.id,
                     idPodcast = artistId,
                     songId = it.id,
                     title = it.title,

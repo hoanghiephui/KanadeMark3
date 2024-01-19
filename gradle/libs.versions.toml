@@ -61,6 +61,7 @@ material = "1.11.0"
 exoPlayer = "1.2.1"
 accompanist = "0.32.0"
 ksp = "1.9.21-1.0.16"
+androidxWork = "2.9.0"
 
 # Protobuf
 protobuf = "3.24.4"
@@ -167,16 +168,8 @@ androidx-glance = { module = "androidx.glance:glance", version.ref = "androidxGl
 androidx-glance-widget = { module = "androidx.glance:glance-appwidget", version.ref = "androidxGlance" }
 androidx-glance-material3 = { module = "androidx.glance:glance-material3", version.ref = "androidxGlance" }
 androidx-glance-wear = { module = "androidx.glance:glance-wear-tiles", version.ref = "androidxGranceWear" }
-retrofit-core = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
-retrofit-converter-moshi = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "retrofit" }
-okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
-okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
-okhttp-urlconnection = { group = "com.squareup.okhttp3", name = "okhttp-urlconnection", version.ref = "okhttp" }
-moshi-kotlin = { group = "com.squareup.moshi", name = "moshi-kotlin", version.ref = "moshi" }
-moshi-adapters = { group = "com.squareup.moshi", name = "moshi-adapters", version.ref = "moshi" }
-moshi-codegen = { group = "com.squareup.moshi", name = "moshi-kotlin-codegen", version.ref = "moshi" }
-apache-common = {module = "org.apache.commons:commons-lang3", version.ref = "commonslangVersion"}
-
+androidx-work-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "androidxWork" }
+hilt-ext-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "androidxHiltNavigationCompose" }
 
 # Compose
 androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "androidxCompose" }
@@ -255,6 +248,15 @@ youtubedl-android-aria2c = { group = "com.github.yausername.youtubedl-android", 
 twitter-compose-rule = { module = "com.twitter.compose.rules:detekt", version.ref = "twitterComposeRule" }
 rssparser = { module = "com.prof18.rssparser:rssparser", version = "6.0.6"}
 applovin-sdk = { module = "com.applovin:applovin-sdk", version.ref = "applovin" }
+retrofit-core = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+retrofit-converter-moshi = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "retrofit" }
+okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
+okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
+okhttp-urlconnection = { group = "com.squareup.okhttp3", name = "okhttp-urlconnection", version.ref = "okhttp" }
+moshi-kotlin = { group = "com.squareup.moshi", name = "moshi-kotlin", version.ref = "moshi" }
+moshi-adapters = { group = "com.squareup.moshi", name = "moshi-adapters", version.ref = "moshi" }
+moshi-codegen = { group = "com.squareup.moshi", name = "moshi-kotlin-codegen", version.ref = "moshi" }
+apache-common = {module = "org.apache.commons:commons-lang3", version.ref = "commonslangVersion"}
 
 # Debugs
 facebook-flipper = { module = "com.facebook.flipper:flipper", version.ref = "flipper" }

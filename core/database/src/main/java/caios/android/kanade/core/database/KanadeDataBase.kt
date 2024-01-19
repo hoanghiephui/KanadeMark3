@@ -1,5 +1,6 @@
 package caios.android.kanade.core.database
 
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
@@ -39,8 +40,11 @@ import caios.android.kanade.core.database.podcast.PodcastFeedItemEntity
         PodcastFeedItemEntity::class,
         PodcastFeedEntity::class
     ],
-    version = 1,
-    autoMigrations = [],
+    version = 3,
+    autoMigrations = [
+        AutoMigration(1, 2),
+        AutoMigration(2, 3)
+    ],
     exportSchema = true,
 )
 @TypeConverters(

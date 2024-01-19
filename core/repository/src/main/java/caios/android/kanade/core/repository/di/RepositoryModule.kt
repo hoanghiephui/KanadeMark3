@@ -35,6 +35,8 @@ import caios.android.kanade.core.repository.podcast.ItunesSearcherRepositoryImpl
 import caios.android.kanade.core.repository.podcast.ParseRssRepository
 import caios.android.kanade.core.repository.podcast.ParseRssRepositoryImpl
 import caios.android.kanade.core.repository.podcast.PodcastSearcherRepository
+import caios.android.kanade.core.repository.podcast.UpdatePodcastRepository
+import caios.android.kanade.core.repository.podcast.UpdatePodcastRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -163,4 +165,10 @@ interface RepositoryModule {
     fun bindIndexRepository(
         indexRepositoryImpl: IndexRepositoryImpl
     ): IndexRepository
+
+    @Singleton
+    @Binds
+    fun bindUpdatePodcastRepository(
+        updatePodcastRepositoryImpl: UpdatePodcastRepositoryImpl
+    ): UpdatePodcastRepository
 }

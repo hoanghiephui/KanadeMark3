@@ -96,6 +96,9 @@
     <string name="notify_channel_last_fm_description">Communicate to obtain song information</string>
     <string name="notify_last_fm_title">Downloading metadata</string>
     <string name="notify_last_fm_message">Automatically downloading artist and album information</string>
+    <string name="sync_notification_title">Podcasts</string>
+    <string name="sync_notification_channel_name">Sync</string>
+    <string name="sync_notification_channel_description">Background tasks for Podcasts</string>
 
     <!-- Search -->
     <string name="search_title">Search library</string>

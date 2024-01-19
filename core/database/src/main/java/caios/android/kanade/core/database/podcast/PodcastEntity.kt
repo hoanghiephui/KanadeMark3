@@ -30,7 +30,8 @@ data class PodcastFeedEntity(
     val author: String? = null,
     @ColumnInfo("avatar")
     val urlAvatar: String? = null,
-    val timeStamp: Long
+    val timeStamp: Long,
+    val podcastSource: String? = null
 )
 
 @Entity(
@@ -46,6 +47,8 @@ data class PodcastFeedEntity(
     ],
 )
 data class PodcastFeedItemEntity(
+    @PrimaryKey
+    val id: Long,
     @ColumnInfo("id_podcast")
     val idPodcast: Long,
     @ColumnInfo("song_id")
@@ -60,10 +63,7 @@ data class PodcastFeedItemEntity(
     val image: String? = null,
     val publishDate: Instant,
     val mimeType: String,
-) {
-    @PrimaryKey(autoGenerate = true)
-    var id: Long = 0
-}
+)
 
 @Entity(
     tableName = "podcast_download",

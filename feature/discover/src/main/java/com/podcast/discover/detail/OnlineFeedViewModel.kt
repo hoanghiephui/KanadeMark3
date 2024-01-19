@@ -65,6 +65,7 @@ class OnlineFeedViewModel @Inject constructor(
     adsSdk: AppLovinSdk
 ) : BaseViewModel<NoneAction>(defaultDispatcher, adsSdk) {
     private var imId: String? = null
+    private var feedUrl: String  = ""
     private val feedState = MutableStateFlow<RssChannel?>(null)
     private val fetchNewFeedResultState = MutableStateFlow<Result<RssChannel>?>(null)
     val screenState =
@@ -103,6 +104,7 @@ class OnlineFeedViewModel @Inject constructor(
 
     suspend fun fetchRssDetail(feedUrl: String, feedId: String) {
         this.imId = feedId
+        this.feedUrl = feedUrl
         asFlowResult {
             repository.getRssDetail(feedUrl)
         }.onResultError(errorsDispatcher::dispatch).safeCollect(
@@ -235,10 +237,10 @@ class OnlineFeedViewModel @Inject constructor(
 
     fun onSubscribePodcast(
         imId: String,
-        artist: Artist
+        artist: Artist,
     ) {
         viewModelScope.launch(defaultDispatcher) {
-            feedRepository.subscribePodcast(imId.toLong(), artist)
+            feedRepository.subscribePodcast(imId.toLong(), artist, feedUrl)
         }
     }
 

@@ -1,6 +1,5 @@
 package caios.android.kanade.core.database.podcast
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -62,4 +61,12 @@ interface PodcastDao {
     @Transaction
     @Query("SELECT * FROM podcast_feed_item WHERE id_podcast = :podcastId")
     fun loadFeedItems(podcastId: Long): List<PodcastFeedItemEntity>
+
+    @Transaction
+    @Query("SELECT * FROM podcast_feed")
+    fun loadPodcastAll(): List<PodcastModel>
+
+    @Transaction
+    @Query("DELETE FROM podcast_feed_item WHERE id_podcast = :podcastId")
+    suspend fun deleteEpisodes(podcastId: Long)
 }
