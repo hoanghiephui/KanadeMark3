@@ -67,6 +67,6 @@ interface PodcastDao {
     fun loadPodcastAll(): List<PodcastModel>
 
     @Transaction
-    @Query("DELETE FROM podcast_feed_item WHERE id_podcast = :podcastId")
-    suspend fun deleteEpisodes(podcastId: Long)
+    @Query("DELETE FROM podcast_feed_item WHERE id_podcast IN (:podcastIds)")
+    suspend fun deleteEpisodes(podcastIds: List<Long>)
 }

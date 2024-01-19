@@ -12,7 +12,7 @@ import javax.inject.Inject
 interface UpdatePodcastRepository {
     suspend fun loadAddPodcast(): List<PodcastModel>
 
-    suspend fun deleteEpisodes(podcastId: Long)
+    suspend fun deleteEpisodes(podcastIds: List<Long>)
 
     suspend fun insertPodcastFeedItem(entity: List<PodcastFeedItemEntity>)
 }
@@ -25,8 +25,8 @@ class UpdatePodcastRepositoryImpl @Inject constructor(
         podcastDao.loadPodcastAll()
     }
 
-    override suspend fun deleteEpisodes(podcastId: Long) = withContext(dispatcher) {
-        podcastDao.deleteEpisodes(podcastId)
+    override suspend fun deleteEpisodes(podcastIds: List<Long>) = withContext(dispatcher) {
+        podcastDao.deleteEpisodes(podcastIds)
     }
 
     override suspend fun insertPodcastFeedItem(entity: List<PodcastFeedItemEntity>) = withContext(dispatcher) {

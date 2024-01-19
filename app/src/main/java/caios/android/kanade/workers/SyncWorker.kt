@@ -65,12 +65,14 @@ class SyncWorker @AssistedInject constructor(
             this.collect { rssChannels ->
                 //TODO: tạm thời xoá hết episodes theo podcastID, rồi add lại list episodes mới sync về
                 if (rssChannels.isNotEmpty()) {
-                    data.forEach {
-                        updatePodcastRepository.deleteEpisodes(it.podcastId)
+                    data.map {
+                        it.podcastId
+                    }.also {
+                        updatePodcastRepository.deleteEpisodes(it)
                     }
                 }
                 rssChannels.forEachIndexed { index, rssChannel ->
-                    val episodes = rssChannel.items.map {
+                    val episodes = rssChannel.items.distinctBy { it.guid }.map {
                         val actual: Date = DateUtils.parse(it.pubDate)
                         PodcastFeedItemEntity(
                             id = BigInteger(it.guid?.toByteArray()).toLong(),
