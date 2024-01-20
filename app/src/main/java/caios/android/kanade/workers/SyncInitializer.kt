@@ -1,8 +1,7 @@
-
 package caios.android.kanade.workers
 
 import android.content.Context
-import androidx.work.ExistingWorkPolicy
+import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.WorkManager
 
 object Sync {
@@ -11,10 +10,10 @@ object Sync {
     fun initialize(context: Context) {
         WorkManager.getInstance(context).apply {
             // Run sync on app startup and ensure only one sync worker runs at any time
-            enqueueUniqueWork(
+            enqueueUniquePeriodicWork(
                 SYNC_WORK_NAME,
-                ExistingWorkPolicy.REPLACE,
-                SyncWorker.startUpSyncWork(),
+                ExistingPeriodicWorkPolicy.KEEP,
+                SyncWorker.nextSyncWork(),
             )
         }
     }

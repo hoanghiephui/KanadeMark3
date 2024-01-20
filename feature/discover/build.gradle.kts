@@ -19,7 +19,7 @@ dependencies {
     implementation(project(":core:music"))
     implementation(project(":core:ui"))
     implementation(project(":core:usecase"))
-
+    implementation(libs.kotlinx.coroutines.android)
     implementation(libs.bundles.ui.implementation)
     kapt(libs.bundles.ui.kapt)
     implementation(libs.rssparser)

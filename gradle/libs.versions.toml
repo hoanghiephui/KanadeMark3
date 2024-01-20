@@ -2,8 +2,8 @@
 # Application
 lottie = "6.1.0"
 playServicesAdsIdentifier = "18.0.1"
-versionName = "1.0.9"
-versionCode = "9"
+versionName = "1.1.0"
+versionCode = "10"
 
 # SDK
 minSdk = "26"
@@ -85,7 +85,7 @@ twitterComposeRule = "0.0.26"
 coil = "2.5.0"
 
 # Debugs
-firebase = "32.7.0"
+firebase = "32.7.1"
 leakCanary = "2.12"
 flipper = "0.238.0"
 timber = "5.0.1"

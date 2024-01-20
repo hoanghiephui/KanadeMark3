@@ -2,15 +2,15 @@ package com.podcast.discover
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import caios.android.kanade.core.design.BaseViewModel
 import caios.android.kanade.core.common.network.Dispatcher
 import caios.android.kanade.core.common.network.KanadeDispatcher
-import caios.android.kanade.core.design.NoneAction
 import caios.android.kanade.core.common.network.Result
 import caios.android.kanade.core.common.network.asFlowResult
 import caios.android.kanade.core.common.network.data
 import caios.android.kanade.core.common.network.extension.safeCollect
 import caios.android.kanade.core.common.network.onResultError
+import caios.android.kanade.core.design.BaseViewModel
+import caios.android.kanade.core.design.NoneAction
 import caios.android.kanade.core.design.R
 import caios.android.kanade.core.model.ScreenState
 import caios.android.kanade.core.model.podcast.Advanced
@@ -25,6 +25,8 @@ import com.podcast.core.usecase.ItunesFeedUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -96,12 +98,18 @@ class DiscoverViewModel @Inject constructor(
             selectCountryCode = countryCode
             val genres =
                 listOf(Genres.TOP, Genres.HEALTH, Genres.EDUCATION, Genres.MUSIC, Genres.SOCIETY)
-            combine(
+            val topPodcastByGenres = withContext(ioDispatcher) {
                 genres.map {
-                    countryCode.getTopPodcastByGenres(it).map { result ->
-                        result.data?.feed?.entry
+                    async {
+                        countryCode.getTopPodcastByGenres(it).map { result ->
+                            result.data?.feed?.entry
+                        }
                     }
-                }
+                }.map { it.await() }
+            }
+
+            combine(
+                topPodcastByGenres
             ) { results ->
                 withContext(ioDispatcher) {
                     val topFeedResult =

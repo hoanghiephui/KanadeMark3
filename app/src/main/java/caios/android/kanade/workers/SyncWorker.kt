@@ -8,6 +8,8 @@ import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.OutOfQuotaPolicy
+import androidx.work.PeriodicWorkRequest
+import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkerParameters
 import caios.android.kanade.core.common.network.Dispatcher
 import caios.android.kanade.core.common.network.KanadeDispatcher
@@ -22,6 +24,8 @@ import com.podcast.analytic.AnalyticsHelper
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Instant
@@ -31,6 +35,7 @@ import timber.log.Timber
 import java.math.BigInteger
 import java.time.ZoneId
 import java.util.Date
+import java.util.concurrent.TimeUnit
 
 @HiltWorker
 class SyncWorker @AssistedInject constructor(
@@ -55,10 +60,10 @@ class SyncWorker @AssistedInject constructor(
                 )
             }
         val feedUrl = data.mapNotNull { it.podcastSource }
+        val deferredChannels = feedUrl.map { async { it.getRssChannel(parseRssRepository) } }
+        val rssChannels = deferredChannels.awaitAll()
         combine(
-            feedUrl.map {
-                it.getRssChannel(parseRssRepository)
-            }
+            rssChannels
         ) { results ->
             results.mapNotNull { it.data }
         }.runCatching {
@@ -121,6 +126,12 @@ class SyncWorker @AssistedInject constructor(
             .setConstraints(SyncConstraints)
             .setInputData(SyncWorker::class.delegatedData())
             .addTag(WORK_TAG_FEED_UPDATE)
+            .build()
+        fun nextSyncWork() = PeriodicWorkRequestBuilder<DelegatingWorker>(1, TimeUnit.DAYS)
+            .setConstraints(SyncConstraints)
+            .setInputData(SyncWorker::class.delegatedData())
+            .addTag(WORK_TAG_FEED_UPDATE)
+            .setNextScheduleTimeOverride(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(20))
             .build()
     }
 
