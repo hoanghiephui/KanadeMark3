@@ -108,6 +108,7 @@ class SyncWorker @AssistedInject constructor(
             }
         }.onFailure {
             Timber.e(it)
+            analyticsHelper.logSyncFinished(false)
             Result.failure()
         }.onSuccess {
             Result.success()

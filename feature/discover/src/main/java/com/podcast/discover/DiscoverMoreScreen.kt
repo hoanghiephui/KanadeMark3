@@ -129,7 +129,7 @@ private fun DiscoverMoreScreen(
             ) {
                 itemsWithEdgeSpace(
                     spanCount = 3,
-                    items = items,
+                    items = items.distinctBy { it.id },
                     key = { artist -> "added-${artist.id}" },
                 ) { artist ->
                     FeedPodcastHolder(

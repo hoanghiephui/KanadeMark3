@@ -80,7 +80,7 @@ internal fun DiscoverFeedSection(
             contentPadding = PaddingValues(horizontal = 10.dp),
         ) {
             items(
-                items = feed.take(size),
+                items = feed.distinctBy { it.id }.take(size),
                 key = { "podcast-${it.id}" },
             ) { feed ->
                 FeedPodcastHolder(

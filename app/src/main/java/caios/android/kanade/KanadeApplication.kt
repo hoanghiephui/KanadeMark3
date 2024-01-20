@@ -13,6 +13,7 @@ import caios.android.kanade.workers.Sync
 import coil.ImageLoader
 import coil.ImageLoaderFactory
 import com.google.android.material.color.DynamicColors
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -58,6 +59,7 @@ class KanadeApplication : Application(), ImageLoaderFactory {
 
         Thread.setDefaultUncaughtExceptionHandler { _, e ->
             startCrushReportActivity(e)
+            FirebaseCrashlytics.getInstance().recordException(e)
         }
 
         scope.launch {

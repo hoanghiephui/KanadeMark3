@@ -139,6 +139,7 @@ dependencies {
     implementation(project(":in-app-update"))
 
     implementation(platform(libs.firebase.bom))
+    implementation(platform(libs.firebase.crashly))
     implementation(platform(libs.androidx.compose.bom))
 
     implementation(libs.bundles.ui.implementation)

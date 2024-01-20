@@ -147,7 +147,7 @@ class SearchViewModel @Inject constructor(
                 asFlowResult {
                     searcherRepository.searchPodcast(keywords.last())
                 }.mapResultData { response ->
-                    response.results?.map {
+                    response.results?.distinctBy { it.collectionId }?.map {
                         PodcastSearchResult(
                             title = it.collectionName.toString(),
                             imageUrl = it.artworkUrl100.toString(),
@@ -164,7 +164,7 @@ class SearchViewModel @Inject constructor(
                 asFlowResult {
                     fyyDRepository.searchPodcast(keywords.last())
                 }.mapResultData { response ->
-                    response.data.map {
+                    response.data.distinctBy { it.id }.map {
                         PodcastSearchResult(
                             title = it.title,
                             imageUrl = it.thumbImageURL,
@@ -181,7 +181,7 @@ class SearchViewModel @Inject constructor(
                 asFlowResult {
                     indexRepository.searchPodcast(keywords.last())
                 }.mapResultData { response ->
-                    response.feeds?.map {
+                    response.feeds?.distinctBy { it.id }?.map {
                         PodcastSearchResult(
                             title = it.title ?: "",
                             imageUrl = it.image ?: "",
@@ -189,23 +189,6 @@ class SearchViewModel @Inject constructor(
                             author = it.author ?: "",
                             id = it.id ?: 0,
                             trackCount = it.episodeCount ?: 0
-                        )
-                    }
-                }
-            }
-
-            else -> {
-                asFlowResult {
-                    searcherRepository.searchPodcast(keywords.last())
-                }.mapResultData { response ->
-                    response.results?.map {
-                        PodcastSearchResult(
-                            title = it.collectionName.toString(),
-                            imageUrl = it.artworkUrl100.toString(),
-                            feedUrl = it.feedUrl.toString(),
-                            author = it.artistName.toString(),
-                            id = it.collectionId ?: 0,
-                            trackCount = it.trackCount ?: 0
                         )
                     }
                 }
@@ -225,7 +208,8 @@ class SearchViewModel @Inject constructor(
         val searchArtistsJob = searchArtists(keywords, artists)
         val searchAlbumsJob = searchAlbums(keywords, albums)
         val searchPlaylistsJob = searchPlaylists(keywords, playlists)
-        val searchYTMusicJob = if (userData?.isEnableYTMusic == true) searchYTMusic(keywords) else null
+        val searchYTMusicJob =
+            if (userData?.isEnableYTMusic == true) searchYTMusic(keywords) else null
 
         val (resultSongs, resultSongsRangeMap) = searchSongsJob.await()
         val (resultArtists, resultArtistsRangeMap) = searchArtistsJob.await()
@@ -270,25 +254,26 @@ class SearchViewModel @Inject constructor(
         return@async (resultSongs to resultRangeMap)
     }
 
-    private fun searchArtists(keywords: List<String>, artists: List<Artist>) = viewModelScope.async {
-        if (keywords.all { it.isEmpty() }) return@async (emptyList<Artist>() to emptyMap<Long, IntRange>())
+    private fun searchArtists(keywords: List<String>, artists: List<Artist>) =
+        viewModelScope.async {
+            if (keywords.all { it.isEmpty() }) return@async (emptyList<Artist>() to emptyMap<Long, IntRange>())
 
-        val resultArtists = mutableListOf<Artist>()
-        val resultRangeMap = mutableMapOf<Long, IntRange>()
+            val resultArtists = mutableListOf<Artist>()
+            val resultRangeMap = mutableMapOf<Long, IntRange>()
 
-        for (artist in artists) {
-            for (keyword in keywords) {
-                val regex = Regex("(?i)$keyword")
+            for (artist in artists) {
+                for (keyword in keywords) {
+                    val regex = Regex("(?i)$keyword")
 
-                if (regex.containsMatchIn(artist.artist)) {
-                    resultArtists.add(artist)
-                    resultRangeMap[artist.artistId] = (regex.find(artist.artist)!!.range)
+                    if (regex.containsMatchIn(artist.artist)) {
+                        resultArtists.add(artist)
+                        resultRangeMap[artist.artistId] = (regex.find(artist.artist)!!.range)
+                    }
                 }
             }
-        }
 
-        return@async (resultArtists to resultRangeMap)
-    }
+            return@async (resultArtists to resultRangeMap)
+        }
 
     private fun searchAlbums(keywords: List<String>, albums: List<Album>) = viewModelScope.async {
         if (keywords.all { it.isEmpty() }) return@async (emptyList<Album>() to emptyMap<Long, IntRange>())
@@ -310,25 +295,26 @@ class SearchViewModel @Inject constructor(
         return@async (resultAlbums to resultRangeMap)
     }
 
-    private fun searchPlaylists(keywords: List<String>, playlists: List<Playlist>) = viewModelScope.async {
-        if (keywords.all { it.isEmpty() }) return@async (emptyList<Playlist>() to emptyMap<Long, IntRange>())
+    private fun searchPlaylists(keywords: List<String>, playlists: List<Playlist>) =
+        viewModelScope.async {
+            if (keywords.all { it.isEmpty() }) return@async (emptyList<Playlist>() to emptyMap<Long, IntRange>())
 
-        val resultPlaylists = mutableListOf<Playlist>()
-        val resultRangeMap = mutableMapOf<Long, IntRange>()
+            val resultPlaylists = mutableListOf<Playlist>()
+            val resultRangeMap = mutableMapOf<Long, IntRange>()
 
-        for (playlist in playlists) {
-            for (keyword in keywords) {
-                val regex = Regex("(?i)$keyword")
+            for (playlist in playlists) {
+                for (keyword in keywords) {
+                    val regex = Regex("(?i)$keyword")
 
-                if (regex.containsMatchIn(playlist.name)) {
-                    resultPlaylists.add(playlist)
-                    resultRangeMap[playlist.id] = (regex.find(playlist.name)!!.range)
+                    if (regex.containsMatchIn(playlist.name)) {
+                        resultPlaylists.add(playlist)
+                        resultRangeMap[playlist.id] = (regex.find(playlist.name)!!.range)
+                    }
                 }
             }
-        }
 
-        return@async (resultPlaylists to resultRangeMap)
-    }
+            return@async (resultPlaylists to resultRangeMap)
+        }
 
     private fun searchYTMusic(keywords: List<String>) = viewModelScope.async {
         if (keywords.all { it.isEmpty() } || keywords.isEmpty()) return@async emptyList()
