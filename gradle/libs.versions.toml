@@ -2,8 +2,8 @@
 # Application
 lottie = "6.1.0"
 playServicesAdsIdentifier = "18.0.1"
-versionName = "1.1.1"
-versionCode = "11"
+versionName = "1.1.2"
+versionCode = "12"
 
 # SDK
 minSdk = "26"
@@ -11,7 +11,7 @@ targetSdk = "34"
 compileSdk = "34"
 
 # Gradle
-gradle = "8.2.1"
+gradle = "8.2.2"
 
 # Kotlin
 kotlin = "1.9.21"
@@ -42,8 +42,8 @@ androidxRoom = "2.6.1"
 androidxMedia = "1.7.0"
 androidxAnnotation = "1.7.1"
 androidxNavigation = "2.7.6"
-androidxCompose = "2023.10.01"
-androidxComposeMaterial3 = "1.2.0-beta02"
+androidxCompose = "2024.01.00"
+androidxComposeMaterial3 = "1.2.0-rc01"
 androidxComposeConstraintLayout = "1.1.0-alpha13"
 androidxHiltNavigationCompose = "1.1.0"
 androidxGlance = "1.0.0"

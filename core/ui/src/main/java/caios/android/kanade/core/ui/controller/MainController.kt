@@ -66,6 +66,7 @@ import caios.android.kanade.core.ui.controller.items.MainControllerToolBarSectio
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.time.Duration
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -111,7 +112,7 @@ fun MainController(
     LaunchedEffect(key1 = adViewState, block = {
         delay(800)
         isShowAd = true
-        delay(15000)
+        delay(Duration.parse("15s"))
         isShowAd = false
     })
 

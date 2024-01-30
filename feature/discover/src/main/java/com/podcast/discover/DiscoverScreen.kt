@@ -52,8 +52,8 @@ internal fun DiscoverRouter(
     val uiState by viewModel.uiState.collectAsStateLifecycleAware()
     val adState by viewModel.adState
     val context = LocalContext.current
-    LaunchedEffect(key1 = BuildConfig.HOME_NATIVE, block = {
-        viewModel.loadAds(context, BuildConfig.HOME_NATIVE)
+    LaunchedEffect(key1 = BuildConfig.FEED_PODCAST_NATIVE, block = {
+        viewModel.loadAds(context, BuildConfig.FEED_PODCAST_NATIVE)
     })
     AsyncLoadContents(
         modifier = modifier,

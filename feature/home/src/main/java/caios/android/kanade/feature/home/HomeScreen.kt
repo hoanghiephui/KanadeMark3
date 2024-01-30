@@ -21,6 +21,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
@@ -47,7 +48,10 @@ import caios.android.kanade.feature.home.items.homeMostPlayedSongsSection
 import caios.android.kanade.feature.home.items.homeRecentlyPlayedSongsSection
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import timber.log.Timber
+import kotlin.time.Duration
 
 @Composable
 internal fun HomeRoute(
@@ -69,8 +73,14 @@ internal fun HomeRoute(
     val scope = rememberCoroutineScope()
     val screenState by viewModel.screenState.collectAsStateWithLifecycle()
     val adState by viewModel.adState
+    val isScreenVisible = LocalView.current.isAttachedToWindow
     LaunchedEffect(key1 = BuildConfig.HOME_NATIVE, block = {
         viewModel.loadAds(context, BuildConfig.HOME_NATIVE)
+        delay(Duration.parse("35s"))
+        if (isScreenVisible) {
+            viewModel.loadAds(context, BuildConfig.HOME_NATIVE)
+            Timber.d("LOADDDDD")
+        }
     })
 
     AsyncLoadContents(
