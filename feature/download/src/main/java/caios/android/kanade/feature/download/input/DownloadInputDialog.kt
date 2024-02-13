@@ -34,6 +34,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import caios.android.kanade.core.design.R
 import caios.android.kanade.core.model.State
 import caios.android.kanade.core.model.download.VideoInfo
+import caios.android.kanade.core.ui.TrackScreenViewEvent
 
 @Composable
 internal fun DownloadInputDialog(
@@ -189,4 +190,5 @@ internal fun DownloadInputDialog(
             }
         }
     }
+    TrackScreenViewEvent("DownloadInputDialog")
 }

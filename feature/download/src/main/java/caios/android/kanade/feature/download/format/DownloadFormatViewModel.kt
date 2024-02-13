@@ -171,7 +171,7 @@ class DownloadFormatViewModel @Inject constructor(
             addOption("-v")
             addOption("--no-mtime")
             addOption("--no-playlist")
-
+            addOption("--concurrent-fragments", 8)
             // Enable aria2c
             // addOption("--downloader", "libaria2c.so")
             // addOption("--external-downloader-args", "aria2c:\"--summary-interval=1\"")
@@ -189,7 +189,7 @@ class DownloadFormatViewModel @Inject constructor(
         Timber.d("Download Command: ${request.buildCommand().joinToString(" ")}")
 
         try {
-            YoutubeDL.getInstance().execute(request, callback = callback)
+            YoutubeDL.getInstance().execute(request = request, processId = videoInfo.id, callback = callback)
         } catch (e: Throwable) {
             Timber.w(e)
             return Result.failure(e)

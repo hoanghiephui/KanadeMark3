@@ -21,6 +21,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.OpenInNew
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -89,7 +90,7 @@ internal fun DownloadFormatRoute(
     ) {
         DownloadFormatScreen(
             modifier = Modifier.background(MaterialTheme.colorScheme.surface),
-            isPlusUser = it.isPlusUser,
+            isPlusUser = !it.isPlusUser,
             videoInfo = it.videoInfo,
             downloadState = it.downloadState,
             saveUniFile = it.saveUniFile,
@@ -260,7 +261,7 @@ private fun DownloadFormatScreen(
     ) { paddingValues ->
         LazyVerticalGrid(
             modifier = Modifier
-                .padding(paddingValues)
+                .padding(top = paddingValues.calculateTopPadding())
                 .fillMaxSize(),
             state = gridState,
             verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -297,7 +298,7 @@ private fun DownloadFormatScreen(
                                 },
                             ) {
                                 Icon(
-                                    imageVector = Icons.Filled.OpenInNew,
+                                    imageVector = Icons.AutoMirrored.Filled.OpenInNew,
                                     contentDescription = null,
                                 )
                             }
