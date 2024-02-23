@@ -79,7 +79,6 @@ internal fun HomeRoute(
         delay(Duration.parse("35s"))
         if (isScreenVisible) {
             viewModel.loadAds(context, BuildConfig.HOME_NATIVE)
-            Timber.d("LOADDDDD")
         }
     })
 

@@ -110,10 +110,12 @@ fun MainController(
     }
 
     LaunchedEffect(key1 = adViewState, block = {
-        delay(800)
-        isShowAd = true
-        delay(Duration.parse("15s"))
-        isShowAd = false
+        if (adViewState is AdViewState.LoadAd) {
+            delay(800)
+            isShowAd = true
+            delay(Duration.parse("15s"))
+            isShowAd = false
+        }
     })
 
 

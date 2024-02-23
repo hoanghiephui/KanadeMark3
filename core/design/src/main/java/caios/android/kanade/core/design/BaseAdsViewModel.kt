@@ -59,7 +59,7 @@ abstract class BaseAdsViewModel(
     ) {
         // Initialize ad with ad loader.
         viewModelScope.launch {
-            loadAdState.collectLatest {
+            loadAdState.collect {
                 if (it && SHOW_ADS) {
                     nativeAdLoader.loadAd(context, adUnitIdentifier)
                     Timber.tag("Applovin").d("Load Ads")
