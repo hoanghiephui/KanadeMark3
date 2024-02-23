@@ -90,7 +90,7 @@ internal fun DownloadFormatRoute(
     ) {
         DownloadFormatScreen(
             modifier = Modifier.background(MaterialTheme.colorScheme.surface),
-            isPlusUser = !it.isPlusUser,
+            isPlusUser = it.isPlusUser,
             videoInfo = it.videoInfo,
             downloadState = it.downloadState,
             saveUniFile = it.saveUniFile,
