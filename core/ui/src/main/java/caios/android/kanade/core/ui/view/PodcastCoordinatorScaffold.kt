@@ -1,6 +1,11 @@
 package caios.android.kanade.core.ui.view
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -22,11 +27,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Shuffle
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -74,6 +80,8 @@ fun PodcastCoordinatorScaffold(
     onClickNavigateUp: () -> Unit,
     onClickMenu: () -> Unit,
     clickSubscribe: (Boolean) -> Unit,
+    clickShuffle: () -> Unit,
+    isSubscribe: Boolean,
     modifier: Modifier = Modifier,
     listState: LazyListState = rememberLazyListState(),
     color: Color = MaterialTheme.colorScheme.surface,
@@ -81,7 +89,7 @@ fun PodcastCoordinatorScaffold(
 ) {
     var appBarAlpha by remember { mutableFloatStateOf(0f) }
     var topSectionHeight by remember { mutableIntStateOf(100) }
-
+    var isVisibleFAB by remember { mutableStateOf(isSubscribe) }
     Box(modifier.background(color)) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
@@ -98,7 +106,10 @@ fun PodcastCoordinatorScaffold(
                         data = data,
                         color = color,
                         alpha = 1f - appBarAlpha,
-                        clickSubscribe = clickSubscribe
+                        clickSubscribe = {
+                            isVisibleFAB = !it
+                            clickSubscribe.invoke(it)
+                        }
                     )
                 }
             }
@@ -122,6 +133,25 @@ fun PodcastCoordinatorScaffold(
             onClickNavigateUp = onClickNavigateUp,
             onClickMenu = onClickMenu,
         )
+
+        AnimatedVisibility(
+            modifier = Modifier
+                .padding(16.dp)
+                .align(Alignment.BottomEnd),
+            visible = isVisibleFAB,
+            enter = fadeIn() + scaleIn(),
+            exit = fadeOut() + scaleOut(),
+        ) {
+            FloatingActionButton(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                onClick = clickShuffle,
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Shuffle,
+                    contentDescription = null,
+                )
+            }
+        }
     }
 
     LaunchedEffect(listState) {

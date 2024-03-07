@@ -8,10 +8,13 @@ import caios.android.kanade.core.common.network.KanadeConfig
 import caios.android.kanade.core.common.network.KanadeDebugTree
 import caios.android.kanade.core.common.network.KanadeDispatcher
 import caios.android.kanade.core.common.network.di.EVENT_RESTART_APP
+import caios.android.kanade.core.design.SHOW_ADS
 import caios.android.kanade.feature.report.CrushReportActivity
 import caios.android.kanade.workers.Sync
 import coil.ImageLoader
 import coil.ImageLoaderFactory
+import com.applovin.sdk.AppLovinMediationProvider
+import com.applovin.sdk.AppLovinSdk
 import com.google.android.material.color.DynamicColors
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dagger.hilt.android.HiltAndroidApp
@@ -45,6 +48,9 @@ class KanadeApplication : Application(), ImageLoaderFactory {
     @Inject
     lateinit var evenBus: MutableSharedFlow<Int>
 
+    @Inject
+    lateinit var appLovinSdk: AppLovinSdk
+
 
     private val scope by lazy {
         CoroutineScope(Dispatchers.Default)
@@ -61,7 +67,9 @@ class KanadeApplication : Application(), ImageLoaderFactory {
             startCrushReportActivity(e)
             FirebaseCrashlytics.getInstance().recordException(e)
         }
-
+        if (SHOW_ADS) {
+            appLovinSdk.mediationProvider = AppLovinMediationProvider.MAX
+        }
         scope.launch {
             evenBus.collectLatest {
                 if (it == EVENT_RESTART_APP) {

@@ -1,7 +1,13 @@
 package com.podcast.episodes
 
 import android.app.Activity
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,7 +15,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Shuffle
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -113,7 +123,8 @@ fun EpisodesRouter(
                 adViewState = adState,
                 openBilling = {
 
-                }
+                },
+                onClickShuffle = viewModel::onShufflePlay
             )
         }
     }
@@ -136,67 +147,93 @@ private fun EpisodesScreen(
     downloadStatus: SnapshotStateMap<Long, Int>,
     downloadProgress: SnapshotStateMap<Long, Float>,
     adViewState: AdViewState,
-    openBilling: () -> Unit
+    openBilling: () -> Unit,
+    onClickShuffle: (List<Song>) -> Unit
 ) {
     var playActiveId by remember { mutableStateOf<Long?>(null) }
-    LazyColumn(
-        modifier = modifier.fillMaxSize(),
-        contentPadding = contentPadding,
-    ) {
-        item {
-            MaxTemplateNativeAdViewComposable(
-                adViewState = adViewState,
-                adType = AdType.SMALL,
-                showBilling = openBilling,
-                modifier = Modifier.padding(
-                    vertical = 8.dp
-                )
-            )
-        }
-        item {
-            Row(
-                modifier = modifier.padding(8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    modifier = Modifier
-                        .padding(horizontal = 8.dp)
-                        .weight(1f),
-                    text = stringResource(R.string.unit_episodes, songs.size),
-                    style = MaterialTheme.typography.bodyMedium.end(),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+    var isVisibleFAB by remember { mutableStateOf(false) }
+
+    LaunchedEffect(songs) {
+        isVisibleFAB = true
+    }
+    Box(Modifier.padding(contentPadding)) {
+        LazyColumn(
+            modifier = modifier.fillMaxSize(),
+        ) {
+            item {
+                MaxTemplateNativeAdViewComposable(
+                    adViewState = adViewState,
+                    adType = AdType.SMALL,
+                    showBilling = openBilling,
+                    modifier = Modifier.padding(
+                        vertical = 8.dp
+                    )
                 )
             }
+            item {
+                Row(
+                    modifier = modifier.padding(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        modifier = Modifier
+                            .padding(horizontal = 8.dp)
+                            .weight(1f),
+                        text = stringResource(R.string.unit_episodes, songs.size),
+                        style = MaterialTheme.typography.bodyMedium.end(),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
 
-        }
-        itemsIndexed(
-            items = songs,
-            key = { _, song -> song.id },
-        ) { index, song ->
-            PodcastItemHolder(
-                modifier = Modifier.fillMaxWidth(),
-                song = song,
-                onClickPlayButton = {
-                    if (playActiveId == null || playActiveId != song.id) {
-                        onClickSong.invoke(index, songs)
-                        if (playActiveId != song.id) {
-                            playActiveId = song.id
+            }
+            itemsIndexed(
+                items = songs,
+                key = { _, song -> song.id },
+            ) { index, song ->
+                PodcastItemHolder(
+                    modifier = Modifier.fillMaxWidth(),
+                    song = song,
+                    onClickPlayButton = {
+                        if (playActiveId == null || playActiveId != song.id) {
+                            onClickSong.invoke(index, songs)
+                            if (playActiveId != song.id) {
+                                playActiveId = song.id
+                            }
+                        } else {
+                            onClickPause.invoke()
+                            playActiveId = null
                         }
-                    } else {
-                        onClickPause.invoke()
-                        playActiveId = null
-                    }
-                },
-                onClickMenu = { onClickMenu.invoke(song) },
-                onClickDownload = onClickDownload,
-                onClickAddToQueue = onClickAddToQueue,
-                isPlay = playActiveId == song.id,
-                downloader = downloader,
-                onClickCancelDownload = onClickCancelDownload,
-                downloadStatus = downloadStatus,
-                downloadProgress = downloadProgress
-            )
-            HorizontalDivider(modifier = Modifier.padding(bottom = 8.dp, start = 12.dp))
+                    },
+                    onClickMenu = { onClickMenu.invoke(song) },
+                    onClickDownload = onClickDownload,
+                    onClickAddToQueue = onClickAddToQueue,
+                    isPlay = playActiveId == song.id,
+                    downloader = downloader,
+                    onClickCancelDownload = onClickCancelDownload,
+                    downloadStatus = downloadStatus,
+                    downloadProgress = downloadProgress
+                )
+                HorizontalDivider(modifier = Modifier.padding(bottom = 8.dp, start = 12.dp))
+            }
+        }
+
+        AnimatedVisibility(
+            modifier = Modifier
+                .padding(16.dp)
+                .align(Alignment.BottomEnd),
+            visible = isVisibleFAB,
+            enter = fadeIn() + scaleIn(),
+            exit = fadeOut() + scaleOut(),
+        ) {
+            FloatingActionButton(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                onClick = { onClickShuffle.invoke(songs) },
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Shuffle,
+                    contentDescription = null,
+                )
+            }
         }
     }
 }

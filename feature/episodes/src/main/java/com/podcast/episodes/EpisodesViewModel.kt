@@ -1,7 +1,6 @@
 package com.podcast.episodes
 
 import android.content.Context
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import caios.android.kanade.core.common.network.Dispatcher
 import caios.android.kanade.core.common.network.KanadeDispatcher
@@ -10,7 +9,9 @@ import caios.android.kanade.core.design.R
 import caios.android.kanade.core.model.ScreenState
 import caios.android.kanade.core.model.music.Song
 import caios.android.kanade.core.model.player.PlayerEvent
+import caios.android.kanade.core.model.player.ShuffleMode
 import caios.android.kanade.core.music.MusicController
+import caios.android.kanade.core.repository.MusicRepository
 import caios.android.kanade.core.repository.podcast.FeedDiscoveryRepository
 import caios.android.kanade.core.repository.toSong
 import com.applovin.sdk.AppLovinSdk
@@ -22,6 +23,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.util.Random
 import javax.inject.Inject
 
 @HiltViewModel
@@ -33,10 +35,11 @@ class EpisodesViewModel @Inject constructor(
     val download: PodcastDownloader,
     @Dispatcher(KanadeDispatcher.Default)
     private val defaultDispatcher: CoroutineDispatcher,
-    adsSdk: AppLovinSdk
+    adsSdk: AppLovinSdk,
+    private val musicRepository: MusicRepository,
 ) : BaseAdsViewModel(adsSdk) {
 
-    var screenState = feedDiscoveryRepository.loadAddItem().flowOn(ioDispatcher)
+    val screenState = feedDiscoveryRepository.loadAddItem().flowOn(ioDispatcher)
         .map { podcastFeedItemEntities ->
             ScreenState.Idle(
                 podcastFeedItemEntities.sortedByDescending { it.publishDate } .map { it.toSong() }
@@ -81,6 +84,19 @@ class EpisodesViewModel @Inject constructor(
             context.getString(R.string.downloading_podcast)
         } else {
             context.getString(R.string.storage_perm_error)
+        }
+    }
+
+    fun onShufflePlay(songs: List<Song>) {
+        viewModelScope.launch {
+            musicRepository.setShuffleMode(ShuffleMode.ON)
+            musicController.playerEvent(
+                PlayerEvent.NewPlay(
+                    index = Random().nextInt(songs.size),
+                    queue = songs,
+                    playWhenReady = true,
+                ),
+            )
         }
     }
 

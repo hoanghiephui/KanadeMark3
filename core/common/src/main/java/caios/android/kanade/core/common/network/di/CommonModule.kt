@@ -44,9 +44,7 @@ internal class CommonModule {
         @ApplicationContext
         context: Context
     ): AppLovinSdk =
-        AppLovinSdk.getInstance(context).apply {
-            mediationProvider = "max"
-        }
+        AppLovinSdk.getInstance(context)
 }
 
 @Module

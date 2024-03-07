@@ -4,44 +4,20 @@ import android.content.Context
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import caios.android.kanade.core.design.component.AdViewState
 import caios.android.kanade.core.design.component.MaxTemplateNativeAdViewComposableLoader
 import com.applovin.sdk.AppLovinSdk
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import timber.log.Timber
 
 abstract class BaseAdsViewModel(
-    appLoVinSdk: AppLovinSdk
+    private val appLoVinSdk: AppLovinSdk
 ): ViewModel() {
     private val callbacks = mutableStateListOf<String>()
-    private val _uiState = MutableStateFlow(false)
-    private val loadAdState = _uiState.asSharedFlow()
+
     private val nativeAdLoader: MaxTemplateNativeAdViewComposableLoader by lazy {
         MaxTemplateNativeAdViewComposableLoader(this)
     }
     val adState: State<AdViewState> get() = nativeAdLoader.nativeAdView
-
-    init {
-        if (SHOW_ADS) {
-            appLoVinSdk.initializeSdk {
-                viewModelScope.launch {
-                    _uiState.emit(true)
-                }
-            }.runCatching {
-                viewModelScope.launch {
-                    delay(3000)
-                    if (!_uiState.value) {
-                        _uiState.emit(true)
-                    }
-                }
-            }
-        }
-    }
 
     /**
      * Log ad callbacks in the LazyColumn.
@@ -58,12 +34,10 @@ abstract class BaseAdsViewModel(
         adUnitIdentifier: String
     ) {
         // Initialize ad with ad loader.
-        viewModelScope.launch {
-            loadAdState.collect {
-                if (it && SHOW_ADS) {
-                    nativeAdLoader.loadAd(context, adUnitIdentifier)
-                    Timber.tag("Applovin").d("Load Ads")
-                }
+        if (SHOW_ADS) {
+            appLoVinSdk.initializeSdk {
+                nativeAdLoader.loadAd(context, adUnitIdentifier)
+                Timber.tag("Applovin").d("Load Ads")
             }
         }
 

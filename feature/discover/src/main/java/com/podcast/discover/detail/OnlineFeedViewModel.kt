@@ -24,6 +24,7 @@ import caios.android.kanade.core.model.music.Artist
 import caios.android.kanade.core.model.music.Artwork
 import caios.android.kanade.core.model.music.Song
 import caios.android.kanade.core.model.player.PlayerEvent
+import caios.android.kanade.core.model.player.ShuffleMode
 import caios.android.kanade.core.music.MusicController
 import caios.android.kanade.core.repository.MusicRepository
 import caios.android.kanade.core.repository.podcast.FeedDiscoveryRepository
@@ -48,6 +49,7 @@ import kotlinx.datetime.toLocalDateTime
 import java.math.BigInteger
 import java.time.ZoneId
 import java.util.Date
+import java.util.Random
 import javax.inject.Inject
 
 @HiltViewModel
@@ -214,6 +216,19 @@ class OnlineFeedViewModel @Inject constructor(
 
     fun playerEvent(event: PlayerEvent) {
         musicController.playerEvent(event)
+    }
+
+    fun onShufflePlay(songs: List<Song>) {
+        viewModelScope.launch {
+            musicRepository.setShuffleMode(ShuffleMode.ON)
+            musicController.playerEvent(
+                PlayerEvent.NewPlay(
+                    index = Random().nextInt(songs.size),
+                    queue = songs,
+                    playWhenReady = true,
+                ),
+            )
+        }
     }
 
 

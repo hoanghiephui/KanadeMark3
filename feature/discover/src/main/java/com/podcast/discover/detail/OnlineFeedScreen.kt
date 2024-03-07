@@ -132,7 +132,8 @@ fun OnlineFeedRoute(
             adViewState = adState,
             openBilling = {
 
-            }
+            },
+            onClickShuffle = viewModel::onShufflePlay
         )
     }
 
@@ -156,7 +157,8 @@ private fun OnlineFeedScreen(
     clickSubscribe: (Boolean) -> Unit,
     onClickSeeAll: (List<Song>, String) -> Unit,
     adViewState: AdViewState,
-    openBilling: () -> Unit
+    openBilling: () -> Unit,
+    onClickShuffle: (List<Song>) -> Unit
 ) {
     var expanded by remember {
         mutableStateOf(false)
@@ -179,7 +181,11 @@ private fun OnlineFeedScreen(
         data = coordinatorData,
         onClickNavigateUp = onTerminate,
         onClickMenu = { onClickMenu.invoke(artist) },
-        clickSubscribe = clickSubscribe
+        clickSubscribe = clickSubscribe,
+        isSubscribe = artist.isSubscribe,
+        clickShuffle = {
+            onClickShuffle.invoke(artist.songs)
+        }
     ) {
         item {
             Text(
