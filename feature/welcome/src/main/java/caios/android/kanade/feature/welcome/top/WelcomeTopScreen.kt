@@ -57,7 +57,7 @@ internal fun WelcomeTopScreen(
     var isDisplayedOldUserDialog by remember { mutableStateOf(false) }
     var isAgreedPrivacyPolicy by remember { mutableStateOf(false) }
 
-    val privacyPolicyUri = "https://sites.google.com/view/podcast68".toUri()
+    val privacyPolicyUri = "https://sites.google.com/view/podcast68/trang-chủ".toUri()
 
     if (isDisplayedOldUserDialog) {
         SimpleAlertDialog(
