@@ -115,10 +115,6 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_square_controller_provider" />
         </receiver>
-
-        <meta-data
-            android:name="applovin.sdk.key"
-            android:value="@string/APPLOVIN_SDK_KEY" />
     </application>
 
 </manifest>

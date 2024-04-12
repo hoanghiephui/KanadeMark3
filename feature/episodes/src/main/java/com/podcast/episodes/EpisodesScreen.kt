@@ -156,9 +156,10 @@ private fun EpisodesScreen(
     LaunchedEffect(songs) {
         isVisibleFAB = true
     }
-    Box(Modifier.padding(contentPadding)) {
+    Box {
         LazyColumn(
             modifier = modifier.fillMaxSize(),
+            contentPadding = contentPadding
         ) {
             item {
                 MaxTemplateNativeAdViewComposable(

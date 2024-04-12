@@ -31,6 +31,7 @@ import caios.android.kanade.core.repository.podcast.FeedDiscoveryRepository
 import caios.android.kanade.core.repository.podcast.ParseRssRepository
 import caios.android.kanade.core.ui.error.ErrorsDispatcher
 import com.applovin.sdk.AppLovinSdk
+import com.applovin.sdk.AppLovinSdkInitializationConfiguration
 import com.podcast.core.network.util.PodcastDownloader
 import com.prof18.rssparser.model.RssChannel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -64,8 +65,9 @@ class OnlineFeedViewModel @Inject constructor(
     private val musicController: MusicController,
     private val musicRepository: MusicRepository,
     val download: PodcastDownloader,
-    adsSdk: AppLovinSdk
-) : BaseViewModel<NoneAction>(defaultDispatcher, adsSdk) {
+    adsSdk: AppLovinSdk,
+    appLovinSdkInitialization: AppLovinSdkInitializationConfiguration
+) : BaseViewModel<NoneAction>(defaultDispatcher, adsSdk, appLovinSdkInitialization) {
     private var imId: String? = null
     private var feedUrl: String  = ""
     private val feedState = MutableStateFlow<RssChannel?>(null)

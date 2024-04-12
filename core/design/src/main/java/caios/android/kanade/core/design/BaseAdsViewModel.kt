@@ -7,11 +7,13 @@ import androidx.lifecycle.ViewModel
 import caios.android.kanade.core.design.component.AdViewState
 import caios.android.kanade.core.design.component.MaxTemplateNativeAdViewComposableLoader
 import com.applovin.sdk.AppLovinSdk
+import com.applovin.sdk.AppLovinSdkInitializationConfiguration
 import timber.log.Timber
 
 abstract class BaseAdsViewModel(
-    private val appLoVinSdk: AppLovinSdk
-): ViewModel() {
+    private val appLoVinSdk: AppLovinSdk,
+    private val appLovinSdkInitialization: AppLovinSdkInitializationConfiguration
+) : ViewModel() {
     private val callbacks = mutableStateListOf<String>()
 
     private val nativeAdLoader: MaxTemplateNativeAdViewComposableLoader by lazy {
@@ -35,7 +37,7 @@ abstract class BaseAdsViewModel(
     ) {
         // Initialize ad with ad loader.
         if (SHOW_ADS) {
-            appLoVinSdk.initializeSdk {
+            appLoVinSdk.initialize(appLovinSdkInitialization) {
                 nativeAdLoader.loadAd(context, adUnitIdentifier)
                 Timber.tag("Applovin").d("Load Ads")
             }

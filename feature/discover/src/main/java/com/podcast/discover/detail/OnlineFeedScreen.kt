@@ -176,6 +176,9 @@ private fun OnlineFeedScreen(
         )
     }
     var playActiveId by remember { mutableStateOf<Long?>(null) }
+    val items = remember(artist.songs) {
+        artist.songs.take(6)
+    }
     PodcastCoordinatorScaffold(
         modifier = modifier.fillMaxSize(),
         data = coordinatorData,
@@ -237,7 +240,7 @@ private fun OnlineFeedScreen(
         }
 
         itemsIndexed(
-            items = artist.songs.take(6),
+            items = items,
             key = { _, song -> song.id },
         ) { index, song ->
             PodcastItemHolder(

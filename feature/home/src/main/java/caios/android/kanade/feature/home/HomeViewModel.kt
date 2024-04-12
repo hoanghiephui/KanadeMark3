@@ -22,6 +22,7 @@ import caios.android.kanade.core.repository.PlaylistRepository
 import caios.android.kanade.core.repository.podcast.FeedDiscoveryRepository
 import caios.android.kanade.core.repository.toSong
 import com.applovin.sdk.AppLovinSdk
+import com.applovin.sdk.AppLovinSdkInitializationConfiguration
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.SharingStarted
@@ -46,8 +47,9 @@ class HomeViewModel @Inject constructor(
     private val ioDispatcher: CoroutineDispatcher,
     @Dispatcher(KanadeDispatcher.Default)
     defaultDispatcher: CoroutineDispatcher,
-    appLoVinSdk: AppLovinSdk
-) : BaseViewModel<NoneAction>(defaultDispatcher, appLoVinSdk) {
+    appLoVinSdk: AppLovinSdk,
+    appLovinSdkInitialization: AppLovinSdkInitializationConfiguration
+) : BaseViewModel<NoneAction>(defaultDispatcher, appLoVinSdk, appLovinSdkInitialization) {
 
 
     val screenState = combine(

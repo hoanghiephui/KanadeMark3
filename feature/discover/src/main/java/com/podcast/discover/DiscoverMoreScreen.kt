@@ -28,6 +28,7 @@ import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -119,6 +120,9 @@ private fun DiscoverMoreScreen(
             modifier = modifier,
             screenState = uiState,
         ) { items ->
+            val itemsDistinctBy = remember(items) {
+                items.distinctBy { it.id }
+            }
             LazyVerticalGrid(
                 modifier = Modifier.padding(top = paddingValues.calculateTopPadding()),
                 contentPadding = contentPadding,
@@ -129,7 +133,7 @@ private fun DiscoverMoreScreen(
             ) {
                 itemsWithEdgeSpace(
                     spanCount = 3,
-                    items = items.distinctBy { it.id },
+                    items = itemsDistinctBy,
                     key = { artist -> "added-${artist.id}" },
                 ) { artist ->
                     FeedPodcastHolder(

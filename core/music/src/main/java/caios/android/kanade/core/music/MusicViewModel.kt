@@ -28,6 +28,7 @@ import caios.android.kanade.core.repository.MusicRepository
 import caios.android.kanade.core.repository.UserDataRepository
 import caios.android.kanade.core.repository.di.LyricsMusixmatch
 import com.applovin.sdk.AppLovinSdk
+import com.applovin.sdk.AppLovinSdkInitializationConfiguration
 import com.yausername.aria2c.Aria2c
 import com.yausername.ffmpeg.FFmpeg
 import com.yausername.youtubedl_android.YoutubeDL
@@ -46,8 +47,9 @@ class MusicViewModel @Inject constructor(
     private val musicRepository: MusicRepository,
     private val userDataRepository: UserDataRepository,
     @LyricsMusixmatch private val lyricsRepository: LyricsRepository,
-    adSdk: AppLovinSdk
-) : BaseAdsViewModel(adSdk) {
+    adSdk: AppLovinSdk,
+    appLovinSdkInitialization: AppLovinSdkInitializationConfiguration
+) : BaseAdsViewModel(adSdk, appLovinSdkInitialization) {
 
     var uiState by mutableStateOf(MusicUiState())
         private set

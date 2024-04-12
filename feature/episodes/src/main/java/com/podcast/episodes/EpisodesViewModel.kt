@@ -15,6 +15,7 @@ import caios.android.kanade.core.repository.MusicRepository
 import caios.android.kanade.core.repository.podcast.FeedDiscoveryRepository
 import caios.android.kanade.core.repository.toSong
 import com.applovin.sdk.AppLovinSdk
+import com.applovin.sdk.AppLovinSdkInitializationConfiguration
 import com.podcast.core.network.util.PodcastDownloader
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -37,7 +38,8 @@ class EpisodesViewModel @Inject constructor(
     private val defaultDispatcher: CoroutineDispatcher,
     adsSdk: AppLovinSdk,
     private val musicRepository: MusicRepository,
-) : BaseAdsViewModel(adsSdk) {
+    appLovinSdkInitialization: AppLovinSdkInitializationConfiguration
+) : BaseAdsViewModel(adsSdk, appLovinSdkInitialization) {
 
     val screenState = feedDiscoveryRepository.loadAddItem().flowOn(ioDispatcher)
         .map { podcastFeedItemEntities ->

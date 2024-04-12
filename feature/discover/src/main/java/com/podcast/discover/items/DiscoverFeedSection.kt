@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,6 +46,9 @@ internal fun DiscoverFeedSection(
     windowSize: WindowSizeClass
 ) {
     val size = if (windowSize.widthSizeClass == WindowWidthSizeClass.Medium) 10 else 5
+    val items = remember(feed) {
+        feed.distinctBy { it.id }.take(size)
+    }
     Column(
         modifier = modifier.padding(vertical = 16.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
@@ -80,7 +84,7 @@ internal fun DiscoverFeedSection(
             contentPadding = PaddingValues(horizontal = 10.dp),
         ) {
             items(
-                items = feed.distinctBy { it.id }.take(size),
+                items = items,
                 key = { "podcast-${it.id}" },
             ) { feed ->
                 FeedPodcastHolder(

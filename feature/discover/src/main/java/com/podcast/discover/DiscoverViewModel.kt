@@ -20,6 +20,7 @@ import caios.android.kanade.core.repository.UserDataRepository
 import caios.android.kanade.core.repository.podcast.FeedDiscoveryRepository
 import caios.android.kanade.core.ui.error.ErrorsDispatcher
 import com.applovin.sdk.AppLovinSdk
+import com.applovin.sdk.AppLovinSdkInitializationConfiguration
 import com.podcast.core.network.api.Genres
 import com.podcast.core.usecase.ItunesFeedUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -49,8 +50,9 @@ class DiscoverViewModel @Inject constructor(
     private val feedRepository: FeedDiscoveryRepository,
     private val userDataRepository: UserDataRepository,
     private val savedStateHandle: SavedStateHandle,
-    appLoVinSdk: AppLovinSdk
-) : BaseViewModel<NoneAction>(defaultDispatcher, appLoVinSdk) {
+    appLoVinSdk: AppLovinSdk,
+    appLovinSdkInitialization: AppLovinSdkInitializationConfiguration
+) : BaseViewModel<NoneAction>(defaultDispatcher, appLoVinSdk, appLovinSdkInitialization) {
     private val genres: Genres
         get() = Genres.fromInt(
             savedStateHandle[DiscoverMoreData_Genres] ?: Genres.TOP.id
