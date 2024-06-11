@@ -23,6 +23,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.HelpOutline
 import androidx.compose.material.icons.filled.Album
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ColorLens
 import androidx.compose.material.icons.filled.DesignServices
 import androidx.compose.material.icons.filled.DoNotDisturb
@@ -34,6 +35,7 @@ import androidx.compose.material.icons.filled.Scanner
 import androidx.compose.material.icons.filled.Widgets
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -69,6 +71,7 @@ private fun BillingPlusDialog(
     onClickPurchase: () -> Unit,
     onClickVerify: () -> Unit,
     onClickConsume: (Purchase) -> Unit,
+    onDismissDialog: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val purchase = uiState.purchase
@@ -84,7 +87,9 @@ private fun BillingPlusDialog(
             modifier = Modifier
                 .padding(top = 24.dp)
                 .fillMaxWidth(),
-        )
+        ) {
+            onDismissDialog()
+        }
 
         Text(
             modifier = Modifier
@@ -255,7 +260,10 @@ const val PLAY_STORE_SUBSCRIPTION_URL =
     "https://play.google.com/store/account/subscriptions"
 
 @Composable
-private fun TitleItem(modifier: Modifier = Modifier) {
+private fun TitleItem(
+    modifier: Modifier = Modifier,
+    hideDialog: () -> Unit
+) {
     val titleStyle = MaterialTheme.typography.headlineLarge.bold()
     val annotatedString = buildAnnotatedString {
         append("Buy ")
@@ -264,13 +272,23 @@ private fun TitleItem(modifier: Modifier = Modifier) {
             append("Podcast+")
         }
     }
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Text(
+            modifier = modifier.weight(1f),
+            text = annotatedString,
+            style = titleStyle,
+            color = MaterialTheme.colorScheme.onSurface,
+        )
+        IconButton(
+            onClick = hideDialog,
+        ) {
+            Icon(
+                imageVector = Icons.Default.Close,
+                contentDescription = null,
+            )
+        }
+    }
 
-    Text(
-        modifier = modifier,
-        text = annotatedString,
-        style = titleStyle,
-        color = MaterialTheme.colorScheme.onSurface,
-    )
 }
 
 @Composable
@@ -325,6 +343,7 @@ private fun BillingPlusScreenPreview() {
         onClickPurchase = {},
         onClickVerify = {},
         onClickConsume = {},
+        onDismissDialog = {}
     )
 }
 
@@ -363,6 +382,9 @@ fun Activity.showBillingPlusDialog(
                         viewModel.consume(this@showBillingPlusDialog, it)
                     }
                 },
+                onDismissDialog =  {
+                    onDismiss()
+                }
             )
         }
         TrackScreenViewEvent("BillingPlusDialog")

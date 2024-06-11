@@ -35,6 +35,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import caios.android.kanade.core.design.R
 import caios.android.kanade.core.design.theme.bold
 import caios.android.kanade.core.design.theme.center
@@ -229,7 +230,9 @@ private fun WelcomePermissionLabel(
                 else -> stringResource(R.string.welcome_permission_denied)
             },
             style = MaterialTheme.typography.labelSmall,
+            fontSize = 10.sp,
             color = color,
+            maxLines = 1
         )
     }
 }

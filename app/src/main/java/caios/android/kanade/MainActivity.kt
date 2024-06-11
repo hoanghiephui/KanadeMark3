@@ -141,14 +141,14 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
 
-        if (intent?.extras?.getBoolean("notify") == true) {
+        if (intent.extras?.getBoolean("notify") == true) {
             musicViewModel.setControllerState(true)
         }
 
-        if (intent?.extras?.getBoolean("plus") == true) {
+        if (intent.extras?.getBoolean("plus") == true) {
             musicViewModel.setPlusDialogDisplayed(true)
         }
     }
